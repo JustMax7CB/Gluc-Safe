@@ -1,4 +1,4 @@
-# Gluc_Ssafe
+# Gluc_Safe
 
 A new Flutter project.
 
