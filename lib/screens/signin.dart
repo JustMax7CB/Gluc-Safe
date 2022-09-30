@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatefulWidget {
@@ -22,10 +23,65 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ),
         elevation: 0,
-        leading: const Icon(Icons.menu),
-        actions: const [Icon(Icons.refresh)],
       ),
-      body: const SigninForm(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: const [
+            Padding(
+              padding: EdgeInsets.only(top: 30.0),
+              child: Text(
+                "Gluc-Safe",
+                style: TextStyle(
+                  fontSize: 46,
+                  fontWeight: FontWeight.w800,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            SigninForm(),
+            Divider(
+              height: 20,
+              thickness: 2,
+              indent: 70,
+              endIndent: 70,
+              color: Colors.grey,
+            ),
+            SignupText(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SignupText extends StatefulWidget {
+  const SignupText({super.key});
+
+  @override
+  State<SignupText> createState() => _SignupTextState();
+}
+
+class _SignupTextState extends State<SignupText> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: TextButton(
+        onPressed: () {
+          print("pressed");
+          Navigator.pushNamed(context, "/register");
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.fiber_new),
+            Text(
+              "Or Signup Here",
+              style: TextStyle(fontSize: 18, color: Colors.blueGrey[500]),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -39,13 +95,34 @@ class SigninForm extends StatefulWidget {
 
 class _SigninFormState extends State<SigninForm> {
   final _formkey = GlobalKey<FormState>();
+  String _email = "";
+  String _pass = "";
+
+  Future checkLogin() async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: _email, password: _pass);
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Invalid user data")));
+    }
+  }
 
   TextFormField textField(String field) {
     return TextFormField(
       decoration: InputDecoration(
-        hintStyle: const TextStyle(fontSize: 13),
-        hintText: "Enter your $field",
-      ),
+          border: const UnderlineInputBorder(),
+          filled: true,
+          icon:
+              (field == "email") ? Icon(Icons.email_outlined) : Icon(Icons.key),
+          hintStyle: const TextStyle(fontSize: 13),
+          hintText: "Enter your $field",
+          labelText: (field == "email") ? "Email" : "Password"),
+      onChanged: (String val) {
+        (field == "email") ? _email = val : _pass = val;
+      },
+      obscureText: (field == "password") ? true : false,
       validator: (val) {
         if (val == null || val.isEmpty) {
           return "$field cannot be empty";
@@ -68,9 +145,9 @@ class _SigninFormState extends State<SigninForm> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              textField("username"),
+              textField("email"),
               textField("password"),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
@@ -79,6 +156,8 @@ class _SigninFormState extends State<SigninForm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Checking Data")));
                     FocusManager.instance.primaryFocus?.unfocus();
+
+                    checkLogin();
                   }
                 },
                 child: const Text("Sign In"),

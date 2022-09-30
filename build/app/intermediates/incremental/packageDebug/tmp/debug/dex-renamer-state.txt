@@ -1,0 +1,4 @@
+#Fri Sep 30 11:15:33 IDT 2022
+base.0=C\:\\Users\\Sman9\\OneDrive\\Desktop\\Gluc-Safe (Final Project)\\gluc_safe\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
