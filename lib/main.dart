@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gluc_safe/screens/LoginPage.dart';
 import 'package:gluc_safe/screens/UserDetails.dart';
-import 'package:gluc_safe/screens/loggedin.dart';
+import 'package:gluc_safe/screens/HomePage.dart';
 import 'package:gluc_safe/screens/Register.dart';
 
 Future<void> main() async {
@@ -20,7 +20,7 @@ Future<void> main() async {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  return const LoggedIn();
+                  return const HomePage();
                 } else if (snapshot.hasError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Some error occured")));

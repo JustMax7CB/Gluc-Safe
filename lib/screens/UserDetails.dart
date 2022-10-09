@@ -140,7 +140,7 @@ class _UserDetailsState extends State<UserDetails> {
           glucUser.setName(_name);
           glucUser.setMobileNum(_mobileNum);
           saveUserCollection(glucUser);
-          Navigator.popAndPushNamed(context, '/');
+          Navigator.pop(context);
         },
         child: Container(
           decoration: BoxDecoration(

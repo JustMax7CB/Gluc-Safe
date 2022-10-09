@@ -4,7 +4,7 @@ class DatabaseService {
   final String uid;
   DatabaseService({required this.uid});
 
-  final CollectionReference users =
+  static final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
   Future updateUserMobile(String fullName, String email, String pass,
