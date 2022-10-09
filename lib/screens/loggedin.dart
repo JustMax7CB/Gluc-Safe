@@ -12,10 +12,9 @@ class _LoggedInState extends State<LoggedIn> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gluc Safe"),
+        title: const Text("Gluc Safe"),
         centerTitle: true,
       ),
       body: Center(
@@ -27,7 +26,7 @@ class _LoggedInState extends State<LoggedIn> {
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
                 },
-                child: Text("Sign Out"))
+                child: const Text("Sign Out"))
           ],
         ),
       ),

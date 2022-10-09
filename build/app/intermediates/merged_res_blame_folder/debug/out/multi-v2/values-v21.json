@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Sman9\\OneDrive\\Desktop\\Gluc-Safe (Final Project)\\gluc_safe\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v21\\values-v21.xml",
+            "outputFile": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v21\\values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\aa701b47cec244085d46a1a42fcc7fb9\\transformed\\core-1.6.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\b8c382b86a78a1c12d8951ddd3924987\\transformed\\core-1.6.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

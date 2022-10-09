@@ -36,6 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.24.0
   firebase_auth: ^3.11.0
+  age_calculator: ^1.0.0
+  dropdown_button2: ^1.8.3
+  intl: ^0.17.0
+  cloud_firestore: ^3.5.1
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +57,29 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: GemunuLibre
+      fonts:
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre.ttf
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-ExtraLight.ttf
+          weight: 100
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-Light.ttf
+          weight: 200
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-Regular.ttf
+          weight: 300
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-Medium.ttf
+          weight: 400
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-SemiBold.ttf
+          weight: 500
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-Bold.ttf
+          weight: 600
+        - asset: lib\assets\fonts\GemunuLibre\GemunuLibre-ExtraBold.ttf
+          weight: 700
+    - family: BebasNeue
+      fonts:
+        - asset: lib\assets\fonts\BebasNeue-Regular.ttf
+
+        
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
