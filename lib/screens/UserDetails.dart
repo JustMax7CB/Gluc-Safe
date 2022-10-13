@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/Models/User.dart';
+import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/assets/customAppBar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:gluc_safe/services/database.dart';
@@ -45,11 +44,12 @@ class _UserDetailsState extends State<UserDetails> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                formField("name", Icon(Icons.person_pin), "Full Name"),
+                formField("name", const Icon(Icons.person_pin), "Full Name"),
                 dividerWidget(),
-                formField("birth", Icon(Icons.calendar_today), "Birthdate"),
+                formField(
+                    "birth", const Icon(Icons.calendar_today), "Birthdate"),
                 dividerWidget(),
-                formField("mobile", Icon(Icons.phone_android_rounded),
+                formField("mobile", const Icon(Icons.phone_android_rounded),
                     "Mobile Number"),
                 dividerWidget(),
                 genderDropDown(),
@@ -64,7 +64,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget genderDropDown() {
     List genders = ["Male", "Female", "Transgender", "Nonbinary", "None"];
-    List<DropdownMenuItem<String>> _items = genders
+    List<DropdownMenuItem<String>> items = genders
         .map((item) => DropdownMenuItem<String>(
               value: item,
               child: Text(
@@ -101,11 +101,12 @@ class _UserDetailsState extends State<UserDetails> {
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
         ),
-        items: _items,
+        items: items,
         validator: (value) {
           if (value == null) {
             return 'Please select gender.';
           }
+          return null;
         },
         onChanged: (value) {
           _gender = value.toString();
@@ -120,7 +121,7 @@ class _UserDetailsState extends State<UserDetails> {
   Future saveUserCollection(GlucUser gluc) async {
     await DatabaseService(uid: gluc.uid).updateUserMobile(
         gluc.fullName,
-        gluc.email,
+        gluc.emailAddress,
         gluc.pass!,
         gluc.gender,
         gluc.mobile,

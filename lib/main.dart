@@ -5,6 +5,7 @@ import 'package:gluc_safe/screens/LoginPage.dart';
 import 'package:gluc_safe/screens/UserDetails.dart';
 import 'package:gluc_safe/screens/HomePage.dart';
 import 'package:gluc_safe/screens/Register.dart';
+import 'package:gluc_safe/screens/UserPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ Future<void> main() async {
             ),
         '/register': (context) => const RegisterPage(),
         '/details': (context) => const UserDetails(),
+        '/profile': (context) => const UserPage(),
       },
     ),
   );
