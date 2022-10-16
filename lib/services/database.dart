@@ -10,14 +10,13 @@ class DatabaseService {
   static final CollectionReference usersGlucose =
       FirebaseFirestore.instance.collection('usersGlucose');
 
-  Future updateUserMobile(String fullName, String email, String pass,
-      String gender, String mobile, int age, DateTime birth) async {
+  Future updateUserDetails(String fullName, String email, String pass,
+      String gender, String mobile, DateTime birth) async {
     return await users.doc(uid).set({
-      "fullName": fullName,
+      'fullName': fullName,
       'email': email,
       'pass': pass,
       'gender': gender,
-      'age': age,
       'birthdate': birth,
       'mobileNum': mobile
     });

@@ -20,11 +20,11 @@ class _UserDetailsState extends State<UserDetails> {
   late DateTime _birthDate;
   late String _gender;
   late String _mobileNum;
-  var glucUser;
+  late Map userAuth;
 
   @override
   Widget build(BuildContext context) {
-    glucUser = ModalRoute.of(context)!.settings.arguments as GlucUser;
+    userAuth = ModalRoute.of(context)!.settings.arguments as Map;
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -119,13 +119,12 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Future saveUserCollection(GlucUser gluc) async {
-    await DatabaseService(uid: gluc.uid).updateUserMobile(
+    await DatabaseService(uid: gluc.uid).updateUserDetails(
         gluc.fullName,
         gluc.emailAddress,
         gluc.pass!,
         gluc.gender,
         gluc.mobile,
-        gluc.age,
         gluc.birthDate);
   }
 
@@ -136,10 +135,15 @@ class _UserDetailsState extends State<UserDetails> {
         borderRadius: BorderRadius.circular(18),
         splashColor: const Color.fromARGB(255, 152, 113, 20),
         onTap: () {
-          glucUser.setBirthdate(_birthDate);
-          glucUser.setGender(_gender);
-          glucUser.setName(_name);
-          glucUser.setMobileNum(_mobileNum);
+          GlucUser glucUser = GlucUser(
+            uid: userAuth['uid'],
+            email: userAuth['email'],
+            pass: userAuth['pass'],
+            name: _name,
+            birth: _birthDate,
+            gender: _gender,
+            mobile: _mobileNum,
+          );
           saveUserCollection(glucUser);
           Navigator.pop(context);
         },

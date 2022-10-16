@@ -1,11 +1,11 @@
 import 'package:age_calculator/age_calculator.dart';
+import 'package:gluc_safe/Models/user.dart';
 
 class GlucUser {
   final String _uid;
   String? _fullName;
   String _email;
   String _pass;
-  int? _age;
   DateTime? _birthDate;
   String? _gender;
   String? _mobileNum;
@@ -35,7 +35,7 @@ class GlucUser {
   get lastName => _fullName!.split(' ')[1];
   get emailAddress => _email;
   get mobile => _mobileNum;
-  get age => _age;
+  get age => calcAge();
   get gender => _gender;
   get birthDate => _birthDate;
 
@@ -43,15 +43,19 @@ class GlucUser {
   changePassword(String newPass) => _pass = newPass;
   setName(String name) => _fullName = name;
   setGender(String gender) => _gender = gender;
-  setBirthdate(DateTime birth) {
-    _birthDate = birth;
-    calcAge();
-  }
+  setBirthdate(DateTime birth) => _birthDate = birth;
 
   setMobileNum(String mobile) => _mobileNum = mobile;
-  calcAge() => _age = AgeCalculator.age(_birthDate!).years;
+  calcAge() => AgeCalculator.age(_birthDate!).years;
 
-  dynamic toJson() => {
+  factory GlucUser.fromMap(Map glucUser) {
+    return GlucUser(
+        uid: glucUser['uid'], email: glucUser['email'], pass: glucUser['pass']);
+  }
+
+  Map<String, dynamic> toMap() => {
+        'uid': _uid,
+        'pass': _pass,
         'fullName': _fullName,
         'emailAddress': emailAddress,
         'mobile': mobile,
@@ -62,6 +66,6 @@ class GlucUser {
   @override
   String toString() {
     print("Email address: $_email\nPassword: $_pass");
-    return 'GlucUser:\nuid: $_uid\nName: $_fullName\nAge: $_age\nBirthdate: $_birthDate\nMobile Number: $_mobileNum\nGender: $_gender';
+    return 'GlucUser:\nuid: $_uid\nName: $_fullName\nAge: ${calcAge()}\nBirthdate: $_birthDate\nMobile Number: $_mobileNum\nGender: $_gender';
   }
 }

@@ -11,8 +11,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late double _deviceHeight, _deviceWidth;
   final _formkey = GlobalKey<FormState>();
-  String _email = "";
-  String _pass = "";
+  late String _email;
+  late String _pass;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.amber[100],
       appBar: AppBar(
         backgroundColor: Colors.amber[800],
-        elevation: 0,
+        elevation: 1,
       ),
       body: SafeArea(
         child: GestureDetector(
@@ -34,20 +34,17 @@ class _LoginPageState extends State<LoginPage> {
               currentFocus.unfocus();
             }
           },
-          child: Container(
-            color: Colors.amber[100],
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  titleWidget(),
-                  Form(
-                    key: _formkey,
-                    child: formWidget(),
-                  ),
-                  dividerWidget(),
-                  signUpText(),
-                ],
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                titleWidget(),
+                Form(
+                  key: _formkey,
+                  child: formWidget(),
+                ),
+                dividerWidget(),
+                signUpText(),
+              ],
             ),
           ),
         ),

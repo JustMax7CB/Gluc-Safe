@@ -78,10 +78,9 @@ class _RegisterPageState extends State<RegisterPage> {
       } finally {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          GlucUser glucUser =
-              GlucUser(uid: user.uid, email: user.email!, pass: _pass);
           user.sendEmailVerification();
-          Navigator.popAndPushNamed(context, "/details", arguments: glucUser);
+          Navigator.popAndPushNamed(context, "/details",
+              arguments: {'uid': user.uid, 'email': user.email, 'pass': _pass});
         }
       }
     } else {
@@ -136,21 +135,6 @@ class _RegisterPageState extends State<RegisterPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget signUpText() {
-    return Column(
-      children: [
-        const Text("Doesn't Have an account?"),
-        TextButton(
-          child: const Text(
-            "Sign up",
-            style: TextStyle(fontSize: 18),
-          ),
-          onPressed: () => Navigator.pushNamed(context, "/register"),
-        ),
-      ],
     );
   }
 

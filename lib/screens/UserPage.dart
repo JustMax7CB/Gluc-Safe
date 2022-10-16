@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/database.dart';
 
 class UserPage extends StatefulWidget {
@@ -61,7 +62,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<DocumentSnapshot> getUser() async {
-    glucUser = await userCollection.doc(firebaseUser!.uid).get();
+    var glucUser = await userCollection.doc(firebaseUser!.uid).get();
     return glucUser;
   }
 
@@ -95,10 +96,21 @@ class _UserPageState extends State<UserPage> {
             FutureBuilder<DocumentSnapshot>(
               future: getUser(),
               builder: (context, snapshot) {
+                GlucUser? user;
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> userData =
                       snapshot.data!.data() as Map<String, dynamic>;
-                  return Text("${glucUser[title]}");
+                  user = GlucUser(
+                      uid: firebaseUser!.uid,
+                      email: userData['email'],
+                      pass: userData['pass'],
+                      birth: userData['birthdate'].toDate(),
+                      gender: userData['gender']);
+                  if (title == "age") {
+                    return Text(user.calcAge().toString());
+                  } else {
+                    return Text(user.gender);
+                  }
                 }
                 return const Text("Loading...");
               },
@@ -123,10 +135,16 @@ class _UserPageState extends State<UserPage> {
           FutureBuilder<DocumentSnapshot>(
               future: getUser(),
               builder: (context, snapshot) {
+                GlucUser? user;
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> userData =
                       snapshot.data!.data() as Map<String, dynamic>;
-                  return Text("Welcome ${glucUser['fullName']}",
+                  user = GlucUser(
+                      uid: firebaseUser!.uid,
+                      email: userData['email'],
+                      pass: userData['pass'],
+                      name: userData['fullName']);
+                  return Text("Welcome ${user.fullName}",
                       style: profileTitleTextStyle());
                 }
                 return const Text("Loading name...");

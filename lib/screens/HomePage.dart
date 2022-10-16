@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:gluc_safe/widgets/valuePicker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,15 +59,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget glucoseValuePicker() {
-    return NumberPicker(
-      value: glucoseValue!.toInt(),
-      minValue: 50,
-      maxValue: 150,
-      onChanged: (value) => setState(() => glucoseValue = value.toDouble()),
-    );
-  }
-
   Widget glucoseSaveButton() {
     return ElevatedButton(
       onPressed: () {
@@ -121,7 +112,8 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder(
         future: getUserName(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              glucUser != null) {
             return Text("Welcome ${glucUser['fullName']}");
           }
           return const Text("Loading username...");
@@ -133,6 +125,15 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.amber[500],
       title: appbarTitle(),
       elevation: 1.0,
+      leading: IconButton(
+        color: Color.fromRGBO(0, 0, 0, 1.0),
+        iconSize: 30,
+        splashRadius: 25,
+        icon: const Icon(Icons.person),
+        onPressed: () {
+          Navigator.pushNamed(context, '/profile');
+        },
+      ),
       actions: [
         signOutButton(),
       ],
