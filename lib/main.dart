@@ -11,7 +11,7 @@ Future<void> main() async {
       ? await Firebase.initializeApp()
       : await Firebase.initializeApp(
           options: const FirebaseOptions(
-              apiKey: //Enter Firebase API Key,
+              apiKey: "AIzaSyDSjYnrijImtCx-Cd_cUURGa3w3atKTi_c",
               authDomain: "gluc-safe.firebaseapp.com",
               projectId: "gluc-safe",
               storageBucket: "gluc-safe.appspot.com",
