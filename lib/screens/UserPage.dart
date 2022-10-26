@@ -17,7 +17,7 @@ class _UserPageState extends State<UserPage> {
   final firebaseUser = FirebaseAuth.instance.currentUser;
   final userCollection = DatabaseService.users;
   final userGlucCollection = DatabaseService.usersGlucose;
-  var glucUser, glucUserData;
+  late final glucUser, glucUserData;
 
   @override
   Widget build(BuildContext context) {

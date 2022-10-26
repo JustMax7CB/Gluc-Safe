@@ -1,15 +1,22 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/screens/LoginPage.dart';
-import 'package:gluc_safe/screens/UserDetails.dart';
-import 'package:gluc_safe/screens/HomePage.dart';
-import 'package:gluc_safe/screens/Register.dart';
-import 'package:gluc_safe/screens/UserPage.dart';
+import 'screens/screens.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  Platform.isAndroid
+      ? await Firebase.initializeApp()
+      : await Firebase.initializeApp(
+          options: const FirebaseOptions(
+              apiKey: "AIzaSyDSjYnrijImtCx-Cd_cUURGa3w3atKTi_c",
+              authDomain: "gluc-safe.firebaseapp.com",
+              projectId: "gluc-safe",
+              storageBucket: "gluc-safe.appspot.com",
+              messagingSenderId: "463867324918",
+              appId: "1:463867324918:web:6e8aa52917e5f2bae3bfd7"));
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -26,9 +33,10 @@ Future<void> main() async {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Some error occured")));
                 }
-                return const LoginPage();
+                return const FirstPage();
               },
             ),
+        '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/details': (context) => const UserDetails(),
         '/profile': (context) => const UserPage(),

@@ -112,9 +112,9 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder(
         future: getUserName(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              glucUser != null) {
-            return Text("Welcome ${glucUser['fullName']}");
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map user = snapshot.data;
+            return Text("Welcome ${user['fullName']}");
           }
           return const Text("Loading username...");
         });
@@ -157,7 +157,6 @@ class _HomePageState extends State<HomePage> {
 
   Future getUserName() async {
     var user = await userCollection.doc(firebaseUser!.uid).get();
-    glucUser = user.data();
-    return glucUser;
+    return user.data() as Map;
   }
 }
