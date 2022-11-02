@@ -1,10 +1,17 @@
+import 'package:gluc_safe/Models/enums/mealsEnum.dart';
+
 class Glucose {
-  final String uid;
-  final DateTime timeAdded;
-  final double value;
+  late DateTime _date;
+  late int _glucoseValue;
+  late int? _carbs;
+  late Meal _meal;
+  late String? _notes;
 
-  Glucose({required this.uid, required this.timeAdded, required this.value});
-
-  get glucValue => value;
-  get glucTime => timeAdded;
+  Glucose(DateTime date, int glucoseValue, int carbs, Meal meal, String? note) {
+    _date = date;
+    _glucoseValue = glucoseValue;
+    _carbs = carbs;
+    _meal = meal;
+    _notes = note;
+  }
 }

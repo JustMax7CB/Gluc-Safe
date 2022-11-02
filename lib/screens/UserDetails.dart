@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/assets/customAppBar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -13,48 +15,53 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
-  late double deviceHeight, deviceWidth;
+  late double _deviceHeight, _deviceWidth;
   TextEditingController dateinput = TextEditingController();
   final _formkey = GlobalKey<FormState>();
-  late String _name;
-  late DateTime _birthDate;
-  late String _gender;
-  late String _mobileNum;
-  late Map userAuth;
+  FirebaseService? _firebaseService;
+  Map userData = {
+    "firstName": null,
+    "lastName": null,
+    "birthDate": null,
+    "height": null,
+    "gender": null,
+    "mobileNum": null,
+    "contactName": null,
+    "contactNumber": null,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
-    userAuth = ModalRoute.of(context)!.settings.arguments as Map;
-    deviceHeight = MediaQuery.of(context).size.height;
-    deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+    _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: customAppBar(context),
-      body: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Form(
             key: _formkey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                formField("name", const Icon(Icons.person_pin), "Full Name"),
-                dividerWidget(),
-                formField(
-                    "birth", const Icon(Icons.calendar_today), "Birthdate"),
-                dividerWidget(),
-                formField("mobile", const Icon(Icons.phone_android_rounded),
-                    "Mobile Number"),
-                dividerWidget(),
-                genderDropDown(),
-                saveButton()
-              ],
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: _deviceWidth * 0.03,
+                vertical: _deviceHeight * 0.08,
+              ),
+              child: Column(
+                children: [
+                  nameRow(),
+                  dividerWidget(),
+                  birthHeightRow(),
+                  genderDropDown(),
+                  phoneFormField(),
+                  contactRow(),
+                  saveButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -62,8 +69,66 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
+  Widget phoneFormField() {
+    return formField(
+      "Phone Number",
+      const Icon(Icons.phone_android),
+      "Enter your phone number",
+    );
+  }
+
+  Widget nameRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Flexible(
+            child: formField(
+              "First Name",
+              const Icon(Icons.person),
+              "Enter your first name",
+            ),
+          ),
+          Flexible(
+            child: formField(
+              "Last Name",
+              const Icon(Icons.person),
+              "Enter your last name",
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget birthHeightRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        children: [
+          Flexible(
+            child: formField(
+              "Date of Birth",
+              const Icon(Icons.calendar_today_outlined),
+              "choose your date of birth",
+            ),
+          ),
+          Flexible(
+            child: formField(
+              "Height",
+              const Icon(Icons.height),
+              "enter your height(in cm)",
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget genderDropDown() {
-    List genders = ["Male", "Female", "Transgender", "Nonbinary", "None"];
+    List genders =
+        Gender.values.map((e) => e.toString().split(".")[1]).toList();
     List<DropdownMenuItem<String>> items = genders
         .map((item) => DropdownMenuItem<String>(
               value: item,
@@ -75,9 +140,11 @@ class _UserDetailsState extends State<UserDetails> {
               ),
             ))
         .toList();
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-          deviceWidth * 0.2, deviceHeight * 0.05, deviceWidth * 0.2, 0),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: _deviceHeight * 0.02,
+      ),
+      width: _deviceWidth * 0.6,
       child: DropdownButtonFormField2(
         decoration: InputDecoration(
           isDense: true,
@@ -96,7 +163,7 @@ class _UserDetailsState extends State<UserDetails> {
           color: Colors.black45,
         ),
         iconSize: 30,
-        buttonHeight: 60,
+        buttonHeight: _deviceHeight * 0.05,
         buttonPadding: const EdgeInsets.only(left: 20, right: 10),
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -109,51 +176,115 @@ class _UserDetailsState extends State<UserDetails> {
           return null;
         },
         onChanged: (value) {
-          _gender = value.toString();
+          userData['gender'] = value.toString();
         },
         onSaved: (value) {
-          _gender = value.toString();
+          userData['gender'] = value.toString();
         },
       ),
     );
   }
 
-  Future saveUserCollection(GlucUser gluc) async {
-    await DatabaseService(uid: gluc.uid).updateUserDetails(
-        gluc.fullName,
-        gluc.emailAddress,
-        gluc.pass!,
-        gluc.gender,
-        gluc.mobile,
-        gluc.birthDate);
+  Widget formField(String label, Icon icon, String hint) {
+    return TextFormField(
+      keyboardType: (label == "Phone Number" ||
+              label == "Height" ||
+              label == "Emergency Contact Phone Number")
+          ? TextInputType.number
+          : null,
+      readOnly: (label == "Date of Birth"),
+      controller: (label == "Date of Birth") ? dateinput : null,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.zero,
+        filled: false,
+        icon: icon,
+        hintStyle: const TextStyle(fontSize: 13),
+        hintText: hint,
+        labelText: label,
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "$label cannot be empty";
+        }
+        return null;
+      },
+      onTap: (label == "Date of Birth") ? calendarShow : null,
+      onSaved: (newValue) {
+        saveValue(label, newValue!);
+      },
+    );
+  }
+
+  saveValue(String label, String value) {
+    print(userData);
+    switch (label) {
+      case "First Name":
+        userData['firstName'] = value;
+        break;
+      case "Last Name":
+        userData['lastName'] = value;
+        break;
+      case "Height":
+        userData['height'] = value;
+        break;
+      case "Phone Number":
+        userData['mobileNum'] = value;
+        break;
+      case "Emergency Contact Name":
+        userData['contactName'] = value;
+        break;
+      case "Emergency Contact Phone Number":
+        userData['contactNumber'] = value;
+        break;
+    }
+  }
+
+  Widget contactRow() {
+    return Column(
+      children: [
+        formField(
+          "Emergency Contact Name",
+          const Icon(Icons.emergency_sharp),
+          "your emergency contact name",
+        ),
+        formField(
+          "Emergency Contact Phone Number",
+          const Icon(Icons.phone_android_sharp),
+          "your emergency contact phone number",
+        ),
+      ],
+    );
   }
 
   Widget saveButton() {
     return Padding(
-      padding: EdgeInsets.only(top: deviceHeight * 0.1),
+      padding: EdgeInsets.only(top: _deviceHeight * 0.1),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         splashColor: const Color.fromARGB(255, 152, 113, 20),
-        onTap: () {
+        onTap: () async {
+          _formkey.currentState!.save();
           GlucUser glucUser = GlucUser(
-            uid: userAuth['uid'],
-            email: userAuth['email'],
-            pass: userAuth['pass'],
-            name: _name,
-            birth: _birthDate,
-            gender: _gender,
-            mobile: _mobileNum,
+            userData['firstName'],
+            userData['lastName'],
+            userData['birthDate'],
+            int.parse(userData['height']),
+            userData['gender'],
+            userData['mobileNum'],
+            userData['contactName'],
+            userData['contactNumber'],
           );
-          saveUserCollection(glucUser);
-          Navigator.pop(context);
+          await _firebaseService!.saveUserData(glucUser: glucUser);
+          Navigator.popAndPushNamed(context, '/');
         },
         child: Container(
           decoration: BoxDecoration(
             color: const Color.fromARGB(243, 220, 149, 62),
             borderRadius: BorderRadius.circular(18),
           ),
-          height: deviceHeight * 0.07,
-          width: deviceWidth * 0.5,
+          height: _deviceHeight * 0.07,
+          width: _deviceWidth * 0.5,
           child: const Center(
             child: Text(
               "Save",
@@ -177,38 +308,6 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 
-  Widget formField(String field, Icon icon, String hint) {
-    return Padding(
-      padding:
-          EdgeInsets.fromLTRB(deviceWidth * 0.05, 60, deviceWidth * 0.05, 0),
-      child: TextFormField(
-        readOnly: (field == "birth"),
-        controller: (field == "birth") ? dateinput : null,
-        keyboardType:
-            (field == "mobile") ? TextInputType.number : TextInputType.text,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
-          icon: icon,
-          hintText: hint,
-          hintStyle: const TextStyle(fontSize: 18),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.zero,
-        ),
-        onTap: (field == "birth") ? calendarShow : null,
-        onChanged: (val) {
-          switch (field) {
-            case "name":
-              _name = val;
-              break;
-            case "mobile":
-              _mobileNum = val;
-              break;
-          }
-        },
-      ),
-    );
-  }
-
   void calendarShow() async {
     DateTime? pickedDate = await showDatePicker(
         context: context,
@@ -218,7 +317,7 @@ class _UserDetailsState extends State<UserDetails> {
         lastDate: DateTime(2050));
 
     if (pickedDate != null) {
-      _birthDate = pickedDate;
+      userData['birthDate'] = pickedDate;
       print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
       String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       print(

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/services/database.dart';
 import 'screens/screens.dart';
 
 Future<void> main() async {
@@ -17,10 +19,11 @@ Future<void> main() async {
               storageBucket: "gluc-safe.appspot.com",
               messagingSenderId: "463867324918",
               appId: "1:463867324918:web:6e8aa52917e5f2bae3bfd7"));
+  GetIt.instance.registerSingleton<FirebaseService>(FirebaseService());
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Gluc-Safe",
+      title: "Gluc-S afe",
       initialRoute: '/',
       routes: {
         '/': (context) => StreamBuilder<User?>(
@@ -39,7 +42,6 @@ Future<void> main() async {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/details': (context) => const UserDetails(),
-        '/profile': (context) => const UserPage(),
       },
     ),
   );

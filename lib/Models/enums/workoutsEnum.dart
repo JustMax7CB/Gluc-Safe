@@ -1,0 +1,4 @@
+enum Workouts {
+  Running,
+  Swimming,
+}

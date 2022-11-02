@@ -13,10 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late double _deviceWidth, _deviceHeight;
-
   final firebaseUser = FirebaseAuth.instance.currentUser;
-  final userCollection = DatabaseService.users;
-  final userGlucCollection = DatabaseService.usersGlucose;
   late final databaseService;
   var glucUser, glucUserData;
 
@@ -24,7 +21,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    databaseService = DatabaseService(uid: firebaseUser!.uid);
     super.initState();
   }
 
@@ -50,12 +46,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget bottomContainer() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        glucoseValuePicker(),
-        glucoseSaveButton(),
-      ],
+    return Container(
+      color: Colors.red,
+      width: _deviceWidth,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          glucoseValuePicker(),
+          glucoseSaveButton(),
+        ],
+      ),
     );
   }
 
@@ -70,12 +70,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget topContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        roundedContainer("Previous Glucose value"),
-        roundedContainer("Average Glucose value")
-      ],
+    return Container(
+      color: Colors.blue,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          roundedContainer("Previous Glucose value"),
+          roundedContainer("Average Glucose value")
+        ],
+      ),
     );
   }
 
@@ -108,22 +111,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  FutureBuilder<dynamic> appbarTitle() {
-    return FutureBuilder(
-        future: getUserName(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map user = snapshot.data;
-            return Text("Welcome ${user['fullName']}");
-          }
-          return const Text("Loading username...");
-        });
-  }
-
   AppBar homeAppBar() {
     return AppBar(
       backgroundColor: Colors.amber[500],
-      title: appbarTitle(),
+      title: Text("Hello"),
       elevation: 1.0,
       leading: IconButton(
         color: Color.fromRGBO(0, 0, 0, 1.0),
@@ -153,10 +144,5 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(color: Colors.white),
       ),
     );
-  }
-
-  Future getUserName() async {
-    var user = await userCollection.doc(firebaseUser!.uid).get();
-    return user.data() as Map;
   }
 }

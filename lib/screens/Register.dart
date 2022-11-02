@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/user.dart';
+import 'package:gluc_safe/services/database.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,6 +17,13 @@ class _RegisterPageState extends State<RegisterPage> {
   late String _email;
   late String _pass;
   late String _confirmPass;
+  FirebaseService? _firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future checkRegistration() async {
     if (_pass == _confirmPass) {
       try {
-        await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _pass);
+        await _firebaseService!.registerUser(email: _email, password: _pass);
       } on FirebaseAuthException catch (e) {
         print("error is: $e");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -76,11 +84,13 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         );
       } finally {
-        User? user = FirebaseAuth.instance.currentUser;
+        User? user = _firebaseService!.user;
         if (user != null) {
           user.sendEmailVerification();
-          Navigator.popAndPushNamed(context, "/details",
-              arguments: {'uid': user.uid, 'email': user.email, 'pass': _pass});
+          Navigator.popAndPushNamed(
+            context,
+            "/details",
+          );
         }
       }
     } else {

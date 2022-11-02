@@ -1,70 +1,36 @@
 import 'package:age_calculator/age_calculator.dart';
+import 'package:gluc_safe/Models/enums/genders.dart';
 
 class GlucUser {
-  final String _uid;
-  String? _fullName;
-  String _email;
-  String _pass;
-  DateTime? _birthDate;
-  String? _gender;
-  String? _mobileNum;
+  late String _firstName;
+  late String _lastName;
+  late DateTime _birthDate;
+  late int _height;
+  late String _gender;
+  late String _mobileNum;
+  late String _contactName;
+  late String _contactNum;
 
   //constructor
-  GlucUser(
-      {required String uid,
-      required String email,
-      required String pass,
-      String? name,
-      DateTime? birth,
-      String? gender,
-      String? mobile})
-      : _uid = uid,
-        _email = email,
-        _pass = pass,
-        _fullName = name,
-        _birthDate = birth,
-        _gender = gender,
-        _mobileNum = mobile;
+  GlucUser(String firstName, String lastName, DateTime birthDate, int height,
+      String gender, String mobileNum, String contact, String contactNum) {
+    _firstName = firstName;
+    _lastName = lastName;
+    _birthDate = birthDate;
+    _height = height;
+    _gender = gender;
+    _mobileNum = mobileNum;
+    _contactName = contact;
+    _contactNum = contactNum;
+  }
 
-  //getters
-  get uid => _uid;
-  get pass => _pass;
-  get fullName => _fullName;
-  get firstName => _fullName!.split(' ')[0];
-  get lastName => _fullName!.split(' ')[1];
-  get emailAddress => _email;
-  get mobile => _mobileNum;
-  get age => calcAge();
+  get firstName => _firstName;
+  get lastName => _lastName;
+  get height => _height;
+  get age => AgeCalculator.age(_birthDate);
   get gender => _gender;
   get birthDate => _birthDate;
-
-  //setter
-  changePassword(String newPass) => _pass = newPass;
-  setName(String name) => _fullName = name;
-  setGender(String gender) => _gender = gender;
-  setBirthdate(DateTime birth) => _birthDate = birth;
-
-  setMobileNum(String mobile) => _mobileNum = mobile;
-  calcAge() => AgeCalculator.age(_birthDate!).years;
-
-  factory GlucUser.fromMap(Map glucUser) {
-    return GlucUser(
-        uid: glucUser['uid'], email: glucUser['email'], pass: glucUser['pass']);
-  }
-
-  Map<String, dynamic> toMap() => {
-        'uid': _uid,
-        'pass': _pass,
-        'fullName': _fullName,
-        'emailAddress': emailAddress,
-        'mobile': mobile,
-        'gender': gender,
-        'birthDate': birthDate
-      };
-
-  @override
-  String toString() {
-    print("Email address: $_email\nPassword: $_pass");
-    return 'GlucUser:\nuid: $_uid\nName: $_fullName\nAge: ${calcAge()}\nBirthdate: $_birthDate\nMobile Number: $_mobileNum\nGender: $_gender';
-  }
+  get mobileNum => _mobileNum;
+  get contactName => _contactName;
+  get contactNum => _contactNum;
 }

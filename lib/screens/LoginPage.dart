@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -52,10 +54,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future checkLogin() async {
+  Future<void> checkLogin() async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email, password: _pass);
+      Navigator.popAndPushNamed(context, '/');
     } on FirebaseAuthException catch (e) {
       print("error is: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -75,32 +78,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget formWidget() {
-    return SizedBox(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
       width: _deviceWidth,
       height: _deviceHeight * 0.55,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            textField(
-              "Email",
-              "Enter your email address",
-              "Email",
-              const Icon(Icons.email_outlined),
-              false,
-            ),
-            textField(
-              "Password",
-              "Enter your password",
-              "Password",
-              const Icon(Icons.security),
-              true,
-            ),
-            signInButton(),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          textField(
+            "Email",
+            "Enter your email address",
+            "Email",
+            const Icon(Icons.email_outlined),
+            false,
+          ),
+          textField(
+            "Password",
+            "Enter your password",
+            "Password",
+            const Icon(Icons.security),
+            true,
+          ),
+          signInButton(),
+        ],
       ),
     );
   }
@@ -199,6 +200,25 @@ class _LoginPageState extends State<LoginPage> {
         }
         return null;
       },
+    );
+  }
+
+  Widget googleButton() {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          foregroundColor: Colors.red),
+      onPressed: () async {
+        print("Pressed Login by Google Account");
+        await GoogleSignIn().signIn();
+        Navigator.pop(context);
+      },
+      icon: const FaIcon(FontAwesomeIcons.google),
+      label: const Text(
+        "Using Google Account",
+        style: TextStyle(color: Colors.black),
+      ),
     );
   }
 }

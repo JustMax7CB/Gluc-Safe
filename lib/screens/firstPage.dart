@@ -70,9 +70,10 @@ class _FirstPageState extends State<FirstPage> {
           backgroundColor: Colors.white,
           elevation: 1,
           foregroundColor: Colors.red),
-      onPressed: () {
+      onPressed: () async {
         print("Pressed Login by Google Account");
-        GoogleSignIn().signIn();
+        await GoogleSignIn().signIn();
+        Navigator.pop(context);
       },
       icon: const FaIcon(FontAwesomeIcons.google),
       label: const Text(
