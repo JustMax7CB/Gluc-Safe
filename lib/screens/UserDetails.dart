@@ -29,6 +29,7 @@ class _UserDetailsState extends State<UserDetails> {
     "contactName": null,
     "contactNumber": null,
   };
+  bool? _saveResult;
 
   @override
   void initState() {
@@ -49,22 +50,87 @@ class _UserDetailsState extends State<UserDetails> {
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: _deviceWidth * 0.03,
-                vertical: _deviceHeight * 0.08,
+                vertical: _deviceHeight * 0.02,
               ),
               child: Column(
                 children: [
-                  nameRow(),
-                  dividerWidget(),
-                  birthHeightRow(),
-                  genderDropDown(),
-                  phoneFormField(),
-                  contactRow(),
+                  userBox(),
+                  contactBox(),
                   saveButton(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget userBox() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 40.0),
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            "User",
+            style: TextStyle(
+              fontSize: 20,
+              fontFamily: "BebasNeue",
+              letterSpacing: 2,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border:
+                  Border.all(color: const Color.fromARGB(253, 166, 165, 165))),
+          child: Column(
+            children: [
+              nameRow(),
+              dividerWidget(),
+              birthHeightRow(),
+              genderDropDown(),
+              phoneFormField(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget contactBox() {
+    return Container(
+      margin: EdgeInsets.only(top: _deviceHeight * 0.02),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 40.0),
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              "Emergency Contact",
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: "BebasNeue",
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: const Color.fromARGB(253, 166, 165, 165),
+              ),
+            ),
+            child: contactRow(),
+          ),
+        ],
       ),
     );
   }
@@ -189,7 +255,7 @@ class _UserDetailsState extends State<UserDetails> {
     return TextFormField(
       keyboardType: (label == "Phone Number" ||
               label == "Height" ||
-              label == "Emergency Contact Phone Number")
+              label == "Contact Phone Number")
           ? TextInputType.number
           : null,
       readOnly: (label == "Date of Birth"),
@@ -217,7 +283,6 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   saveValue(String label, String value) {
-    print(userData);
     switch (label) {
       case "First Name":
         userData['firstName'] = value;
@@ -231,10 +296,10 @@ class _UserDetailsState extends State<UserDetails> {
       case "Phone Number":
         userData['mobileNum'] = value;
         break;
-      case "Emergency Contact Name":
+      case "Contact Name":
         userData['contactName'] = value;
         break;
-      case "Emergency Contact Phone Number":
+      case "Contact Phone Number":
         userData['contactNumber'] = value;
         break;
     }
@@ -244,12 +309,12 @@ class _UserDetailsState extends State<UserDetails> {
     return Column(
       children: [
         formField(
-          "Emergency Contact Name",
+          "Contact Name",
           const Icon(Icons.emergency_sharp),
           "your emergency contact name",
         ),
         formField(
-          "Emergency Contact Phone Number",
+          "Contact Phone Number",
           const Icon(Icons.phone_android_sharp),
           "your emergency contact phone number",
         ),
@@ -259,24 +324,32 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget saveButton() {
     return Padding(
-      padding: EdgeInsets.only(top: _deviceHeight * 0.1),
+      padding: EdgeInsets.only(top: _deviceHeight * 0.05),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         splashColor: const Color.fromARGB(255, 152, 113, 20),
         onTap: () async {
-          _formkey.currentState!.save();
-          GlucUser glucUser = GlucUser(
-            userData['firstName'],
-            userData['lastName'],
-            userData['birthDate'],
-            int.parse(userData['height']),
-            userData['gender'],
-            userData['mobileNum'],
-            userData['contactName'],
-            userData['contactNumber'],
-          );
-          await _firebaseService!.saveUserData(glucUser: glucUser);
-          Navigator.popAndPushNamed(context, '/');
+          try {
+            _formkey.currentState!.save();
+            GlucUser glucUser = GlucUser(
+              userData['firstName'],
+              userData['lastName'],
+              userData['birthDate'],
+              int.parse(userData['height']),
+              userData['gender'],
+              userData['mobileNum'],
+              userData['contactName'],
+              userData['contactNumber'],
+            );
+            _saveResult =
+                await _firebaseService!.saveUserData(glucUser: glucUser);
+          } catch (e) {
+            print("Some error occured while saving user data");
+          } finally {
+            if (_saveResult != null && _saveResult == true) {
+              Navigator.popAndPushNamed(context, '/');
+            }
+          }
         },
         child: Container(
           decoration: BoxDecoration(

@@ -70,7 +70,7 @@ class FirebaseService {
           'gender': gender,
           'mobile': mobileNum,
           'contactName': contactName,
-          'contactNumber': contactName,
+          'contactNumber': contactMobile,
         },
       );
       return true;

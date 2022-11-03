@@ -87,10 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
         User? user = _firebaseService!.user;
         if (user != null) {
           user.sendEmailVerification();
-          Navigator.popAndPushNamed(
-            context,
-            "/details",
-          );
+          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, "/details");
         }
       }
     } else {
