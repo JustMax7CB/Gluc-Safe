@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
-import 'package:gluc_safe/assets/customAppBar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/widgets/customAppBar.dart';
 import 'package:intl/intl.dart';
+import 'package:gluc_safe/widgets/details_card.dart';
+import 'dart:developer' as dev;
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
@@ -22,8 +24,8 @@ class _UserDetailsState extends State<UserDetails> {
   Map userData = {
     "firstName": null,
     "lastName": null,
-    "birthDate": null,
-    "height": null,
+    "birthDate": DateTime,
+    "height": num,
     "gender": null,
     "mobileNum": null,
     "contactName": null,
@@ -67,71 +69,30 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Widget userBox() {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 40.0),
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            "User",
-            style: TextStyle(
-              fontSize: 20,
-              fontFamily: "BebasNeue",
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.all(10.0),
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border:
-                  Border.all(color: const Color.fromARGB(253, 166, 165, 165))),
-          child: Column(
-            children: [
-              nameRow(),
-              dividerWidget(),
-              birthHeightRow(),
-              genderDropDown(),
-              phoneFormField(),
-            ],
-          ),
-        ),
-      ],
+    return DetailsCard(
+      title: "User",
+      width: _deviceWidth,
+      height: _deviceHeight,
+      child: Column(
+        children: [
+          nameRow(),
+          dividerWidget(),
+          birthHeightRow(),
+          dividerWidget(),
+          genderDropDown(),
+          dividerWidget(),
+          phoneFormField(),
+        ],
+      ),
     );
   }
 
   Widget contactBox() {
-    return Container(
-      margin: EdgeInsets.only(top: _deviceHeight * 0.02),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 40.0),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "Emergency Contact",
-              style: TextStyle(
-                fontSize: 20,
-                fontFamily: "BebasNeue",
-                letterSpacing: 2,
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10.0),
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: const Color.fromARGB(253, 166, 165, 165),
-              ),
-            ),
-            child: contactRow(),
-          ),
-        ],
-      ),
+    return DetailsCard(
+      title: "Contact",
+      width: _deviceWidth,
+      height: _deviceHeight,
+      child: contactRow(),
     );
   }
 
@@ -291,7 +252,7 @@ class _UserDetailsState extends State<UserDetails> {
         userData['lastName'] = value;
         break;
       case "Height":
-        userData['height'] = value;
+        userData['height'] = int.parse(value);
         break;
       case "Phone Number":
         userData['mobileNum'] = value;
@@ -313,6 +274,7 @@ class _UserDetailsState extends State<UserDetails> {
           const Icon(Icons.emergency_sharp),
           "your emergency contact name",
         ),
+        dividerWidget(),
         formField(
           "Contact Phone Number",
           const Icon(Icons.phone_android_sharp),
@@ -335,7 +297,7 @@ class _UserDetailsState extends State<UserDetails> {
               userData['firstName'],
               userData['lastName'],
               userData['birthDate'],
-              int.parse(userData['height']),
+              userData['height'],
               userData['gender'],
               userData['mobileNum'],
               userData['contactName'],
@@ -345,6 +307,7 @@ class _UserDetailsState extends State<UserDetails> {
                 await _firebaseService!.saveUserData(glucUser: glucUser);
           } catch (e) {
             print("Some error occured while saving user data");
+            print(e);
           } finally {
             if (_saveResult != null && _saveResult == true) {
               Navigator.popAndPushNamed(context, '/');
@@ -374,10 +337,12 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Widget dividerWidget() {
-    return const Divider(
-      height: 5,
+    return Divider(
+      height: 3,
       thickness: 1,
-      color: Colors.grey,
+      indent: 35,
+      endIndent: 35,
+      color: Colors.grey[400],
     );
   }
 
@@ -391,9 +356,8 @@ class _UserDetailsState extends State<UserDetails> {
 
     if (pickedDate != null) {
       userData['birthDate'] = pickedDate;
-      print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
       String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-      print(
+      dev.log(
           formattedDate); //formatted date output using intl package =>  16/03/2021
       //you can implement different kind of Date Format here according to your requirement
 

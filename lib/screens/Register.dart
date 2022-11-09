@@ -69,42 +69,16 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         await _firebaseService!.registerUser(email: _email, password: _pass);
       } on FirebaseAuthException catch (e) {
-        print("error is: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Invalid User Data'),
-            duration: const Duration(seconds: 2),
-            action: SnackBarAction(
-              label: 'Dismiss',
-              onPressed: () {
-                // Hide the snackbar before its duration ends
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ),
-        );
+        snackBarWithDismiss('Invalid user data');
       } finally {
         User? user = _firebaseService!.user;
         if (user != null) {
           user.sendEmailVerification();
-          Navigator.pop(context);
           Navigator.popAndPushNamed(context, "/details");
         }
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Passwords don't match"),
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            onPressed: () {
-              // Hide the snackbar before its duration ends
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ),
-      );
+      snackBarWithDismiss('Passwords doe not match');
     }
   }
 
@@ -162,23 +136,27 @@ class _RegisterPageState extends State<RegisterPage> {
       child: ElevatedButton(
         onPressed: () {
           if (_formkey.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Checking Data'),
-                duration: const Duration(seconds: 2),
-                action: SnackBarAction(
-                  label: 'Dismiss',
-                  onPressed: () {
-                    // Hide the snackbar before its duration ends
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  },
-                ),
-              ),
-            );
+            snackBarWithDismiss("Checking data...");
             checkRegistration();
           }
         },
         child: const Text("Register"),
+      ),
+    );
+  }
+
+  snackBarWithDismiss(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {
+            // Hide the snackbar before its duration ends
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
       ),
     );
   }

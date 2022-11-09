@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/widgets/valuePicker.dart';
+import 'package:gluc_safe/Models/user.dart';
+import 'dart:developer' as dev;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,15 +13,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late double _deviceWidth, _deviceHeight;
-  final firebaseUser = FirebaseAuth.instance.currentUser;
-  late final databaseService;
-  var glucUser, glucUserData;
-
+  FirebaseService? _firebaseService;
+  GlucUser? _glucUser;
   double? glucoseValue = 100;
 
   @override
   void initState() {
     super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+    getGlucUser();
+  }
+
+  Future<GlucUser> getGlucUser() async {
+    String uid = _firebaseService!.user.uid;
+    Map userData = await _firebaseService!.getUserData(uid: uid) as Map;
+    var timestamp = userData['birthdate'].seconds;
+    DateTime birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    GlucUser user = GlucUser(
+        userData['firstName'],
+        userData['lastName'],
+        birthDate,
+        180,
+        userData['gender'],
+        userData['mobile'],
+        userData['contactName'],
+        userData['contactNumber']);
+    _glucUser = user;
+    return user;
   }
 
   @override
@@ -30,6 +48,20 @@ class _HomePageState extends State<HomePage> {
     _deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: homeAppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.add,
+          size: 38,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.redAccent,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 3,
+        child: bottomNavBar(),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -45,39 +77,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget bottomContainer() {
-    return Container(
-      color: Colors.red,
-      width: _deviceWidth,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          glucoseValuePicker(),
-          glucoseSaveButton(),
-        ],
-      ),
+  Widget bottomNavBar() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.forum, color: Colors.white),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/profile', arguments: _glucUser);
+          },
+          icon: const Icon(Icons.person, color: Colors.white),
+        )
+      ],
     );
   }
 
-  Widget glucoseSaveButton() {
-    return ElevatedButton(
-      onPressed: () {
-        databaseService.updateUserGlucose(glucoseValue, glucUser['fullName']);
-        print("Saving Value: $glucoseValue for ${glucUser['fullName']}");
-      },
-      child: const Text("Save Value"),
+  Widget bottomContainer() {
+    return Container(
+      color: Colors.green,
+      width: _deviceWidth,
+      child: const Center(
+        child: Text(
+          "Bottom Container",
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
     );
   }
 
   Widget topContainer() {
     return Container(
       color: Colors.blue,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          roundedContainer("Previous Glucose value"),
-          roundedContainer("Average Glucose value")
-        ],
+      child: const Center(
+        child: Text(
+          "Top Container",
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
@@ -114,17 +153,26 @@ class _HomePageState extends State<HomePage> {
   AppBar homeAppBar() {
     return AppBar(
       backgroundColor: Colors.amber[500],
-      title: Text("Hello"),
-      elevation: 1.0,
-      leading: IconButton(
-        color: Color.fromRGBO(0, 0, 0, 1.0),
-        iconSize: 30,
-        splashRadius: 25,
-        icon: const Icon(Icons.person),
-        onPressed: () {
-          Navigator.pushNamed(context, '/profile');
+      title: FutureBuilder(
+        future: getGlucUser(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            GlucUser user = snapshot.data as GlucUser;
+            return Text(
+              "Hello ${user.firstName}",
+              style: const TextStyle(
+                fontSize: 22,
+                color: Colors.black,
+                fontWeight: FontWeight.w300,
+                fontFamily: "BebasNeue",
+                letterSpacing: 1,
+              ),
+            );
+          }
+          return const CircularProgressIndicator();
         },
       ),
+      elevation: 1.0,
       actions: [
         signOutButton(),
       ],
@@ -137,7 +185,7 @@ class _HomePageState extends State<HomePage> {
         overlayColor: MaterialStateProperty.all(Colors.transparent),
       ),
       onPressed: () {
-        FirebaseAuth.instance.signOut();
+        _firebaseService!.logout();
       },
       child: const Text(
         "Sign Out",

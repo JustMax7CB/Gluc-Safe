@@ -12,8 +12,8 @@ final String MEDICATION_COLLECTION = 'medication';
 final String WORKOUT_COLLECTION = 'workout';
 
 class FirebaseService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore _database = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _database = FirebaseFirestore.instance;
 
   Map? currentUser;
 
@@ -23,8 +23,11 @@ class FirebaseService {
   get DB => _database;
   get user => _auth.currentUser;
 
-  Future<bool> registerUser(
-      {required String email, required String password}) async {
+  Future<bool> registerUser({required String email, required String password})
+  // the function will try to register the user to the firebase database
+  // and will return true if successful otherwise return false
+
+  async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -56,6 +59,7 @@ class FirebaseService {
     String firstName = glucUser.firstName;
     String lastName = glucUser.lastName;
     DateTime birthDate = glucUser.birthDate;
+    int height = glucUser.height;
     String gender = glucUser.gender;
     String mobileNum = glucUser.mobileNum;
     String contactName = glucUser.contactName;
@@ -67,6 +71,7 @@ class FirebaseService {
           'firstName': firstName,
           'lastName': lastName,
           'birthdate': birthDate,
+          'height': height,
           'gender': gender,
           'mobile': mobileNum,
           'contactName': contactName,

@@ -1,6 +1,9 @@
+import 'dart:developer' as dev;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/services/database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +18,13 @@ class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
   late String _email;
   late String _pass;
+  FirebaseService? _firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +50,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 titleWidget(),
-                Form(
-                  key: _formkey,
-                  child: formWidget(),
-                ),
+                _formWidget(),
                 dividerWidget(),
                 signUpText(),
               ],
@@ -54,38 +61,61 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _formWidget() {
+    return Form(
+      key: _formkey,
+      child: formContainer(),
+    );
+  }
+
+  Widget googleButton() {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          foregroundColor: Colors.red),
+      onPressed: () async {
+        dev.log("Pressed Login by Google Account");
+        await GoogleSignIn().signIn();
+      },
+      icon: const FaIcon(FontAwesomeIcons.google),
+      label: const Text(
+        "Login Using Google Account",
+        style: TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
   Future<void> checkLogin() async {
+    bool _result = false;
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email, password: _pass);
-      Navigator.popAndPushNamed(context, '/');
+      _result =
+          await _firebaseService!.loginUser(email: _email, password: _pass);
     } on FirebaseAuthException catch (e) {
-      print("error is: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Invalid User Data'),
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            onPressed: () {
-              // Hide the snackbar before its duration ends
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ),
-      );
+      dev.log("error is: $e");
+      snackBarWithDismiss("Invalid user data");
     }
   }
 
-  Widget formWidget() {
+  Widget formContainer() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       width: _deviceWidth,
       height: _deviceHeight * 0.55,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              "Login",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           textField(
             "Email",
             "Enter your email address",
@@ -101,7 +131,27 @@ class _LoginPageState extends State<LoginPage> {
             true,
           ),
           signInButton(),
+          CircularContainer(),
+          googleButton(),
         ],
+      ),
+    );
+  }
+
+  Widget CircularContainer() {
+    return Container(
+      width: _deviceWidth * 0.06,
+      height: _deviceWidth * 0.06,
+      decoration: const ShapeDecoration(
+        shape: CircleBorder(
+          side: BorderSide(width: 1),
+        ),
+      ),
+      child: const Center(
+        child: Text(
+          "OR",
+          style: TextStyle(fontSize: 10),
+        ),
       ),
     );
   }
@@ -115,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
             "Sign up",
             style: TextStyle(fontSize: 18),
           ),
-          onPressed: () => Navigator.pushNamed(context, "/register"),
+          onPressed: () => Navigator.popAndPushNamed(context, "/register"),
         ),
       ],
     );
@@ -137,23 +187,27 @@ class _LoginPageState extends State<LoginPage> {
       child: ElevatedButton(
         onPressed: () {
           if (_formkey.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Checking Data'),
-                duration: const Duration(seconds: 2),
-                action: SnackBarAction(
-                  label: 'Dismiss',
-                  onPressed: () {
-                    // Hide the snackbar before its duration ends
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  },
-                ),
-              ),
-            );
+            snackBarWithDismiss("Checking Data...");
             checkLogin();
           }
         },
         child: const Text("Sign In"),
+      ),
+    );
+  }
+
+  snackBarWithDismiss(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {
+            // Hide the snackbar before its duration ends
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
       ),
     );
   }
@@ -200,25 +254,6 @@ class _LoginPageState extends State<LoginPage> {
         }
         return null;
       },
-    );
-  }
-
-  Widget googleButton() {
-    return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          elevation: 1,
-          foregroundColor: Colors.red),
-      onPressed: () async {
-        print("Pressed Login by Google Account");
-        await GoogleSignIn().signIn();
-        Navigator.pop(context);
-      },
-      icon: const FaIcon(FontAwesomeIcons.google),
-      label: const Text(
-        "Using Google Account",
-        style: TextStyle(color: Colors.black),
-      ),
     );
   }
 }
