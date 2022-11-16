@@ -4,7 +4,7 @@ class Workout {
   late DateTime _dateTime;
   late Workouts _workoutType;
   late int _duration;
-  late int? _distance;
+  int? _distance;
 
   Workout(
       DateTime dateTime, Workouts workoutType, int duration, int? distance) {
@@ -13,4 +13,9 @@ class Workout {
     _duration = duration;
     _distance = distance;
   }
+
+  get date => _dateTime;
+  get workoutType => _workoutType;
+  get duration => _duration;
+  get distance => _distance;
 }

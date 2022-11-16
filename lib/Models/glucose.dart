@@ -15,4 +15,10 @@ class Glucose {
     _meal = meal;
     _notes = note;
   }
+
+  get date => _date;
+  get glucoseValue => _glucoseValue;
+  get carbs => _carbs;
+  get meal => _meal;
+  get notes => _notes;
 }

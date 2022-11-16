@@ -11,4 +11,9 @@ class Medication {
     _perDay = perDay;
     _reminders = reminders;
   }
+
+  get medicationName => _medicationName;
+  get numOfPills => _numOfPills;
+  get perDay => _perDay;
+  get reminders => _reminders;
 }

@@ -6,4 +6,7 @@ class Weight {
     _date = date;
     _weight = weight;
   }
+
+  get date => _date;
+  get weight => _weight;
 }

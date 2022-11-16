@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/Models/enums/enumsExport.dart';
+import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
@@ -26,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<GlucUser> getGlucUser() async {
     String uid = _firebaseService!.user.uid;
-    Map userData = await _firebaseService!.getUserData(uid: uid) as Map;
+    Map userData = await _firebaseService!.getUserData() as Map;
     var timestamp = userData['birthdate'].seconds;
     DateTime birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     GlucUser user = GlucUser(
@@ -112,10 +114,28 @@ class _HomePageState extends State<HomePage> {
   Widget topContainer() {
     return Container(
       color: Colors.blue,
-      child: const Center(
-        child: Text(
-          "Top Container",
-          style: TextStyle(fontSize: 20),
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              "Top Container",
+              style: TextStyle(fontSize: 20),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Glucose gluc = Glucose(
+                    DateTime.now(), 56, 120, Meal.AfterLunch, "Test Note");
+                _firebaseService!.saveGlucoseData(gluc);
+              },
+              child: Text("Glucose Update Test"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await _firebaseService!.getGlucoseData();
+              },
+              child: Text("Glucose Get Test"),
+            )
+          ],
         ),
       ),
     );
