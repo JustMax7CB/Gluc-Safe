@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
@@ -102,10 +103,28 @@ class _HomePageState extends State<HomePage> {
     return Container(
       color: Colors.green,
       width: _deviceWidth,
-      child: const Center(
-        child: Text(
-          "Bottom Container",
-          style: TextStyle(fontSize: 20),
+      child: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Medication med = Medication(
+                    "Acamol", 3, 1, [DateTime.now(), DateTime.now()]);
+                _firebaseService!.saveMedicationData(med);
+              },
+              child: const Text("Medication Update Test"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _firebaseService!.getMedicationData();
+              },
+              child: const Text("Medication Get Test"),
+            ),
+            const Text(
+              "Bottom Container",
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
         ),
       ),
     );
@@ -117,7 +136,7 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Column(
           children: [
-            Text(
+            const Text(
               "Top Container",
               style: TextStyle(fontSize: 20),
             ),
@@ -127,14 +146,14 @@ class _HomePageState extends State<HomePage> {
                     DateTime.now(), 56, 120, Meal.AfterLunch, "Test Note");
                 _firebaseService!.saveGlucoseData(gluc);
               },
-              child: Text("Glucose Update Test"),
+              child: const Text("Glucose Update Test"),
             ),
             ElevatedButton(
               onPressed: () async {
                 await _firebaseService!.getGlucoseData();
               },
-              child: Text("Glucose Get Test"),
-            )
+              child: const Text("Glucose Get Test"),
+            ),
           ],
         ),
       ),

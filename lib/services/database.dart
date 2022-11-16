@@ -3,15 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:path/path.dart' as p;
 import 'dart:developer' as dev;
 
-final String USER_COLLECTION = 'users';
-final String GLUCOSE_COLLECTION = 'glucose';
-final String WEIGHT_COLLECTION = 'weight';
-final String MEDICATION_COLLECTION = 'medication';
-final String WORKOUT_COLLECTION = 'workout';
+const String USER_COLLECTION = 'users';
+const String GLUCOSE_COLLECTION = 'glucose';
+const String WEIGHT_COLLECTION = 'weight';
+const String MEDICATION_COLLECTION = 'medication';
+const String WORKOUT_COLLECTION = 'workout';
+
+const String GLUCOSE_RECORDS = 'glucose_records';
+const String WEIGHT_RECORDS = 'weight_records';
+const String MEDICATION_RECORDS = 'medication_records';
+const String WORKOUT_RECORDS = 'workout_records';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -88,15 +94,34 @@ class FirebaseService {
           'contactNumber': contactMobile,
         },
       );
-      await _database
-          .collection(GLUCOSE_COLLECTION)
-          .doc(userId)
-          .set({'valuesList': []});
+      openUserCollections();
       return true;
     } catch (e) {
       print("Failed to save user data");
       return false;
     }
+  }
+
+  Future<void> openUserCollections() async {
+    // function to open all the documents for the user in the database
+
+    String? userID = user!.uid;
+    await _database
+        .collection(GLUCOSE_COLLECTION)
+        .doc(userID)
+        .set({GLUCOSE_RECORDS: []});
+    await _database
+        .collection(WEIGHT_COLLECTION)
+        .doc(userID)
+        .set({WEIGHT_RECORDS: []});
+    await _database
+        .collection(MEDICATION_COLLECTION)
+        .doc(userID)
+        .set({MEDICATION_RECORDS: []});
+    await _database
+        .collection(WORKOUT_COLLECTION)
+        .doc(userID)
+        .set({WORKOUT_RECORDS: []});
   }
 
   Future<Map?> getUserData() async {
@@ -128,7 +153,7 @@ class FirebaseService {
     // gets an instance of Glucose
     // the function will try to save the glucose data to the firebase database
     // will return true if successful otherwise return false
-    List valuesListFromDB = [];
+    List recordsList = [];
     String userId = user!.uid;
     DateTime dataDate = glucoseData.date;
     int dataGlucose = glucoseData.glucoseValue;
@@ -143,16 +168,17 @@ class FirebaseService {
       "Notes": dataNotes,
     };
     try {
-      var document = await _database.collection('glucose').doc(userId).get();
-      var docList = document.data()!['valuesList'];
+      var document =
+          await _database.collection(GLUCOSE_COLLECTION).doc(userId).get();
+      var docList = document.data()![GLUCOSE_RECORDS];
       if (document.exists && docList != null) {
-        valuesListFromDB = docList;
-        valuesListFromDB.add(glucReading);
+        recordsList = docList;
+        recordsList.add(glucReading);
       } else {
-        valuesListFromDB.add(glucReading);
+        recordsList.add(glucReading);
       }
-      await _database.collection('glucose').doc(userId).set({
-        'valuesList': valuesListFromDB,
+      await _database.collection(GLUCOSE_COLLECTION).doc(userId).set({
+        GLUCOSE_RECORDS: recordsList,
       });
       dev.log("Glucose data saved successfully");
       return true;
@@ -171,9 +197,64 @@ class FirebaseService {
     try {
       var document =
           await _database.collection(GLUCOSE_COLLECTION).doc(userID).get();
-      glucUserData = document.data()!['valuesList'] as List;
+      glucUserData = document.data()![GLUCOSE_RECORDS] as List;
       dev.log(glucUserData.toString());
       return glucUserData;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to get user glucose data");
+      return null;
+    }
+  }
+
+  Future<bool> saveMedicationData(Medication medicationData) async {
+    // gets an instance of Medication
+    // the function will try to save the medication data to the firebase database
+    List recordsList = [];
+    String? userID = user!.uid;
+    String medName = medicationData.medicationName;
+    int numOfPills = medicationData.numOfPills;
+    int perDay = medicationData.perDay;
+    List<DateTime> reminders = medicationData.reminders;
+    final medicationRecord = {
+      'medicationName': medName,
+      'numOfPills': numOfPills,
+      'perDay': perDay,
+      'reminders': reminders,
+    };
+    try {
+      var document =
+          await _database.collection(MEDICATION_COLLECTION).doc(userID).get();
+      var docList = document.data()![MEDICATION_RECORDS];
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(medicationRecord);
+      } else {
+        recordsList.add(medicationRecord);
+      }
+      await _database.collection(MEDICATION_COLLECTION).doc(userID).set({
+        MEDICATION_RECORDS: recordsList,
+      });
+      print(recordsList);
+      dev.log("Medication data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      return false;
+    }
+  }
+
+  Future<List?> getMedicationData() async {
+    // gets user id as a string
+    // the function will try to fetch the user medication data from the firebase database
+    List? glucUserMedicationData;
+    String? userID = user!.uid;
+    try {
+      var document =
+          await _database.collection(MEDICATION_COLLECTION).doc(userID).get();
+      glucUserMedicationData = document.data()![MEDICATION_RECORDS] as List;
+      dev.log(glucUserMedicationData.toString());
+      return glucUserMedicationData;
     } catch (e) {
       dev.log(e.toString());
       dev.log("Failed to get user glucose data");
