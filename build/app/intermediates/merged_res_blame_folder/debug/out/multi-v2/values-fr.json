@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fr\\values-fr.xml",
+            "outputFile": "C:\\src\\Project\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fr\\values-fr.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\39ab30a7b9653fcac3e22e77ae32ce40\\transformed\\jetified-play-services-base-18.0.1\\res\\values-fr\\values.xml",
+                    "source": "C:\\Users\\jenga\\.gradle\\caches\\transforms-3\\39ab30a7b9653fcac3e22e77ae32ce40\\transformed\\jetified-play-services-base-18.0.1\\res\\values-fr\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\f4f1053dad2e86edf903fd2ededdf838\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-fr\\values.xml",
+                    "source": "C:\\Users\\jenga\\.gradle\\caches\\transforms-3\\f4f1053dad2e86edf903fd2ededdf838\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-fr\\values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\1b1c9a1043ece91e90bd5a574620ba0c\\transformed\\browser-1.4.0\\res\\values-fr\\values-fr.xml",
+                    "source": "C:\\Users\\jenga\\.gradle\\caches\\transforms-3\\1b1c9a1043ece91e90bd5a574620ba0c\\transformed\\browser-1.4.0\\res\\values-fr\\values-fr.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Sman9\\.gradle\\caches\\transforms-3\\b8c382b86a78a1c12d8951ddd3924987\\transformed\\core-1.6.0\\res\\values-fr\\values-fr.xml",
+                    "source": "C:\\Users\\jenga\\.gradle\\caches\\transforms-3\\b8c382b86a78a1c12d8951ddd3924987\\transformed\\core-1.6.0\\res\\values-fr\\values-fr.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
