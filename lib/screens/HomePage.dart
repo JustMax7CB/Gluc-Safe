@@ -5,6 +5,8 @@ import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
+import 'package:gluc_safe/Models/weight.dart';
+import 'package:gluc_safe/Models/workout.dart';
 import 'dart:developer' as dev;
 
 class HomePage extends StatefulWidget {
@@ -75,6 +77,10 @@ class _HomePageState extends State<HomePage> {
             flex: 2,
             child: bottomContainer(),
           ),
+          Expanded(
+            flex:3,
+            child:WorkoutAndWeightContainer(),
+          )
         ],
       ),
     );
@@ -96,6 +102,49 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.person, color: Colors.white),
         )
       ],
+    );
+  }
+
+  Widget WorkoutAndWeightContainer() {
+    return Container(
+      color: Colors.yellow,
+      width: _deviceWidth,
+      child: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Workout workout=Workout(DateTime.now(), Workouts.Yoga,60,0);
+                _firebaseService!.saveWorkoutData(workout);
+              },
+              child: const Text("Sport Update Test"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _firebaseService!.getWorkoutData();
+              },
+              child: const Text("Sport Get Test"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Weight weight = Weight(DateTime.now(),50);
+                _firebaseService!.saveWeightData(weight);
+              },
+              child: const Text("Weight Update Test"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _firebaseService!.getWeightData();
+              },
+              child: const Text("Weight Get Test"),
+            ),
+            const Text(
+              "Sport And Weight Container",
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

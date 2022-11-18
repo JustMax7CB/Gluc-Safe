@@ -65,7 +65,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget profileAge() {
     return profileWidget(
-        const Icon(Icons.person_4_sharp),
+        const Icon(Icons.person),
         Text(
           "${_glucUser!.age.years}",
           style: dataTextStyle(),
@@ -74,7 +74,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget profileGender() {
     return profileWidget(
-        const Icon(Icons.person_2_rounded),
+        const Icon(Icons.person),
         Text(
           "${_glucUser!.gender}",
           style: dataTextStyle(),

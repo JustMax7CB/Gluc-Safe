@@ -5,6 +5,9 @@ import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/user.dart';
+import 'package:gluc_safe/Models/weight.dart';
+import 'package:gluc_safe/Models/workout.dart';
+import 'package:gluc_safe/Models/enums/workoutsEnum.dart';
 import 'package:path/path.dart' as p;
 import 'dart:developer' as dev;
 
@@ -258,6 +261,108 @@ class FirebaseService {
     } catch (e) {
       dev.log(e.toString());
       dev.log("Failed to get user glucose data");
+      return null;
+    }
+  }
+
+  Future<bool> saveWeightData(Weight weightData) async {
+    List recordsList = [];
+    String userId = user!.uid; 
+    DateTime dataDate = weightData.date;
+    int dataWeight = weightData.weight;
+    final weightReading = {
+      "Date": dataDate,
+      "Weight": dataWeight,
+    };
+    try {
+      var document =
+          await _database.collection(WEIGHT_COLLECTION).doc(userId).get();
+      var docList = document.data()![WEIGHT_RECORDS];
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(weightReading);
+      } else {
+        recordsList.add(weightReading);
+      }
+      await _database.collection(WEIGHT_COLLECTION).doc(userId).set({
+        WEIGHT_RECORDS: recordsList,
+      });
+      dev.log("Weight data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to save user weight data");
+      return false;
+    }
+  }
+
+  Future<List?> getWeightData() async {
+    // gets user id as a string
+    // the function will try to fetch the user glucose data from the firebase database
+    List? weightUserData;
+    String? userID = user!.uid;
+    try {
+      var document =
+          await _database.collection(WEIGHT_COLLECTION).doc(userID).get();
+      weightUserData = document.data()![WEIGHT_RECORDS] as List;
+      dev.log(weightUserData.toString());
+      return weightUserData;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to get user weight data");
+      return null;
+    }
+  }
+
+  Future<bool> saveWorkoutData(Workout workoutData) async {
+    List recordsList = [];
+    String userId = user!.uid; 
+    DateTime dataDate = workoutData.date;
+    String workoutType = workoutData.workoutType.toString().split('.')[1];
+    int durationData = workoutData.duration;
+    int? distanceData = workoutData.distance;
+    final workoutReading = {
+      "Date": dataDate,
+      "workoutType": workoutType,
+      "Duration": durationData,
+      "Distance": distanceData,
+    };
+    try {
+      var document =
+          await _database.collection(WORKOUT_COLLECTION).doc(userId).get();
+      var docList = document.data()![WORKOUT_RECORDS];
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(workoutReading);
+      } else {
+        recordsList.add(workoutReading);
+      }
+      await _database.collection(WORKOUT_COLLECTION).doc(userId).set({
+        WORKOUT_RECORDS: recordsList,
+      });
+      dev.log("Workout data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to save user workout data");
+      return false;
+    }
+  }
+
+  Future<List?> getWorkoutData() async {
+    // gets user id as a string
+    // the function will try to fetch the user glucose data from the firebase database
+    List? workoutUserData;
+    String? userID = user!.uid;
+    try {
+      var document =
+          await _database.collection(WORKOUT_COLLECTION).doc(userID).get();
+      workoutUserData = document.data()![WORKOUT_RECORDS] as List;
+      dev.log(workoutUserData.toString());
+      return workoutUserData;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to get user workout data");
       return null;
     }
   }
