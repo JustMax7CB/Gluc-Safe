@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
@@ -8,6 +9,8 @@ import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
 import 'package:gluc_safe/Models/workout.dart';
 import 'dart:developer' as dev;
+
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
+    getGlucoseValues();
     return Scaffold(
       appBar: homeAppBar(),
       floatingActionButton: FloatingActionButton(
@@ -78,8 +82,8 @@ class _HomePageState extends State<HomePage> {
             child: bottomContainer(),
           ),
           Expanded(
-            flex:3,
-            child:WorkoutAndWeightContainer(),
+            flex: 2,
+            child: workoutAndWeightContainer(),
           )
         ],
       ),
@@ -105,7 +109,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget WorkoutAndWeightContainer() {
+  Widget workoutAndWeightContainer() {
     return Container(
       color: Colors.yellow,
       width: _deviceWidth,
@@ -114,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                Workout workout=Workout(DateTime.now(), Workouts.Yoga,60,0);
+                Workout workout = Workout(DateTime.now(), Workouts.Yoga, 60, 0);
                 _firebaseService!.saveWorkoutData(workout);
               },
               child: const Text("Sport Update Test"),
@@ -127,7 +131,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Weight weight = Weight(DateTime.now(),50);
+                Weight weight = Weight(DateTime.now(), 50);
                 _firebaseService!.saveWeightData(weight);
               },
               child: const Text("Weight Update Test"),
@@ -280,5 +284,37 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(color: Colors.white),
       ),
     );
+  }
+
+  Future<List> getGlucoseValues() async {
+    // return a list of glucose values in the format (Glucose value, Date value saved)
+    List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
+    if (userGlucoseRecords == null) return [];
+    userGlucoseRecords = userGlucoseRecords
+        .map((record) => glucoseRecordsWithDateTimeFormat(record))
+        .toList();
+    userGlucoseRecords = userGlucoseRecords
+        .map((record) => ([record['Glucose'], record['Date']]))
+        .toList();
+    dev.log("\x1B[37m" + userGlucoseRecords.toString());
+    return userGlucoseRecords;
+  }
+
+  double dateFormatToMiliseconds(String formattedDate) {
+    List date = formattedDate
+        .split("/")
+        .map((datePart) => int.parse(datePart))
+        .toList();
+    DateTime dateTime = DateTime(date[2], date[1], date[0]);
+    return dateTime.millisecondsSinceEpoch.toDouble();
+  }
+
+  Map glucoseRecordsWithDateTimeFormat(Map record) {
+    // gets a map of glucose record and converts the Date timestamp into
+    // a DateTime format string according to (dd/MM/yyyy)
+    // and returns the updated glucose record as a map
+    DateTime timestampToDateTime = (record['Date'] as Timestamp).toDate();
+    record['Date'] = DateFormat('dd/MM/yyyy').format(timestampToDateTime);
+    return record;
   }
 }

@@ -201,7 +201,7 @@ class FirebaseService {
       var document =
           await _database.collection(GLUCOSE_COLLECTION).doc(userID).get();
       glucUserData = document.data()![GLUCOSE_RECORDS] as List;
-      dev.log(glucUserData.toString());
+      dev.log("\x1B[32m" + glucUserData.toString());
       return glucUserData;
     } catch (e) {
       dev.log(e.toString());
@@ -267,7 +267,7 @@ class FirebaseService {
 
   Future<bool> saveWeightData(Weight weightData) async {
     List recordsList = [];
-    String userId = user!.uid; 
+    String userId = user!.uid;
     DateTime dataDate = weightData.date;
     int dataWeight = weightData.weight;
     final weightReading = {
@@ -316,7 +316,7 @@ class FirebaseService {
 
   Future<bool> saveWorkoutData(Workout workoutData) async {
     List recordsList = [];
-    String userId = user!.uid; 
+    String userId = user!.uid;
     DateTime dataDate = workoutData.date;
     String workoutType = workoutData.workoutType.toString().split('.')[1];
     int durationData = workoutData.duration;

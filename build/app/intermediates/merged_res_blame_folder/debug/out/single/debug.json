@@ -1,30 +1,30 @@
 [
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\drawable_launch_background.xml.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\drawable\\launch_background.xml"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\drawable-v21_launch_background.xml.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\drawable-v21\\launch_background.xml"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher.png.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\drawable_launch_background.xml.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\drawable\\launch_background.xml"
     },
     {
-        "merged": "C:\\src\\Project\\build\\app\\intermediates\\merged_res\\debug\\mipmap-hdpi_ic_launcher.png.flat",
-        "source": "C:\\src\\Project\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+        "merged": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\build\\app\\intermediates\\merged_res\\debug\\drawable-v21_launch_background.xml.flat",
+        "source": "C:\\Users\\Sman9\\Desktop\\Final Project (Gluc-Safe)\\gluc_safe\\android\\app\\src\\main\\res\\drawable-v21\\launch_background.xml"
     }
 ]
