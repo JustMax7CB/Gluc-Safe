@@ -18,7 +18,7 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Gluc-Safe",
-      initialRoute: '/chart',
+      initialRoute: '/',
       routes: {
         '/': (context) => StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),

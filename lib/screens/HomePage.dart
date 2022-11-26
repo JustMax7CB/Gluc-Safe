@@ -159,18 +159,10 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Column(
           children: [
-            FutureBuilder(
-              future: getGlucoseValues(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return LineChartWidget(
-                      glucoseValues: snapshot.data as List,
-                      deviceHeight: _deviceHeight,
-                      deviceWidth: _deviceWidth);
-                }
-                return const CircularProgressIndicator();
-              },
-            )
+            const Center(child: Text("Bottom Container")),
+            ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/chart'),
+                child: const Text("Chart Page Route"))
           ],
         ),
       ),
@@ -189,8 +181,8 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Glucose gluc = Glucose(
-                    DateTime.now(), 56, 120, Meal.AfterLunch, "Test Note");
+                Glucose gluc = Glucose(DateTime(2022, 11, 15), 72, 120,
+                    Meal.AfterLunch, "Test Note");
                 _firebaseService!.saveGlucoseData(gluc);
               },
               child: const Text("Glucose Update Test"),

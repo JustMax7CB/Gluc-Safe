@@ -6,6 +6,7 @@ import 'package:gluc_safe/widgets/chart.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
 import 'package:get_it/get_it.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../Models/enums/enumsExport.dart';
 
@@ -19,6 +20,7 @@ class ChartPage extends StatefulWidget {
 class _ChartPageState extends State<ChartPage> {
   late double _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
+  int? startDate, endDate;
 
   @override
   void initState() {
@@ -55,17 +57,18 @@ class _ChartPageState extends State<ChartPage> {
             Expanded(
               flex: 2,
               child: Container(
-                  width: _deviceWidth,
-                  color: Colors.red,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Glucose gluc = Glucose(DateTime(2022, 2, 12), 12, 120,
-                          Meal.AfterLunch, "Test Note");
-                      _firebaseService!.saveGlucoseData(gluc);
-                      setState(() {});
-                    },
-                    child: const Text("Glucose Update Test"),
-                  )),
+                width: _deviceWidth,
+                child: SfDateRangePicker(
+                  view: DateRangePickerView.month,
+                  monthViewSettings:
+                      const DateRangePickerMonthViewSettings(firstDayOfWeek: 7),
+                  selectionMode: DateRangePickerSelectionMode.range,
+                  onSelectionChanged: (_) {
+                    selectedDates(_);
+                    setState(() {});
+                  },
+                ),
+              ),
             )
           ],
         ),
@@ -73,38 +76,56 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+  void selectedDates(DateRangePickerSelectionChangedArgs args) {
+    DateTime? startDateTime = args.value.startDate;
+    DateTime? endDateTime = args.value.endDate;
+    dev.log("$startDateTime, $endDateTime");
+    if (startDateTime != null && endDateTime != null) {
+      startDate = startDateTime.millisecondsSinceEpoch;
+      endDate = endDateTime.millisecondsSinceEpoch;
+    }
+  }
+
   Future<List> getGlucoseValues() async {
     // return a list of glucose values in the format (Glucose value, Date value saved)
+
     List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
     if (userGlucoseRecords == null) return [];
-
+    dev.log("Initial List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = userGlucoseRecords
-        .map((record) => glucoseRecordsWithDateTimeFormat(record))
+        .map((record) => glucoseRecordsToDateTimeFormat(record))
         .toList();
-
+    dev.log("Formatted DateTime List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
+    dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = sortDateString(userGlucoseRecords);
-    dev.log("\x1B[37m$userGlucoseRecords");
+    if (startDate == null && endDate == null) {
+      startDate = userGlucoseRecords[0][1];
+      endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
+    }
+    userGlucoseRecords = userGlucoseRecords
+        .where((element) => element[1] >= startDate && element[1] <= endDate)
+        .toList();
+
+    userGlucoseRecords = userGlucoseRecords
+        .map((e) => [
+              e[0],
+              DateFormat("dd/MM/yyyy")
+                  .format(DateTime.fromMillisecondsSinceEpoch(e[1]))
+            ])
+        .toList();
+    dev.log("Final List  \x1B[37m$userGlucoseRecords");
     return userGlucoseRecords;
   }
 
   List sortDateString(List userGlucoseRecords) {
-    dev.log(userGlucoseRecords.toString());
+    //dev.log(userGlucoseRecords.toString());
     List records = userGlucoseRecords
-        .map((recordTuple) =>
-            [recordTuple[0], dateFormatToMiliseconds(recordTuple[1])])
+        .map((recordTuple) => [recordTuple[0], recordTuple[1]])
         .toList();
     records.sort((a, b) => a[1].compareTo(b[1]));
-    records = records
-        .map((record) => [
-              record[0],
-              DateFormat('dd/MM/yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(record[1].toInt())),
-            ])
-        .toList();
-    dev.log(records.toString());
     return records;
   }
 
@@ -117,12 +138,12 @@ class _ChartPageState extends State<ChartPage> {
     return dateTime.millisecondsSinceEpoch.toDouble();
   }
 
-  Map glucoseRecordsWithDateTimeFormat(Map record) {
+  Map glucoseRecordsToDateTimeFormat(Map record) {
     // gets a map of glucose record and converts the Date timestamp into
     // a DateTime format string according to (dd/MM/yyyy)
     // and returns the updated glucose record as a map
     DateTime timestampToDateTime = (record['Date'] as Timestamp).toDate();
-    record['Date'] = DateFormat('dd/MM/yyyy').format(timestampToDateTime);
+    record['Date'] = timestampToDateTime.millisecondsSinceEpoch;
     return record;
   }
 }
