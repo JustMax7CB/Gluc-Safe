@@ -8,6 +8,7 @@ import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
 import 'package:gluc_safe/Models/workout.dart';
+import 'package:gluc_safe/widgets/chart.dart';
 import 'dart:developer' as dev;
 
 import 'package:intl/intl.dart';
@@ -54,7 +55,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
-    getGlucoseValues();
     return Scaffold(
       appBar: homeAppBar(),
       floatingActionButton: FloatingActionButton(
@@ -159,24 +159,18 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Medication med = Medication(
-                    "Acamol", 3, 1, [DateTime.now(), DateTime.now()]);
-                _firebaseService!.saveMedicationData(med);
+            FutureBuilder(
+              future: getGlucoseValues(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return LineChartWidget(
+                      glucoseValues: snapshot.data as List,
+                      deviceHeight: _deviceHeight,
+                      deviceWidth: _deviceWidth);
+                }
+                return const CircularProgressIndicator();
               },
-              child: const Text("Medication Update Test"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _firebaseService!.getMedicationData();
-              },
-              child: const Text("Medication Get Test"),
-            ),
-            const Text(
-              "Bottom Container",
-              style: TextStyle(fontSize: 20),
-            ),
+            )
           ],
         ),
       ),
@@ -296,7 +290,7 @@ class _HomePageState extends State<HomePage> {
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
-    dev.log("\x1B[37m" + userGlucoseRecords.toString());
+    //dev.log("\x1B[37m${userGlucoseRecords.toString()}");
     return userGlucoseRecords;
   }
 
