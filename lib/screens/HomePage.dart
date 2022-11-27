@@ -1,15 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/glucose.dart';
-import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
 import 'package:gluc_safe/Models/workout.dart';
 import 'dart:developer' as dev;
-
+import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,7 +25,12 @@ class _HomePageState extends State<HomePage> {
   late double _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   GlucUser? _glucUser;
-  double? glucoseValue = 100;
+  final _formkey = GlobalKey<FormState>();
+  TextEditingController dateinput = TextEditingController();
+  TextEditingController noteText = TextEditingController();
+  late int glucoseValue;
+  int? carbsValue;
+  String? mealValue;
 
   @override
   void initState() {
@@ -54,40 +61,45 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
-    getGlucoseValues();
     return Scaffold(
-      appBar: homeAppBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          Icons.add,
-          size: 38,
+        appBar: homeAppBar(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(
+            Icons.add,
+            size: 38,
+          ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.redAccent,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 3,
-        child: bottomNavBar(),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: topContainer(),
-          ),
-          Expanded(
-            flex: 2,
-            child: bottomContainer(),
-          ),
-          Expanded(
-            flex: 2,
-            child: workoutAndWeightContainer(),
-          )
-        ],
-      ),
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.redAccent,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 3,
+          child: bottomNavBar(),
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: topContainer(),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: bottomContainer(),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: workoutAndWeightContainer(),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget bottomNavBar() {
@@ -159,23 +171,30 @@ class _HomePageState extends State<HomePage> {
       child: Center(
         child: Column(
           children: [
+            const Center(child: Text("Bottom Container")),
             ElevatedButton(
-              onPressed: () {
-                Medication med = Medication(
-                    "Acamol", 3, 1, [DateTime.now(), DateTime.now()]);
-                _firebaseService!.saveMedicationData(med);
-              },
-              child: const Text("Medication Update Test"),
+              onPressed: () => Navigator.pushNamed(context, '/chart'),
+              child: const Text("Chart Page Route"),
             ),
             ElevatedButton(
               onPressed: () {
-                _firebaseService!.getMedicationData();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Glucose Entry"),
+                    content: SingleChildScrollView(
+                      child: Container(
+                        height: _deviceHeight * 0.6,
+                        child: Form(
+                          key: _formkey,
+                          child: glucoseForm(),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
-              child: const Text("Medication Get Test"),
-            ),
-            const Text(
-              "Bottom Container",
-              style: TextStyle(fontSize: 20),
+              child: const Text("Add Glucose Value"),
             ),
           ],
         ),
@@ -194,14 +213,6 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 20),
             ),
             ElevatedButton(
-              onPressed: () {
-                Glucose gluc = Glucose(
-                    DateTime.now(), 56, 120, Meal.AfterLunch, "Test Note");
-                _firebaseService!.saveGlucoseData(gluc);
-              },
-              child: const Text("Glucose Update Test"),
-            ),
-            ElevatedButton(
               onPressed: () async {
                 await _firebaseService!.getGlucoseData();
               },
@@ -209,27 +220,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget roundedContainer(String text) {
-    return Container(
-      width: _deviceWidth * 0.46,
-      height: _deviceHeight * 0.1,
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            text,
-            style: textTitleStyle(16, Colors.white),
-          ),
-          const Text("Glucose Value") // TODO!!
-        ],
       ),
     );
   }
@@ -296,7 +286,7 @@ class _HomePageState extends State<HomePage> {
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
-    dev.log("\x1B[37m" + userGlucoseRecords.toString());
+    //dev.log("\x1B[37m${userGlucoseRecords.toString()}");
     return userGlucoseRecords;
   }
 
@@ -316,5 +306,134 @@ class _HomePageState extends State<HomePage> {
     DateTime timestampToDateTime = (record['Date'] as Timestamp).toDate();
     record['Date'] = DateFormat('dd/MM/yyyy').format(timestampToDateTime);
     return record;
+  }
+
+  glucoseForm() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextFormField(
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.only(left: 10.0),
+              filled: false,
+              icon: FaIcon(FontAwesomeIcons.bolt, size: 20),
+              hintStyle: TextStyle(fontSize: 10),
+              labelText: "Glucose Value"),
+          onChanged: (value) {
+            setState(() {
+              glucoseValue = int.parse(value);
+            });
+          },
+        ),
+        SizedBox(
+          height: _deviceHeight * 0.01,
+        ),
+        TextFormField(
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.only(left: 10.0),
+              filled: false,
+              icon: FaIcon(FontAwesomeIcons.candyCane, size: 18),
+              hintStyle: TextStyle(fontSize: 10),
+              labelText: "Carbs Value(optional)"),
+          onChanged: (value) {
+            setState(() {
+              carbsValue = int.parse(value);
+            });
+          },
+        ),
+        mealDropDown(),
+        dateFormField(),
+        notesBox(),
+        ElevatedButton(
+          onPressed: () async {
+            List dateStringList = dateinput.text.toString().split("/");
+            DateTime date = DateTime(int.parse(dateStringList[2]),
+                int.parse(dateStringList[1]), int.parse(dateStringList[0]));
+            Glucose gluc = Glucose(date, glucoseValue, carbsValue,
+                Meal.AfterDinner, noteText.text);
+            await _firebaseService!.saveGlucoseData(gluc);
+            dateinput.clear();
+            noteText.clear();
+            Navigator.pop(context);
+          },
+          child: const Text("Submit Entry"),
+        ),
+      ],
+    );
+  }
+
+  mealDropDown() {
+    List meals = Meal.values.map((e) => e.toString().split(".")[1]).toList();
+    return DropDown(
+        enumsList: meals,
+        height: _deviceHeight,
+        width: _deviceWidth,
+        hint: "Select a Meal(optional)",
+        save: saveMealValue);
+  }
+
+  saveMealValue(String meal) {
+    setState(() {
+      mealValue = meal;
+      dev.log(mealValue.toString());
+    });
+  }
+
+  notesBox() {
+    return SizedBox(
+      height: _deviceHeight * 0.1,
+      width: _deviceWidth * 0.8,
+      child: TextField(
+        controller: noteText,
+        keyboardType: TextInputType.multiline,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          labelText: "Notes",
+          hintText: "Here you can enter your notes",
+        ),
+      ),
+    );
+  }
+
+  dateFormField() {
+    return TextFormField(
+      readOnly: true,
+      controller: dateinput,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.only(left: 10.0),
+        filled: false,
+        icon: FaIcon(FontAwesomeIcons.calendarDay),
+        hintStyle: TextStyle(fontSize: 13),
+        labelText: "Entry Date",
+      ),
+      onTap: calendarShow,
+    );
+  }
+
+  void calendarShow() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(
+            1950), //DateTime.now() - not to allow to choose before today.
+        lastDate: DateTime(2050));
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      dev.log(
+          formattedDate); //formatted date output using intl package =>  16/03/2021
+      //you can implement different kind of Date Format here according to your requirement
+
+      setState(() {
+        dateinput.text = formattedDate; //set output date to TextField value.
+      });
+    } else {
+      print("Date is not selected");
+    }
   }
 }
