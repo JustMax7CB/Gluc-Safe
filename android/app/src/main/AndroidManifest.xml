@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gluc_safe">
    <application
-        android:label="gluc_safe"
+        android:label="GlucSafe"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/glucsafe">
         <activity
             android:name=".MainActivity"
             android:exported="true"

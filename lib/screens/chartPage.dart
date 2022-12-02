@@ -122,11 +122,8 @@ class _ChartPageState extends State<ChartPage> {
 
   List sortDateString(List userGlucoseRecords) {
     //dev.log(userGlucoseRecords.toString());
-    List records = userGlucoseRecords
-        .map((recordTuple) => [recordTuple[0], recordTuple[1]])
-        .toList();
-    records.sort((a, b) => a[1].compareTo(b[1]));
-    return records;
+    userGlucoseRecords.sort((a, b) => a[1].compareTo(b[1]));
+    return userGlucoseRecords;
   }
 
   double dateFormatToMiliseconds(String formattedDate) {

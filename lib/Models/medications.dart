@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
+
 class Medication {
   late String _medicationName;
   late int _numOfPills;
   late int _perDay;
-  late List<DateTime> _reminders;
+  late List<TimeOfDay> _reminders;
 
   Medication(
-      String medName, int numOfPills, int perDay, List<DateTime> reminders) {
+      String medName, int numOfPills, int perDay, List<TimeOfDay> reminders) {
     _medicationName = medName;
     _numOfPills = numOfPills;
     _perDay = perDay;
