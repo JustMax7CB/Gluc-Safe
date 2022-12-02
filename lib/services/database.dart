@@ -201,7 +201,7 @@ class FirebaseService {
       var document =
           await _database.collection(GLUCOSE_COLLECTION).doc(userID).get();
       glucUserData = document.data()![GLUCOSE_RECORDS] as List;
-      //dev.log("\x1B[32m" + glucUserData.toString());
+      // dev.log("\x1B[32m" + glucUserData.toString());
       return glucUserData;
     } catch (e) {
       dev.log(e.toString());
