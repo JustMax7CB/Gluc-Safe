@@ -39,6 +39,7 @@ Future<void> main() async {
         '/profile': (context) => ProfilePage(),
         '/chart': (context) => const ChartPage(),
         '/glucose': (context) => GlucosePage(),
+        '/medications':(context) => const MedicationPage(),
       },
     ),
   );
