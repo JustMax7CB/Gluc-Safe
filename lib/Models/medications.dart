@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-
+import 'package:gluc_safe/Models/MedReminder.dart';
 class Medication {
   late String _medicationName;
   late int _numOfPills;
   late int _perDay;
-  late List<TimeOfDay> _reminders;
+  late MedReminders _reminders;
 
   Medication(
-      String medName, int numOfPills, int perDay, List<TimeOfDay> reminders) {
+      String medName, int numOfPills, int perDay, MedReminders reminders) {
     _medicationName = medName;
     _numOfPills = numOfPills;
     _perDay = perDay;

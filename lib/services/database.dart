@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/Models/medications.dart';
@@ -218,12 +219,13 @@ class FirebaseService {
     String medName = medicationData.medicationName;
     int numOfPills = medicationData.numOfPills;
     int perDay = medicationData.perDay;
-    List<DateTime> reminders = medicationData.reminders;
+    MedReminders reminders = medicationData.reminders;
     final medicationRecord = {
       'medicationName': medName,
       'numOfPills': numOfPills,
       'perDay': perDay,
-      'reminders': reminders,
+      //'reminders': reminders,
+      'reminders': reminders.reminders.map((e)=> {"Day":e.day.toString().split(".")[1],"Time":("${e.time.hour}:${e.time.minute}")}).toList(),
     };
     try {
       var document =
@@ -235,6 +237,7 @@ class FirebaseService {
       } else {
         recordsList.add(medicationRecord);
       }
+      dev.log(recordsList.toString());
       await _database.collection(MEDICATION_COLLECTION).doc(userID).set({
         MEDICATION_RECORDS: recordsList,
       });

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/mealsEnum.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
+
+import '../Models/enums/days.dart';
 
 class GlucosePage extends StatefulWidget {
   GlucosePage({super.key});
@@ -106,6 +110,22 @@ class _GlucosePageState extends State<GlucosePage> {
             },
             child: const Text("Glucose Get Test"),
           ),
+          ElevatedButton(
+              onPressed: () {
+                MedReminder m1=MedReminder(Day.Thursday,TimeOfDay(hour: 19,minute:05));
+                MedReminder m2=MedReminder(Day.Thursday,TimeOfDay(hour: 6,minute:30));
+                MedReminders m=MedReminders([m1,m2]);
+                Medication med = Medication("Optalgin",1,2,m);
+                _firebaseService!.saveMedicationData(med);
+              },
+              child: const Text("Madication Update Test"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _firebaseService!.getMedicationData();
+              },
+              child: const Text("Madication Get Test"),
+            ),
         ],
       ),
     );
