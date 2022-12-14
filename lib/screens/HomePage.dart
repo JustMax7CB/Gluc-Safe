@@ -4,9 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/glucose.dart';
-import 'package:gluc_safe/screens/glucosePage.dart';
-import 'package:gluc_safe/screens/weightPage.dart';
-import 'package:gluc_safe/screens/workoutPage.dart';
+import 'package:gluc_safe/screens/screens.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
@@ -69,6 +67,7 @@ class _HomePageState extends State<HomePage> {
           GlucosePage(),
           WorkoutPage(),
           WeightPage(),
+          MedicationPage(),
         ],
         onPageChanged: (value) {
           setState(() {
@@ -115,7 +114,10 @@ class _HomePageState extends State<HomePage> {
             tooltip: "Medicine Page",
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _pageController.jumpToPage(3);
+              _pageIndex = 3;
+            },
             icon: const FaIcon(FontAwesomeIcons.capsules),
             color: Colors.white,
             tooltip: "Weight Page",
