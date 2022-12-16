@@ -36,6 +36,7 @@ Future<void> main() async {
             ),
         '/register': (context) => const RegisterPage(),
         '/details': (context) => const UserDetails(),
+        '/chart': (context) => const ChartPage(),
       },
     ),
   );

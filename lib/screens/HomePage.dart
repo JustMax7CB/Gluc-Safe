@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -124,7 +124,8 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/profile', arguments: _glucUser);
+              // Navigator.pushNamed(context, '/profile', arguments: _glucUser);
+              dev.log("${_glucUser!.contactName}, ${_glucUser!.contactNum}");
             },
             icon: const Icon(Icons.person, color: Colors.white),
             tooltip: "Profile Page",
