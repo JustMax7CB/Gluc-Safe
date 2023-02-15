@@ -1,4 +1,8 @@
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/MedReminder.dart';
@@ -111,21 +115,23 @@ class _GlucosePageState extends State<GlucosePage> {
             child: const Text("Glucose Get Test"),
           ),
           ElevatedButton(
-              onPressed: () {
-                MedReminder m1=MedReminder(Day.Thursday,TimeOfDay(hour: 19,minute:05));
-                MedReminder m2=MedReminder(Day.Thursday,TimeOfDay(hour: 6,minute:30));
-                MedReminders m=MedReminders([m1,m2]);
-                Medication med = Medication("Optalgin",1,2,m);
-                _firebaseService!.saveMedicationData(med);
-              },
-              child: const Text("Madication Update Test"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _firebaseService!.getMedicationData();
-              },
-              child: const Text("Madication Get Test"),
-            ),
+            onPressed: () {
+              MedReminder m1 =
+                  MedReminder(Day.Thursday, TimeOfDay(hour: 19, minute: 05));
+              MedReminder m2 =
+                  MedReminder(Day.Thursday, TimeOfDay(hour: 6, minute: 30));
+              MedReminders m = MedReminders([m1, m2]);
+              Medication med = Medication("Optalgin", 1, 2, m);
+              _firebaseService!.saveMedicationData(med);
+            },
+            child: const Text("Madication Update Test"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _firebaseService!.getMedicationData();
+            },
+            child: const Text("Madication Get Test"),
+          ),
         ],
       ),
     );
@@ -165,13 +171,34 @@ class _GlucosePageState extends State<GlucosePage> {
           },
         ),
         mealDropDown(),
-        dateFormField(),
+        GestureDetector(
+          child: TextFormField(
+            readOnly: true,
+            controller: dateinput,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.only(left: 10.0),
+              filled: false,
+              icon: FaIcon(FontAwesomeIcons.calendarDay),
+              hintStyle: TextStyle(fontSize: 13),
+              labelText: "Entry Date",
+            ),
+            onTap: dateFormField,
+          ),
+        ),
         notesBox(),
         ElevatedButton(
           onPressed: () async {
-            List dateStringList = dateinput.text.toString().split("/");
-            DateTime date = DateTime(int.parse(dateStringList[2]),
-                int.parse(dateStringList[1]), int.parse(dateStringList[0]));
+            List dateTimeStringList =
+                dateinput.text.split(" "); // ["dd/MM/yyyy", "HH:mm"]
+            List dateStringList =
+                dateTimeStringList[0].split("/").map((num) => int.parse(num)).toList(); // [dd,MM,yyyy]
+            List timeStringList =
+                dateTimeStringList[1].split(":").map((num) => int.parse(num)).toList(); // [HH, mm]
+
+            DateTime date = DateTime(dateStringList[2], dateStringList[1],
+                dateStringList[0], timeStringList[0], timeStringList[1]);
+
             Glucose gluc = Glucose(date, glucoseValue, carbsValue,
                 Meal.AfterDinner, noteText.text);
             await _firebaseService!.saveGlucoseData(gluc);
@@ -216,20 +243,29 @@ class _GlucosePageState extends State<GlucosePage> {
     );
   }
 
+  DateTime IL_TimezoneConvert(DateTime dateTime) {
+    int hours = dateTime.hour + 2;
+    return DateTime(
+        dateTime.year, dateTime.month, dateTime.day, hours, dateTime.minute);
+  }
+
   dateFormField() {
-    return TextFormField(
-      readOnly: true,
-      controller: dateinput,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.only(left: 10.0),
-        filled: false,
-        icon: FaIcon(FontAwesomeIcons.calendarDay),
-        hintStyle: TextStyle(fontSize: 13),
-        labelText: "Entry Date",
-      ),
-      onTap: calendarShow,
+    DatePicker.showDatePicker(
+      context,
+      dateFormat: 'dd/MMMM/yyyy HH:mm',
+      initialDateTime: DateTime.now(),
+      minDateTime: DateTime(2000),
+      maxDateTime: IL_TimezoneConvert(DateTime.now()),
+      onConfirm: (dateTime, selectedIndex) {
+        String formattedDateTime =
+            DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
+        dev.log("Formatted Date Time: $formattedDateTime");
+        setState(() {
+          dateinput.text = formattedDateTime;
+        });
+      },
     );
+    
   }
 
   void calendarShow() async {
@@ -241,7 +277,7 @@ class _GlucosePageState extends State<GlucosePage> {
         lastDate: DateTime(2050));
 
     if (pickedDate != null) {
-      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      String formattedDate = DateFormat('dd/MM/yyyy\nH:m').format(pickedDate);
       dev.log(
           formattedDate); //formatted date output using intl package =>  16/03/2021
       //you can implement different kind of Date Format here according to your requirement

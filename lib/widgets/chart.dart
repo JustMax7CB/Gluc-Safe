@@ -25,7 +25,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _tooltipBehavior = TooltipBehavior(enable: true, header: "Glucose");
+    _tooltipBehavior = TooltipBehavior(enable: true, header: "Glucose", 
+                                      format: 'point.y mg/DL\npoint.x',borderColor: Colors.red,
+                                      borderWidth: 2,);
     return Container(
       color: Colors.brown[900],
       width: widget.deviceWidth,

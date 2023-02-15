@@ -112,7 +112,7 @@ class _ChartPageState extends State<ChartPage> {
     userGlucoseRecords = userGlucoseRecords
         .map((e) => [
               e[0],
-              DateFormat("dd/MM/yyyy")
+              DateFormat("dd/MM/yyyy\nHH:mm")
                   .format(DateTime.fromMillisecondsSinceEpoch(e[1]))
             ])
         .toList();
