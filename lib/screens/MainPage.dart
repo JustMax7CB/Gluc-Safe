@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
@@ -6,7 +5,6 @@ import 'package:gluc_safe/screens/screens.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
-import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -21,11 +19,13 @@ class _MainPageState extends State<MainPage> {
   GlucUser? _glucUser;
   int _pageIndex = 0;
   PageController _pageController = PageController();
+  GlucUser nullUser = GlucUser("", "", DateTime.now(), 0, "", "", "", "");
 
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    getGlucUser();
   }
 
   Future<GlucUser> getGlucUser() async {
@@ -37,13 +37,13 @@ class _MainPageState extends State<MainPage> {
         userData['firstName'],
         userData['lastName'],
         birthDate,
-        180,
+        userData['height'],
         userData['gender'],
         userData['mobile'],
         userData['contactName'],
         userData['contactNumber']);
     _glucUser = user;
-    return user;
+    return await user;
   }
 
   @override
@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
       body: PageView(
         controller: _pageController,
         children: [
-          HomePage(),
+          HomePage(glucUser: _glucUser != null ? _glucUser! : nullUser),
           GlucosePage(),
           WorkoutPage(),
           WeightPage(),
@@ -181,37 +181,5 @@ class _MainPageState extends State<MainPage> {
         style: TextStyle(color: Colors.white),
       ),
     );
-  }
-
-  Future<List> getGlucoseValues() async {
-    // return a list of glucose values in the format (Glucose value, Date value saved)
-    List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
-    if (userGlucoseRecords == null) return [];
-    userGlucoseRecords = userGlucoseRecords
-        .map((record) => glucoseRecordsWithDateTimeFormat(record))
-        .toList();
-    userGlucoseRecords = userGlucoseRecords
-        .map((record) => ([record['Glucose'], record['Date']]))
-        .toList();
-    //dev.log("\x1B[37m${userGlucoseRecords.toString()}");
-    return userGlucoseRecords;
-  }
-
-  double dateFormatToMiliseconds(String formattedDate) {
-    List date = formattedDate
-        .split("/")
-        .map((datePart) => int.parse(datePart))
-        .toList();
-    DateTime dateTime = DateTime(date[2], date[1], date[0]);
-    return dateTime.millisecondsSinceEpoch.toDouble();
-  }
-
-  Map glucoseRecordsWithDateTimeFormat(Map record) {
-    // gets a map of glucose record and converts the Date timestamp into
-    // a DateTime format string according to (dd/MM/yyyy)
-    // and returns the updated glucose record as a map
-    DateTime timestampToDateTime = (record['Date'] as Timestamp).toDate();
-    record['Date'] = DateFormat('dd/MM/yyyy').format(timestampToDateTime);
-    return record;
   }
 }
