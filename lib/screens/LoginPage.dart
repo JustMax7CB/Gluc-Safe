@@ -1,4 +1,6 @@
 import 'dart:developer' as dev;
+import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,8 +18,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late double _deviceHeight, _deviceWidth;
   final _formkey = GlobalKey<FormState>();
+  final _resetKey = GlobalKey<FormState>();
   late String _email;
   late String _pass;
+  String? resetEmail;
   FirebaseService? _firebaseService;
 
   @override
@@ -99,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget formContainer() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      padding: const EdgeInsets.symmetric(horizontal: 28.0),
       width: _deviceWidth,
       height: _deviceHeight * 0.55,
       child: Column(
@@ -116,19 +120,26 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          textField(
-            "Email",
-            "Enter your email address",
-            "Email",
-            const Icon(Icons.email_outlined),
-            false,
-          ),
-          textField(
-            "Password",
-            "Enter your password",
-            "Password",
-            const Icon(Icons.security),
-            true,
+          Column(
+            children: [
+              textField(
+                "Email",
+                "Enter your email address",
+                "Email",
+                const Icon(Icons.email_outlined),
+                false,
+              ),
+              SizedBox(height: 13),
+              textField(
+                "Password",
+                "Enter your password",
+                "Password",
+                const Icon(Icons.security),
+                true,
+              ),
+              SizedBox(height: 8),
+              resetBtn(),
+            ],
           ),
           signInButton(),
           CircularContainer(),
@@ -136,6 +147,93 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Widget resetBtn() {
+    return SizedBox(
+      height: 31,
+      child: TextButton(
+        onPressed: () => resetPopup(context),
+        child: Text(
+          "Forgot Password?",
+          style: TextStyle(fontSize: 13, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  void resetPopup(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      animType: AnimType.topSlide,
+      dialogType: DialogType.noHeader,
+      dismissOnTouchOutside: false,
+      btnOk: OutlinedButton(
+        child: Text("Confirm"),
+        onPressed: () {
+          try {
+            if (_resetKey.currentState!.validate()) {
+              _firebaseService?.resetPassword(email: resetEmail!);
+              Navigator.pop(context);
+              sleep(Duration(milliseconds: 500));
+              AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.success,
+                  animType: AnimType.bottomSlide,
+                  title: "Reset Password",
+                  desc: "Check your email for a reset password link",
+                  autoHide: Duration(
+                    seconds: 3,
+                  )).show();
+            }
+          } catch (e) {
+            print("Password reset failed");
+          }
+        },
+      ),
+      btnCancel: OutlinedButton(
+        child: Text("Cancel"),
+        onPressed: () => Navigator.pop(context),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Text(
+              "Reset Password",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: Form(
+                key: _resetKey,
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    filled: true,
+                    hintStyle: const TextStyle(fontSize: 13),
+                    hintText: "Email",
+                  ),
+                  onChanged: (value) {
+                    resetEmail = value;
+                  },
+                  validator: (val) {
+                    Pattern pattern =
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                    RegExp regExp = RegExp(pattern.toString());
+                    if (val == null || val.isEmpty) {
+                      return "Email cannot be empty";
+                    } else if (!regExp.hasMatch(val)) {
+                      return "The email is not valid";
+                    }
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    ).show();
   }
 
   Widget CircularContainer() {
@@ -182,17 +280,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget signInButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          if (_formkey.currentState!.validate()) {
-            snackBarWithDismiss("Checking Data...");
-            checkLogin();
-          }
-        },
-        child: const Text("Sign In"),
-      ),
+    return ElevatedButton(
+      onPressed: () {
+        if (_formkey.currentState!.validate()) {
+          snackBarWithDismiss("Checking Data...");
+          checkLogin();
+        }
+      },
+      child: const Text("Sign In"),
     );
   }
 

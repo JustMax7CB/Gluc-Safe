@@ -71,6 +71,14 @@ class FirebaseService {
     }
   }
 
+  Future<void> resetPassword({required String email}) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<bool> saveUserData({required GlucUser glucUser}) async {
     // gets an instance of GlucUser
     // the function will try to save the user details to the firebase database
@@ -202,6 +210,9 @@ class FirebaseService {
       var document =
           await _database.collection(GLUCOSE_COLLECTION).doc(userID).get();
       glucUserData = document.data()![GLUCOSE_RECORDS] as List;
+      glucUserData.forEach((record) {
+        record['Date'] = (record['Date'] as Timestamp).millisecondsSinceEpoch;
+      });
       // dev.log("\x1B[32m" + glucUserData.toString());
       return glucUserData;
     } catch (e) {
@@ -225,7 +236,12 @@ class FirebaseService {
       'numOfPills': numOfPills,
       'perDay': perDay,
       //'reminders': reminders,
-      'reminders': reminders.reminders.map((e)=> {"Day":e.day.toString().split(".")[1],"Time":("${e.time.hour}:${e.time.minute}")}).toList(),
+      'reminders': reminders.reminders
+          .map((e) => {
+                "Day": e.day.toString().split(".")[1],
+                "Time": ("${e.time.hour}:${e.time.minute}")
+              })
+          .toList(),
     };
     try {
       var document =

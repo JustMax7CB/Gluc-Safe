@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,7 +11,6 @@ import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
-
 import '../Models/enums/days.dart';
 
 class GlucosePage extends StatefulWidget {
@@ -191,10 +187,14 @@ class _GlucosePageState extends State<GlucosePage> {
           onPressed: () async {
             List dateTimeStringList =
                 dateinput.text.split(" "); // ["dd/MM/yyyy", "HH:mm"]
-            List dateStringList =
-                dateTimeStringList[0].split("/").map((num) => int.parse(num)).toList(); // [dd,MM,yyyy]
-            List timeStringList =
-                dateTimeStringList[1].split(":").map((num) => int.parse(num)).toList(); // [HH, mm]
+            List dateStringList = dateTimeStringList[0]
+                .split("/")
+                .map((num) => int.parse(num))
+                .toList(); // [dd,MM,yyyy]
+            List timeStringList = dateTimeStringList[1]
+                .split(":")
+                .map((num) => int.parse(num))
+                .toList(); // [HH, mm]
 
             DateTime date = DateTime(dateStringList[2], dateStringList[1],
                 dateStringList[0], timeStringList[0], timeStringList[1]);
@@ -265,7 +265,6 @@ class _GlucosePageState extends State<GlucosePage> {
         });
       },
     );
-    
   }
 
   void calendarShow() async {

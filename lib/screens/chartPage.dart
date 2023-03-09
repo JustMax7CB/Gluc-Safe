@@ -92,16 +92,13 @@ class _ChartPageState extends State<ChartPage> {
     List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
     if (userGlucoseRecords == null) return [];
     dev.log("Initial List  \x1B[37m$userGlucoseRecords");
-    userGlucoseRecords = userGlucoseRecords
-        .map((record) => glucoseRecordsToDateTimeFormat(record))
-        .toList();
-    dev.log("Formatted DateTime List  \x1B[37m$userGlucoseRecords");
+
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
     dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = sortDateString(userGlucoseRecords);
-    if (startDate == null && endDate == null) {
+    if (startDate == null && endDate == null && userGlucoseRecords.length > 0) {
       startDate = userGlucoseRecords[0][1];
       endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
     }
@@ -133,14 +130,5 @@ class _ChartPageState extends State<ChartPage> {
         .toList();
     DateTime dateTime = DateTime(date[2], date[1], date[0]);
     return dateTime.millisecondsSinceEpoch.toDouble();
-  }
-
-  Map glucoseRecordsToDateTimeFormat(Map record) {
-    // gets a map of glucose record and converts the Date timestamp into
-    // a DateTime format string according to (dd/MM/yyyy)
-    // and returns the updated glucose record as a map
-    DateTime timestampToDateTime = (record['Date'] as Timestamp).toDate();
-    record['Date'] = timestampToDateTime.millisecondsSinceEpoch;
-    return record;
   }
 }

@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/screens/MainPage.dart';
-import 'package:gluc_safe/screens/glucosePage.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
