@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           await _firebaseService!.loginUser(email: _email, password: _pass);
     } on FirebaseAuthException catch (e) {
       dev.log("error is: $e");
-      snackBarWithDismiss("Invalid user data");
+      snackBarWithDismiss(e.code);
     }
   }
 
@@ -173,7 +173,9 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           try {
             if (_resetKey.currentState!.validate()) {
-              _firebaseService?.resetPassword(email: resetEmail!);
+              Future<bool>? result;
+              if (_firebaseService?.resetPassword(email: resetEmail!) == false)
+                throw Exception();
               Navigator.pop(context);
               sleep(Duration(milliseconds: 500));
               AwesomeDialog(
@@ -187,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                   )).show();
             }
           } catch (e) {
-            print("Password reset failed");
+            snackBarWithDismiss("Reset Password failed");
           }
         },
       ),

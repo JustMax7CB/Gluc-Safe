@@ -66,16 +66,17 @@ class FirebaseService {
       }
       return false;
     } catch (e) {
-      print("User login failed");
-      return false;
+      throw FirebaseAuthException(code: 'Log in failed');
     }
   }
 
-  Future<void> resetPassword({required String email}) async {
+  Future<bool> resetPassword({required String email}) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
+      return true;
     } catch (e) {
-      print(e);
+      dev.log("Failed to reset password");
+      return false;
     }
   }
 
@@ -109,7 +110,7 @@ class FirebaseService {
       openUserCollections();
       return true;
     } catch (e) {
-      print("Failed to save user data");
+      dev.log("Failed to save user data");
       return false;
     }
   }
@@ -146,7 +147,7 @@ class FirebaseService {
           await _database.collection(USER_COLLECTION).doc(userID).get();
       return _doc.data() as Map;
     } catch (e) {
-      print("User Document doesn't exist or failed to retrieve data");
+      dev.log("User Document doesn't exist or failed to retrieve data");
       return null;
     }
   }
@@ -157,7 +158,7 @@ class FirebaseService {
     try {
       await _auth.signOut();
     } catch (e) {
-      print("Logout Failed");
+      dev.log("Logout Failed");
     }
   }
 
@@ -257,7 +258,7 @@ class FirebaseService {
       await _database.collection(MEDICATION_COLLECTION).doc(userID).set({
         MEDICATION_RECORDS: recordsList,
       });
-      print(recordsList);
+      dev.log(recordsList.toString());
       dev.log("Medication data saved successfully");
       return true;
     } catch (e) {

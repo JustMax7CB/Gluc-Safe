@@ -6,6 +6,8 @@ import 'package:gluc_safe/screens/MainPage.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
+import 'dart:io';
+import 'dart:developer' as dev;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +15,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   GetIt.instance.registerSingleton<FirebaseService>(FirebaseService());
+  try {
+    final result = await InternetAddress.lookup('google..com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      dev.log('connected');
+    }
+  } on SocketException catch (_) {
+    dev.log('not connected');
+  }
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
