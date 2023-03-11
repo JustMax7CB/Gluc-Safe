@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/Models/glucose.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/chart.dart';
+import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
 import 'package:get_it/get_it.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-
-import '../Models/enums/enumsExport.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -20,12 +18,18 @@ class ChartPage extends StatefulWidget {
 class _ChartPageState extends State<ChartPage> {
   late double _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
-  int? startDate, endDate;
+  int? startDate, endDate, selectedYear, selectedMonth;
+  List options = ['Month', 'Year', 'Range'];
+  late String optionSelected;
+  DateRangePickerView view = DateRangePickerView.month;
+  final DateRangePickerController _controller = DateRangePickerController();
 
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    optionSelected = options.first;
+    _controller.view = DateRangePickerView.month;
   }
 
   @override
@@ -33,7 +37,22 @@ class _ChartPageState extends State<ChartPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          DropDown(
+            enumsList: options,
+            height: 700,
+            width: 400,
+            hint: 'Select Option',
+            save: (selection) {
+              setState(() {
+                optionSelected = selection;
+                optionView();
+              });
+            },
+          )
+        ],
+      ),
       body: Container(
         child: Column(
           children: [
@@ -42,7 +61,7 @@ class _ChartPageState extends State<ChartPage> {
               child: Container(
                   color: Colors.blue,
                   child: FutureBuilder(
-                    future: getGlucoseValues(),
+                    future: getGlucoseValues(optionSelected),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return LineChartWidget(
@@ -59,12 +78,15 @@ class _ChartPageState extends State<ChartPage> {
               child: Container(
                 width: _deviceWidth,
                 child: SfDateRangePicker(
-                  view: DateRangePickerView.month,
-                  monthViewSettings:
-                      const DateRangePickerMonthViewSettings(firstDayOfWeek: 7),
-                  selectionMode: DateRangePickerSelectionMode.range,
+                  controller: _controller,
+                  allowViewNavigation: optionSelected == 'Range',
+                  selectionMode: optionSelected == 'Range'
+                      ? DateRangePickerSelectionMode.range
+                      : DateRangePickerSelectionMode.single,
                   onSelectionChanged: (_) {
-                    selectedDates(_);
+                    optionSelected == 'Range'
+                        ? selectedRangeDates(_)
+                        : selectedSingleDate(_);
                     setState(() {});
                   },
                 ),
@@ -76,17 +98,68 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
-  void selectedDates(DateRangePickerSelectionChangedArgs args) {
+  void optionView() {
+    switch (optionSelected) {
+      case 'Month':
+        _controller.view = DateRangePickerView.year;
+        break;
+      case 'Year':
+        _controller.view = DateRangePickerView.decade;
+        break;
+      default:
+        _controller.view = DateRangePickerView.month;
+    }
+  }
+
+  void selectedSingleDate(DateRangePickerSelectionChangedArgs args) {
+    String ViewMode = optionSelected;
+    selectedYear = args.value.year;
+    selectedMonth = args.value.month;
+    // dev.log(selectedYear.toString());
+    // dev.log(selectedMonth.toString());
+  }
+
+  void selectedRangeDates(DateRangePickerSelectionChangedArgs args) {
     DateTime? startDateTime = args.value.startDate;
     DateTime? endDateTime = args.value.endDate;
-    dev.log("$startDateTime, $endDateTime");
+    // dev.log("$startDateTime, $endDateTime");
     if (startDateTime != null && endDateTime != null) {
       startDate = startDateTime.millisecondsSinceEpoch;
       endDate = endDateTime.millisecondsSinceEpoch;
     }
   }
 
-  Future<List> getGlucoseValues() async {
+  List GlucoseByRange(List userGlucoseRecords) {
+    if (startDate == null && endDate == null && userGlucoseRecords.length > 0) {
+      startDate = userGlucoseRecords[0][1];
+      endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
+    }
+    userGlucoseRecords = userGlucoseRecords
+        .where((element) => element[1] >= startDate && element[1] <= endDate)
+        .toList();
+
+    return userGlucoseRecords;
+  }
+
+  List GlucoseByYear(List userGlucoseRecords) {
+    userGlucoseRecords = userGlucoseRecords
+        .where((element) =>
+            (DateTime.fromMillisecondsSinceEpoch(element[1]).year ==
+                selectedYear))
+        .toList();
+    return userGlucoseRecords;
+  }
+
+  List GlucoseByMonth(List userGlucoseRecords) {
+    userGlucoseRecords = userGlucoseRecords
+        .where((element) =>
+            (DateTime.fromMillisecondsSinceEpoch(element[1]).month ==
+                selectedMonth))
+        .toList();
+    return userGlucoseRecords;
+  }
+
+  Future<List> getGlucoseValues(String mode) async {
     // return a list of glucose values in the format (Glucose value, Date value saved)
 
     List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
@@ -98,13 +171,14 @@ class _ChartPageState extends State<ChartPage> {
         .toList();
     dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = sortDateString(userGlucoseRecords);
-    if (startDate == null && endDate == null && userGlucoseRecords.length > 0) {
-      startDate = userGlucoseRecords[0][1];
-      endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
-    }
-    userGlucoseRecords = userGlucoseRecords
-        .where((element) => element[1] >= startDate && element[1] <= endDate)
-        .toList();
+
+    if (mode == "Range") {
+      userGlucoseRecords = GlucoseByRange(userGlucoseRecords);
+    } else if (mode == "Year") {
+      userGlucoseRecords = GlucoseByYear(userGlucoseRecords);
+    } else if (mode == "Month") {
+      userGlucoseRecords = GlucoseByMonth(userGlucoseRecords);
+    } else {}
 
     userGlucoseRecords = userGlucoseRecords
         .map((e) => [
@@ -113,6 +187,7 @@ class _ChartPageState extends State<ChartPage> {
                   .format(DateTime.fromMillisecondsSinceEpoch(e[1]))
             ])
         .toList();
+
     dev.log("Final List  \x1B[37m$userGlucoseRecords");
     return userGlucoseRecords;
   }
