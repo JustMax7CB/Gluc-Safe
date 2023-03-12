@@ -1,6 +1,6 @@
 # **Gluc-Safe**
 
-![Gluc-Safe Logo](lib\assets\icon\res\mipmap-xhdpi\glucsafe.png)
+![Gluc-Safe Logo](https://github.com/JustMax7CB/Gluc-Safe/blob/Max/lib/assets/icon/res/mipmap-xhdpi/glucsafe.png)
 
 Gluc-Safe is a mobile application designed for patients with Diabetes Type 1 to track their glucose levels in the blood.<br>
 With Gluc-Safe, users can easily monitor their glucose levels, set reminders for medication, and view their glucose history over time.
