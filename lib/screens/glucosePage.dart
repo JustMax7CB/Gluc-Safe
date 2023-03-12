@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,14 +75,14 @@ class _GlucosePageState extends State<GlucosePage> {
         children: [
           ElevatedButton(
             onPressed: () => Navigator.pushNamed(context, '/chart'),
-            child: const Text("Chart Page Route"),
+            child: Text("glucose_page_chart_page_route".tr()),
           ),
           ElevatedButton(
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text("Glucose Entry"),
+                  title: Text("glucose_page_glucose_entry".tr()),
                   content: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -94,7 +95,7 @@ class _GlucosePageState extends State<GlucosePage> {
                         ),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text("Dismiss"),
+                          child: Text("misc_snackbar_dismiss".tr()),
                         ),
                       ],
                     ),
@@ -102,7 +103,7 @@ class _GlucosePageState extends State<GlucosePage> {
                 ),
               );
             },
-            child: const Text("Add Glucose Value"),
+            child: Text("glucose_page_add_glucose_entry".tr()),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -139,13 +140,13 @@ class _GlucosePageState extends State<GlucosePage> {
       children: [
         TextFormField(
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.only(left: 10.0),
               filled: false,
               icon: FaIcon(FontAwesomeIcons.bolt, size: 20),
               hintStyle: TextStyle(fontSize: 10),
-              labelText: "Glucose Value"),
+              labelText: "glucose_page_glucose_value".tr()),
           onChanged: (value) {
             glucoseValue = int.parse(value);
           },
@@ -155,13 +156,13 @@ class _GlucosePageState extends State<GlucosePage> {
         ),
         TextFormField(
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.only(left: 10.0),
               filled: false,
               icon: FaIcon(FontAwesomeIcons.candyCane, size: 18),
               hintStyle: TextStyle(fontSize: 10),
-              labelText: "Carbs Value(optional)"),
+              labelText: "glucose_page_carbs_value".tr()),
           onChanged: (value) {
             carbsValue = int.parse(value);
           },
@@ -171,13 +172,13 @@ class _GlucosePageState extends State<GlucosePage> {
           child: TextFormField(
             readOnly: true,
             controller: dateinput,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.only(left: 10.0),
               filled: false,
               icon: FaIcon(FontAwesomeIcons.calendarDay),
               hintStyle: TextStyle(fontSize: 13),
-              labelText: "Entry Date",
+              labelText: "glucose_page_entry_date".tr(),
             ),
             onTap: dateFormField,
           ),
@@ -206,7 +207,7 @@ class _GlucosePageState extends State<GlucosePage> {
             noteText.clear();
             Navigator.pop(context);
           },
-          child: const Text("Submit Entry"),
+          child: Text("glucose_page_submit_entry".tr()),
         ),
       ],
     );
@@ -218,7 +219,7 @@ class _GlucosePageState extends State<GlucosePage> {
         enumsList: meals,
         height: _deviceHeight,
         width: _deviceWidth,
-        hint: "Select a Meal(optional)",
+        hint: "glucose_page_meal_select".tr(),
         save: saveMealValue);
   }
 
@@ -234,10 +235,10 @@ class _GlucosePageState extends State<GlucosePage> {
       child: TextField(
         controller: noteText,
         keyboardType: TextInputType.multiline,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           border: InputBorder.none,
-          labelText: "Notes",
-          hintText: "Here you can enter your notes",
+          labelText: "glucose_page_entry_note_label".tr(),
+          hintText: "glucose_page_entry_note_hint".tr(),
         ),
       ),
     );

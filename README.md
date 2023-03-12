@@ -1,6 +1,6 @@
 # **Gluc-Safe**
 
-![Gluc-Safe Logo](lib\assets\icon\res\mipmap-xhdpi\glucsafe.png)
+![Gluc-Safe Logo](https://github.com/JustMax7CB/Gluc-Safe/blob/Max/lib/assets/icon/res/mipmap-xhdpi/glucsafe.png)
 
 Gluc-Safe is a mobile application designed for patients with Diabetes Type 1 to track their glucose levels in the blood.<br>
 With Gluc-Safe, users can easily monitor their glucose levels, set reminders for medication, and view their glucose history over time.
@@ -28,7 +28,7 @@ Together, Flutter and Firebase provide a powerful combination for building moder
 To use Gluc-Safe, you will need a smartphone running iOS or Android.
 
 ### **Installation**
-Gluc-Safe will can be downloaded from the Apple App Store or Google Play Store.
+Gluc-Safe will be downloadable from the Apple App Store or Google Play Store.
 
 ### **Usage**
 After installing Gluc-Safe, simply open the app and follow the on-screen instructions to set up your account. From there, you can begin tracking your glucose levels and using the app's features to manage your diabetes.

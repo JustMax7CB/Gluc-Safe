@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
@@ -89,7 +90,7 @@ class _MainPageState extends State<MainPage> {
             },
             icon: const FaIcon(FontAwesomeIcons.vial),
             color: Colors.white,
-            tooltip: "Glucose Page",
+            tooltip: "main_page_tooltip_glucose".tr(),
           ),
           IconButton(
             onPressed: () {
@@ -98,25 +99,25 @@ class _MainPageState extends State<MainPage> {
             },
             icon: const FaIcon(FontAwesomeIcons.dumbbell),
             color: Colors.white,
-            tooltip: "Workout Page",
+            tooltip: "main_page_tooltip_workout".tr(),
           ),
           IconButton(
             onPressed: () {
               _pageController.jumpToPage(2);
               _pageIndex = 2;
             },
-            icon: const FaIcon(FontAwesomeIcons.weightScale),
+            icon: const FaIcon(FontAwesomeIcons.capsules),
             color: Colors.white,
-            tooltip: "Medicine Page",
+            tooltip: "main_page_tooltip_medicine".tr(),
           ),
           IconButton(
             onPressed: () {
               _pageController.jumpToPage(3);
               _pageIndex = 3;
             },
-            icon: const FaIcon(FontAwesomeIcons.capsules),
+            icon: const FaIcon(FontAwesomeIcons.weightScale),
             color: Colors.white,
-            tooltip: "Weight Page",
+            tooltip: "main_page_tooltip_weight".tr(),
           ),
           IconButton(
             onPressed: () {
@@ -124,7 +125,7 @@ class _MainPageState extends State<MainPage> {
               dev.log("${_glucUser!.contactName}, ${_glucUser!.contactNum}");
             },
             icon: const Icon(Icons.person, color: Colors.white),
-            tooltip: "Profile Page",
+            tooltip: "main_page_tooltip_profile".tr(),
           )
         ],
       ),
@@ -148,7 +149,7 @@ class _MainPageState extends State<MainPage> {
           if (snapshot.hasData) {
             GlucUser user = snapshot.data as GlucUser;
             return Text(
-              "Hello ${user.firstName}",
+              "main_page_appbar_hello".tr(args: [user.firstName]),
               style: const TextStyle(
                 fontSize: 22,
                 color: Colors.black,
@@ -164,6 +165,17 @@ class _MainPageState extends State<MainPage> {
       elevation: 1.0,
       actions: [
         signOutButton(),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              if (context.locale == Locale('en'))
+                context.setLocale(Locale('he'));
+              else
+                context.setLocale(Locale('en'));
+            });
+          },
+          child: Text("misc_change_lang".tr()),
+        ),
       ],
     );
   }
@@ -176,8 +188,8 @@ class _MainPageState extends State<MainPage> {
       onPressed: () {
         _firebaseService!.logout();
       },
-      child: const Text(
-        "Sign Out",
+      child: Text(
+        "misc_sign_out".tr(),
         style: TextStyle(color: Colors.white),
       ),
     );

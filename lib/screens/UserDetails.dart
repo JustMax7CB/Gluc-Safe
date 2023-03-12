@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
@@ -70,7 +71,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget userBox() {
     return DetailsCard(
-      title: "User",
+      title: "details_page_user_title".tr(),
       width: _deviceWidth,
       height: _deviceHeight,
       child: Column(
@@ -89,7 +90,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget contactBox() {
     return DetailsCard(
-      title: "Contact",
+      title: "details_page_contact_title".tr(),
       width: _deviceWidth,
       height: _deviceHeight,
       child: contactRow(),
@@ -98,9 +99,9 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget phoneFormField() {
     return formField(
-      "Phone Number",
+      "details_page_user_phone_label".tr(),
       const Icon(Icons.phone_android),
-      "Enter your phone number",
+      "details_page_user_phone_hint".tr(),
     );
   }
 
@@ -112,16 +113,16 @@ class _UserDetailsState extends State<UserDetails> {
         children: [
           Flexible(
             child: formField(
-              "First Name",
+              "details_page_user_first_name_label".tr(),
               const Icon(Icons.person),
-              "Enter your first name",
+              "details_page_user_first_name_hint".tr(),
             ),
           ),
           Flexible(
             child: formField(
-              "Last Name",
+              "details_page_user_last_name_label".tr(),
               const Icon(Icons.person),
-              "Enter your last name",
+              "details_page_user_last_name_hint".tr(),
             ),
           ),
         ],
@@ -136,16 +137,16 @@ class _UserDetailsState extends State<UserDetails> {
         children: [
           Flexible(
             child: formField(
-              "Date of Birth",
+              "details_page_user_birthday_label".tr(),
               const Icon(Icons.calendar_today_outlined),
-              "choose your date of birth",
+              "details_page_user_birthday_hint".tr(),
             ),
           ),
           Flexible(
             child: formField(
-              "Height",
+              "details_page_user_height_label".tr(),
               const Icon(Icons.height),
-              "enter your height(in cm)",
+              "details_page_user_height_hint".tr(),
             ),
           ),
         ],
@@ -181,8 +182,8 @@ class _UserDetailsState extends State<UserDetails> {
           ),
         ),
         isExpanded: true,
-        hint: const Text(
-          'Select Your Gender',
+        hint: Text(
+          "details_page_user_gender_hint".tr(),
           style: TextStyle(fontSize: 14),
         ),
         icon: const Icon(
@@ -198,7 +199,7 @@ class _UserDetailsState extends State<UserDetails> {
         items: items,
         validator: (value) {
           if (value == null) {
-            return 'Please select gender.';
+            return "details_page_user_gender_error".tr();
           }
           return null;
         },
@@ -214,13 +215,14 @@ class _UserDetailsState extends State<UserDetails> {
 
   Widget formField(String label, Icon icon, String hint) {
     return TextFormField(
-      keyboardType: (label == "Phone Number" ||
-              label == "Height" ||
-              label == "Contact Phone Number")
+      keyboardType: (label == "details_page_user_phone_label".tr() ||
+              label == "details_page_user_height_label".tr() ||
+              label == "details_page_contact_phone_label".tr())
           ? TextInputType.number
           : null,
-      readOnly: (label == "Date of Birth"),
-      controller: (label == "Date of Birth") ? dateinput : null,
+      readOnly: (label == "details_page_user_birthday_label".tr()),
+      controller:
+          (label == "details_page_user_birthday_label".tr()) ? dateinput : null,
       decoration: InputDecoration(
         border: InputBorder.none,
         contentPadding: EdgeInsets.zero,
@@ -232,11 +234,13 @@ class _UserDetailsState extends State<UserDetails> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "$label cannot be empty";
+          return "misc_label_empty".tr();
         }
         return null;
       },
-      onTap: (label == "Date of Birth") ? calendarShow : null,
+      onTap: (label == "details_page_user_birthday_label".tr())
+          ? calendarShow
+          : null,
       onSaved: (newValue) {
         saveValue(label, newValue!);
       },
@@ -246,21 +250,27 @@ class _UserDetailsState extends State<UserDetails> {
   saveValue(String label, String value) {
     switch (label) {
       case "First Name":
+      case "שם פרטי":
         userData['firstName'] = value;
         break;
       case "Last Name":
+      case "שם משפחה":
         userData['lastName'] = value;
         break;
       case "Height":
+      case "גובה":
         userData['height'] = int.parse(value);
         break;
       case "Phone Number":
+      case "מס' טלפון":
         userData['mobileNum'] = value;
         break;
       case "Contact Name":
+      case "שם איש קשר":
         userData['contactName'] = value;
         break;
       case "Contact Phone Number":
+      case "מס' טלפון של איש קשר":
         userData['contactNumber'] = value;
         break;
     }
@@ -270,15 +280,15 @@ class _UserDetailsState extends State<UserDetails> {
     return Column(
       children: [
         formField(
-          "Contact Name",
+          "details_page_contact_name_label".tr(),
           const Icon(Icons.emergency_sharp),
-          "your emergency contact name",
+          "details_page_contact_name_hint".tr(),
         ),
         dividerWidget(),
         formField(
-          "Contact Phone Number",
+          "details_page_contact_phone_label".tr(),
           const Icon(Icons.phone_android_sharp),
-          "your emergency contact phone number",
+          "details_page_contact_phone_hint".tr(),
         ),
       ],
     );
@@ -321,9 +331,9 @@ class _UserDetailsState extends State<UserDetails> {
           ),
           height: _deviceHeight * 0.07,
           width: _deviceWidth * 0.5,
-          child: const Center(
+          child: Center(
             child: Text(
-              "Save",
+              "misc_save".tr(),
               style: TextStyle(
                 fontSize: 24,
                 fontFamily: "BebasNeue",
@@ -380,9 +390,9 @@ class _UserDetailsState extends State<UserDetails> {
           height: 250,
           width: MediaQuery.of(context).size.width,
           color: Colors.amber[800],
-          child: const Center(
+          child: Center(
             child: Text(
-              "User Details",
+              "details_page_title".tr(),
               style: TextStyle(
                 fontSize: 32,
                 fontFamily: "BebasNeue",

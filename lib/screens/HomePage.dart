@@ -1,13 +1,9 @@
-import 'dart:ui';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
 
 class HomePage extends StatelessWidget {
@@ -62,7 +58,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Your average glucose value",
+          Text("average_glucose".tr(),
               style: TextStyle(
                   fontSize: 20,
                   letterSpacing: 1.2,
@@ -101,7 +97,7 @@ class HomePage extends StatelessWidget {
           Column(
             children: [
               Text(
-                "Latest Glucose",
+                "latest_glucose".tr(),
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
               FutureBuilder(

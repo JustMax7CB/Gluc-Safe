@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -69,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         await _firebaseService!.registerUser(email: _email, password: _pass);
       } on FirebaseAuthException catch (e) {
-        snackBarWithDismiss('Invalid user data');
+        snackBarWithDismiss("register_page_invalid_data".tr());
       } finally {
         User? user = _firebaseService!.user;
         if (user != null) {
@@ -78,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       }
     } else {
-      snackBarWithDismiss('Passwords doe not match');
+      snackBarWithDismiss("register_page_passwords_no_match".tr());
     }
   }
 
@@ -93,23 +94,23 @@ class _RegisterPageState extends State<RegisterPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             textField(
-              "Email",
-              "Enter your email address",
-              "Email",
+              "input_email_label".tr(),
+              "input_email_hint".tr(),
+              "input_email_label".tr(),
               const Icon(Icons.email_outlined),
               false,
             ),
             textField(
-              "Password",
-              "Enter your password",
-              "Password",
+              "input_password_label".tr(),
+              "input_password_hint".tr(),
+              "input_password_label".tr(),
               const Icon(Icons.security),
               true,
             ),
             textField(
-              "Confirm Password",
-              "Confirm your password",
-              "Confirm Password",
+              "input_confirm_password_label".tr(),
+              "input_confirm_password_hint".tr(),
+              "input_confirm_password_label".tr(),
               const Icon(Icons.security),
               true,
             ),
@@ -136,11 +137,11 @@ class _RegisterPageState extends State<RegisterPage> {
       child: ElevatedButton(
         onPressed: () {
           if (_formkey.currentState!.validate()) {
-            snackBarWithDismiss("Checking data...");
+            snackBarWithDismiss("form_checking_data".tr());
             checkRegistration();
           }
         },
-        child: const Text("Register"),
+        child: Text("register_page_register_btn".tr()),
       ),
     );
   }
@@ -151,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
         content: Text(text),
         duration: const Duration(seconds: 2),
         action: SnackBarAction(
-          label: 'Dismiss',
+          label: "misc_snackbar_dismiss".tr(),
           onPressed: () {
             // Hide the snackbar before its duration ends
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -194,16 +195,16 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: hint,
           labelText: label),
       onChanged: (String val) {
-        (field == "Email")
+        (field == "Email" || field == "כתובת מייל")
             ? _email = val
-            : (label == "Password")
+            : (label == "Password" || label == "סיסמא")
                 ? _pass = val
                 : _confirmPass = val;
       },
       obscureText: obscure,
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return "$field cannot be empty";
+          return "misc_field_empty".tr(args: [field]);
         }
         return null;
       },
