@@ -66,12 +66,12 @@
 
   "glucose_page_chart_page_route": "Chart Page Route",
   "glucose_page_glucose_entry": "Glucose Entry",
-  "glucose_page_glucose_value": "Glucose Value",
+  "glucose_page_entry_glucose_value": "Glucose Value",
   "glucose_page_add_glucose_entry": "Add Glucose Value",
-  "glucose_page_carbs_value": "Carbs Value(optional)",
+  "glucose_page_entry_carbs_value": "Carbs Value(optional)",
   "glucose_page_entry_date": "Entry Date",
-  "glucose_page_submit_entry": "Submit Entry",
-  "glucose_page_meal_select": "Select a Meal(optional)",
+  "glucose_page_entry_submit": "Submit Entry",
+  "glucose_page_entry_meal_select": "Select a Meal(optional)",
   "glucose_page_entry_note_label": "Notes",
   "glucose_page_entry_note_hint": "Here you can enter your notes",
 

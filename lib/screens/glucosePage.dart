@@ -146,7 +146,7 @@ class _GlucosePageState extends State<GlucosePage> {
               filled: false,
               icon: FaIcon(FontAwesomeIcons.bolt, size: 20),
               hintStyle: TextStyle(fontSize: 10),
-              labelText: "glucose_page_glucose_value".tr()),
+              labelText: "glucose_page_entry_glucose_value".tr()),
           onChanged: (value) {
             glucoseValue = int.parse(value);
           },
@@ -162,7 +162,7 @@ class _GlucosePageState extends State<GlucosePage> {
               filled: false,
               icon: FaIcon(FontAwesomeIcons.candyCane, size: 18),
               hintStyle: TextStyle(fontSize: 10),
-              labelText: "glucose_page_carbs_value".tr()),
+              labelText: "glucose_page_entry_carbs_value".tr()),
           onChanged: (value) {
             carbsValue = int.parse(value);
           },
@@ -207,7 +207,7 @@ class _GlucosePageState extends State<GlucosePage> {
             noteText.clear();
             Navigator.pop(context);
           },
-          child: Text("glucose_page_submit_entry".tr()),
+          child: Text("glucose_page_entry_submit".tr()),
         ),
       ],
     );
@@ -219,7 +219,7 @@ class _GlucosePageState extends State<GlucosePage> {
         enumsList: meals,
         height: _deviceHeight,
         width: _deviceWidth,
-        hint: "glucose_page_meal_select".tr(),
+        hint: "glucose_page_entry_meal_select".tr(),
         save: saveMealValue);
   }
 

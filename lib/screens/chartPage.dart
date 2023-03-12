@@ -121,8 +121,8 @@ class _ChartPageState extends State<ChartPage> {
     String ViewMode = optionSelected;
     selectedYear = args.value.year;
     selectedMonth = args.value.month;
-    // dev.log(selectedYear.toString());
-    // dev.log(selectedMonth.toString());
+    dev.log(selectedYear.toString());
+    dev.log(selectedMonth.toString());
   }
 
   void selectedRangeDates(DateRangePickerSelectionChangedArgs args) {
@@ -170,19 +170,19 @@ class _ChartPageState extends State<ChartPage> {
 
     List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
     if (userGlucoseRecords == null) return [];
-    dev.log("Initial List  \x1B[37m$userGlucoseRecords");
+    // dev.log("Initial List  \x1B[37m$userGlucoseRecords");
 
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
-    dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
+    // dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = sortDateString(userGlucoseRecords);
 
-    if (mode == "Range") {
+    if (mode == "chart_option_range".tr()) {
       userGlucoseRecords = GlucoseByRange(userGlucoseRecords);
-    } else if (mode == "Year") {
+    } else if (mode == "chart_option_year".tr()) {
       userGlucoseRecords = GlucoseByYear(userGlucoseRecords);
-    } else if (mode == "Month") {
+    } else if (mode == "chart_option_month".tr()) {
       userGlucoseRecords = GlucoseByMonth(userGlucoseRecords);
     } else {}
 
