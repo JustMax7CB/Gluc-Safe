@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,6 +41,17 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.amber[800],
         elevation: 1,
+        leading: TextButton(
+          onPressed: () {
+            setState(() {
+              if (context.locale == Locale('en'))
+                context.setLocale(Locale('he'));
+              else
+                context.setLocale(Locale('en'));
+            });
+          },
+          child: Text("misc_change_lang".tr()),
+        ),
       ),
       body: SafeArea(
         child: GestureDetector(
@@ -83,8 +95,8 @@ class _LoginPageState extends State<LoginPage> {
         await GoogleSignIn().signIn();
       },
       icon: const FaIcon(FontAwesomeIcons.google),
-      label: const Text(
-        "Login Using Google Account",
+      label: Text(
+        "login_page_google".tr(),
         style: TextStyle(color: Colors.black),
       ),
     );
@@ -110,10 +122,10 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "Login",
+              "login_page_title".tr(),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -123,17 +135,17 @@ class _LoginPageState extends State<LoginPage> {
           Column(
             children: [
               textField(
-                "Email",
-                "Enter your email address",
-                "Email",
+                "input_email_label".tr(),
+                "input_email_hint".tr(),
+                "input_email_label".tr(),
                 const Icon(Icons.email_outlined),
                 false,
               ),
               SizedBox(height: 13),
               textField(
-                "Password",
-                "Enter your password",
-                "Password",
+                "input_password_label".tr(),
+                "input_password_hint".tr(),
+                "input_password_label".tr(),
                 const Icon(Icons.security),
                 true,
               ),
@@ -155,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         onPressed: () => resetPopup(context),
         child: Text(
-          "Forgot Password?",
+          "login_page_forgot_password".tr(),
           style: TextStyle(fontSize: 13, color: Colors.black),
         ),
       ),
@@ -169,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
       dialogType: DialogType.noHeader,
       dismissOnTouchOutside: false,
       btnOk: OutlinedButton(
-        child: Text("Confirm"),
+        child: Text("login_page_forgot_confirm_btn".tr()),
         onPressed: () {
           try {
             if (_resetKey.currentState!.validate()) {
@@ -182,26 +194,26 @@ class _LoginPageState extends State<LoginPage> {
                   context: context,
                   dialogType: DialogType.success,
                   animType: AnimType.bottomSlide,
-                  title: "Reset Password",
-                  desc: "Check your email for a reset password link",
+                  title: "login_page_forgot_popup_title".tr(),
+                  desc: "login_page_forgot_popup_description".tr(),
                   autoHide: Duration(
                     seconds: 3,
                   )).show();
             }
           } catch (e) {
-            snackBarWithDismiss("Reset Password failed");
+            snackBarWithDismiss("login_page_reset_failed".tr());
           }
         },
       ),
       btnCancel: OutlinedButton(
-        child: Text("Cancel"),
+        child: Text("login_page_forgot_cancel_btn".tr()),
         onPressed: () => Navigator.pop(context),
       ),
       body: Container(
         child: Column(
           children: [
             Text(
-              "Reset Password",
+              "login_page_forgot_popup_title".tr(),
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
             Container(
@@ -214,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                     border: const UnderlineInputBorder(),
                     filled: true,
                     hintStyle: const TextStyle(fontSize: 13),
-                    hintText: "Email",
+                    hintText: "input_email_label".tr(),
                   ),
                   onChanged: (value) {
                     resetEmail = value;
@@ -224,9 +236,9 @@ class _LoginPageState extends State<LoginPage> {
                         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
                     RegExp regExp = RegExp(pattern.toString());
                     if (val == null || val.isEmpty) {
-                      return "Email cannot be empty";
+                      return "login_page_email_empty".tr();
                     } else if (!regExp.hasMatch(val)) {
-                      return "The email is not valid";
+                      return "login_page_email_not_valid".tr();
                     }
                   },
                 ),
@@ -247,9 +259,9 @@ class _LoginPageState extends State<LoginPage> {
           side: BorderSide(width: 1),
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
-          "OR",
+          "misc_or".tr(),
           style: TextStyle(fontSize: 10),
         ),
       ),
@@ -259,10 +271,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget signUpText() {
     return Column(
       children: [
-        const Text("Doesn't Have an account?"),
+        Text("login_page_no_account".tr()),
         TextButton(
-          child: const Text(
-            "Sign up",
+          child: Text(
+            "login_page_signup_btn".tr(),
             style: TextStyle(fontSize: 18),
           ),
           onPressed: () => Navigator.popAndPushNamed(context, "/register"),
@@ -285,11 +297,11 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       onPressed: () {
         if (_formkey.currentState!.validate()) {
-          snackBarWithDismiss("Checking Data...");
+          snackBarWithDismiss("form_checking_data".tr());
           checkLogin();
         }
       },
-      child: const Text("Sign In"),
+      child: Text("login_page_signin_btn".tr()),
     );
   }
 
@@ -299,7 +311,7 @@ class _LoginPageState extends State<LoginPage> {
         content: Text(text),
         duration: const Duration(seconds: 2),
         action: SnackBarAction(
-          label: 'Dismiss',
+          label: "misc_snackbar_dismiss".tr(),
           onPressed: () {
             // Hide the snackbar before its duration ends
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -342,12 +354,14 @@ class _LoginPageState extends State<LoginPage> {
           hintText: hint,
           labelText: label),
       onChanged: (String val) {
-        (field == "Email") ? _email = val : _pass = val;
+        (field == "Email" || field == "כתובת מייל")
+            ? _email = val
+            : _pass = val;
       },
       obscureText: obscure,
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return "$field cannot be empty";
+          return "misc_field_empty".tr(args: [field]);
         }
         return null;
       },

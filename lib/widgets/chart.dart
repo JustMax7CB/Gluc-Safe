@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +26,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _tooltipBehavior = TooltipBehavior(enable: true, header: "Glucose", 
-                                      format: 'point.y mg/DL\npoint.x',borderColor: Colors.red,
-                                      borderWidth: 2,);
+    _tooltipBehavior = TooltipBehavior(
+      enable: true,
+      header: "chart_graph_header".tr(),
+      format: "chart_graph_tooltip_format".tr(args: ['point.y', 'point.x']),
+      borderColor: Colors.red,
+      borderWidth: 2,
+    );
     return Container(
       color: Colors.brown[900],
       width: widget.deviceWidth,

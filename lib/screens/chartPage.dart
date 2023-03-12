@@ -1,9 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/chart.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
-import 'package:intl/intl.dart';
 import 'dart:developer' as dev;
 import 'package:get_it/get_it.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -19,7 +18,11 @@ class _ChartPageState extends State<ChartPage> {
   late double _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   int? startDate, endDate, selectedYear, selectedMonth;
-  List options = ['Month', 'Year', 'Range'];
+  List options = [
+    "chart_option_month".tr(),
+    "chart_option_year".tr(),
+    "chart_option_range".tr()
+  ];
   late String optionSelected;
   DateRangePickerView view = DateRangePickerView.month;
   final DateRangePickerController _controller = DateRangePickerController();
@@ -43,7 +46,7 @@ class _ChartPageState extends State<ChartPage> {
             enumsList: options,
             height: 700,
             width: 400,
-            hint: 'Select Option',
+            hint: "chart_page_select_option".tr(),
             save: (selection) {
               setState(() {
                 optionSelected = selection;
@@ -79,12 +82,13 @@ class _ChartPageState extends State<ChartPage> {
                 width: _deviceWidth,
                 child: SfDateRangePicker(
                   controller: _controller,
-                  allowViewNavigation: optionSelected == 'Range',
-                  selectionMode: optionSelected == 'Range'
+                  allowViewNavigation:
+                      optionSelected == "chart_option_range".tr(),
+                  selectionMode: optionSelected == "chart_option_range".tr()
                       ? DateRangePickerSelectionMode.range
                       : DateRangePickerSelectionMode.single,
                   onSelectionChanged: (_) {
-                    optionSelected == 'Range'
+                    optionSelected == "chart_option_range".tr()
                         ? selectedRangeDates(_)
                         : selectedSingleDate(_);
                     setState(() {});
@@ -101,9 +105,11 @@ class _ChartPageState extends State<ChartPage> {
   void optionView() {
     switch (optionSelected) {
       case 'Month':
+      case 'חודש':
         _controller.view = DateRangePickerView.year;
         break;
       case 'Year':
+      case 'שנה':
         _controller.view = DateRangePickerView.decade;
         break;
       default:
@@ -115,8 +121,8 @@ class _ChartPageState extends State<ChartPage> {
     String ViewMode = optionSelected;
     selectedYear = args.value.year;
     selectedMonth = args.value.month;
-    // dev.log(selectedYear.toString());
-    // dev.log(selectedMonth.toString());
+    dev.log(selectedYear.toString());
+    dev.log(selectedMonth.toString());
   }
 
   void selectedRangeDates(DateRangePickerSelectionChangedArgs args) {
@@ -164,19 +170,19 @@ class _ChartPageState extends State<ChartPage> {
 
     List? userGlucoseRecords = await _firebaseService!.getGlucoseData();
     if (userGlucoseRecords == null) return [];
-    dev.log("Initial List  \x1B[37m$userGlucoseRecords");
+    // dev.log("Initial List  \x1B[37m$userGlucoseRecords");
 
     userGlucoseRecords = userGlucoseRecords
         .map((record) => ([record['Glucose'], record['Date']]))
         .toList();
-    dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
+    // dev.log("Tuple List  \x1B[37m$userGlucoseRecords");
     userGlucoseRecords = sortDateString(userGlucoseRecords);
 
-    if (mode == "Range") {
+    if (mode == "chart_option_range".tr()) {
       userGlucoseRecords = GlucoseByRange(userGlucoseRecords);
-    } else if (mode == "Year") {
+    } else if (mode == "chart_option_year".tr()) {
       userGlucoseRecords = GlucoseByYear(userGlucoseRecords);
-    } else if (mode == "Month") {
+    } else if (mode == "chart_option_month".tr()) {
       userGlucoseRecords = GlucoseByMonth(userGlucoseRecords);
     } else {}
 
