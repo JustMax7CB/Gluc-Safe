@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/Models/MedHistory.dart';
 import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/mealsEnum.dart';
 import 'package:gluc_safe/Models/glucose.dart';
@@ -128,6 +129,13 @@ class _GlucosePageState extends State<GlucosePage> {
               _firebaseService!.getMedicationData();
             },
             child: const Text("Madication Get Test"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              MedHistory medhis=MedHistory("Advil",2,DateTime.now());
+              _firebaseService!.saveMedHistoryData(medhis);
+            },
+            child: const Text("Madication History Test"),
           ),
         ],
       ),
