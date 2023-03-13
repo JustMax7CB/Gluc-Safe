@@ -5,6 +5,7 @@ import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/Models/medications.dart';
+import 'package:gluc_safe/Models/MedHistory.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
 import 'package:gluc_safe/Models/workout.dart';
@@ -17,11 +18,13 @@ const String GLUCOSE_COLLECTION = 'glucose';
 const String WEIGHT_COLLECTION = 'weight';
 const String MEDICATION_COLLECTION = 'medication';
 const String WORKOUT_COLLECTION = 'workout';
+const String MEDHISTORY_COLLECTION = 'medHistory';
 
 const String GLUCOSE_RECORDS = 'glucose_records';
 const String WEIGHT_RECORDS = 'weight_records';
 const String MEDICATION_RECORDS = 'medication_records';
 const String WORKOUT_RECORDS = 'workout_records';
+const String MEDHISTORY_RECORDS = 'medHistory_records';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -135,6 +138,10 @@ class FirebaseService {
         .collection(WORKOUT_COLLECTION)
         .doc(userID)
         .set({WORKOUT_RECORDS: []});
+    await _database
+        .collection(MEDHISTORY_COLLECTION)
+        .doc(userID)
+        .set({MEDHISTORY_RECORDS: []});
   }
 
   Future<Map?> getUserData() async {
@@ -384,6 +391,51 @@ class FirebaseService {
       dev.log(e.toString());
       dev.log("Failed to get user workout data");
       return null;
+    }
+  }
+
+  Future<bool> saveMedHistoryData(MedHistory medHistoryData) async {
+    // gets an instance of MedHistory
+    // the function will try to save the medication history data to the firebase database
+    List recordsList = [];
+    String? userID = user!.uid;
+    String medName = medHistoryData.medicationName;
+    int numOfPills = medHistoryData.numOfPills;
+    DateTime date = medHistoryData.date;
+    final medHistoryRecord = {
+      'medicationName': medName,
+      'numOfPills': numOfPills,
+      'date': date,
+    };
+    try {
+      var document =
+          await _database.collection(MEDHISTORY_COLLECTION).doc(userID).get();
+      var docList=[];
+      if(document.exists){
+        docList = document.data()![MEDHISTORY_RECORDS];
+      }
+      else{
+        await _database
+        .collection(MEDHISTORY_COLLECTION)
+        .doc(userID)
+        .set({MEDHISTORY_RECORDS: []});
+      }
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(medHistoryRecord);
+      } else {
+        recordsList.add(medHistoryRecord);
+      }
+      dev.log(recordsList.toString());
+      await _database.collection(MEDHISTORY_COLLECTION).doc(userID).set({
+        MEDHISTORY_RECORDS: recordsList,
+      });
+      dev.log(recordsList.toString());
+      dev.log("Medication History data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      return false;
     }
   }
 }
