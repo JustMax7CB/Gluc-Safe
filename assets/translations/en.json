@@ -17,11 +17,13 @@
   "login_page_forgot_popup_title": "Reset Password",
   "login_page_forgot_popup_description": "Check your email for a reset password link",
   "login_page_reset_failed": "Reset Password failed",
-  "login_page_no_account": "Doesn't Have an account?",
+  "login_page_no_account": "Don't Have an account?",
   "login_page_signup_btn": "Sign Up",
   "login_page_signin_btn": "Sign In",
   "login_page_email_empty" : "Email cannot be empty",
   "login_page_email_not_valid" : "Email is not valid",
+  "login_page_welcome_title" : "Welcome to",
+  "login_page_glucsafe_title": "Gluc Safe",
 
 
   "register_page_invalid_data": "Invalid user data",
@@ -49,7 +51,7 @@
   "details_page_contact_phone_hint": "your emergency contact phone number",
 
   "form_checking_data": "Checking Data...",
-  "input_email_hint": "Enter your email address",
+  "input_email_hint": "Enter your email",
   "input_email_label": "Email",
   "input_password_hint": "Enter your password",
   "input_password_label": "Password",

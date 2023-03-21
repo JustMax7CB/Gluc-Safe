@@ -22,6 +22,8 @@
   "login_page_signin_btn": "כניסה",
   "login_page_email_empty" : "כתובת מייל אינה יכולה להיות ריקה",
   "login_page_email_not_valid" : "כתובת מייל לא תקינה",
+  "login_page_welcome_title" : "ברוכים הבאים",
+  "login_page_glucsafe_title": "גלוק-סייף",
 
   "register_page_invalid_data": "נתוני משתמש שגויים",
   "register_page_passwords_no_match": "סיסמאות לא תואמות",
