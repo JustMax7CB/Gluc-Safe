@@ -11,6 +11,9 @@ import 'package:gluc_safe/widgets/customAppBar.dart';
 import 'package:gluc_safe/widgets/textField.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../routes/registerPageRoute.dart';
+import '../widgets/glucsafeAppbar.dart';
+import '../widgets/textStroke.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: glucSafeAppbar(),
+          appBar: glucSafeAppbar(context),
           body: loginContainer(),
         ),
         GestureDetector(
@@ -236,105 +239,13 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    onPressed: () => Navigator.pushNamed(context, "/register"),
-                  )
+                    onPressed: () =>
+                        Navigator.of(context).push(registerPageRoute()),
+                  ),
                 ],
               )),
         ],
       ),
-    );
-  }
-
-  List<Shadow> textStroke(double width, Color color) {
-    return <Shadow>[
-      Shadow(
-        color: color,
-        blurRadius: 0,
-        offset: Offset(-width, -width),
-      ),
-      Shadow(
-        color: color,
-        blurRadius: 0,
-        offset: Offset(width, -width),
-      ),
-      Shadow(
-        color: color,
-        blurRadius: 0,
-        offset: Offset(width, width),
-      ),
-      Shadow(
-        color: color,
-        blurRadius: 0,
-        offset: Offset(-width, width),
-      ),
-    ];
-  }
-
-  AppBar glucSafeAppbar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      toolbarHeight: 140,
-      elevation: 0.0,
-      title: Container(
-        margin: EdgeInsets.only(bottom: 30),
-        child: Column(
-          children: [
-            Text(
-              "login_page_welcome_title".tr(),
-              style: welcomeTextStyle(),
-            ),
-            Text(
-              "login_page_glucsafe_title".tr(),
-              style: glucSafeTextStyle(),
-            )
-          ],
-        ),
-      ),
-      centerTitle: true,
-      flexibleSpace: ClipPath(
-        clipper: CustomAppBar(),
-        child: Container(
-            height: 250,
-            width: _deviceWidth,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                  Color.fromRGBO(89, 200, 98, 1),
-                  Color.fromRGBO(59, 190, 65, 1)
-                ]))),
-      ),
-    );
-  }
-
-  TextStyle glucSafeTextStyle() {
-    return TextStyle(
-      fontFamily: "DM_Sans",
-      fontSize: 50,
-      fontWeight: FontWeight.w500,
-      shadows: <Shadow>[
-        Shadow(
-          color: Color.fromRGBO(0, 0, 0, 0.6),
-          blurRadius: 0,
-          offset: Offset(0, 3),
-        ),
-      ],
-    );
-  }
-
-  TextStyle welcomeTextStyle() {
-    return TextStyle(
-      fontFamily: "DM_Sans",
-      fontSize: 28,
-      fontWeight: FontWeight.w500,
-      shadows: <Shadow>[
-        Shadow(
-          color: Color.fromRGBO(0, 0, 0, 0.6),
-          blurRadius: 0,
-          offset: Offset(0, 3),
-        ),
-      ],
     );
   }
 
