@@ -7,7 +7,17 @@
   "main_page_tooltip_medicine": "Medicine Page",
   "main_page_tooltip_weight": "Weight Page",
   "main_page_tooltip_profile": "Profile Page",
-  "main_page_appbar_hello" : "Hello {}",
+  "main_page_appbar_welcome" : "Welcome {}",
+  "main_page_appbar_title" : "My Glucose",
+  "main_page_appbar_glucose_title" : "{}",
+  "main_page_appbar_glucose_average_value" : "{} mg/DL",
+
+  "main_page_add_glucose" : "Add Glucose",
+  "main_page_add_medicine" : "Add Medicine",
+  "main_page_add_weight" : "Add Weight",
+  "main_page_add_workout" : "Add Workout",
+  "main_page_glucose_graph" : "Glucose Graph",
+
 
   "login_page_google": "Login Using Google",
   "login_page_title": "Login",

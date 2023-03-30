@@ -39,7 +39,7 @@ dependencies:
   cloud_firestore: ^4.2.0
   age_calculator: ^1.0.0
   dropdown_button2: ^1.9.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   syncfusion_flutter_charts: ^20.3.61
   syncfusion_flutter_datepicker: ^20.3.61
   flutter_cupertino_datetime_picker: ^3.0.0

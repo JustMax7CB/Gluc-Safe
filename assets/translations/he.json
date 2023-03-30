@@ -7,7 +7,16 @@
   "main_page_tooltip_medicine": "עמוד תרופות",
   "main_page_tooltip_weight": "עמוד משקל",
   "main_page_tooltip_profile": "פרופיל",
-  "main_page_appbar_hello" : "{} שלום",
+  "main_page_appbar_welcome" : "ברוך הבא {}",
+  "main_page_appbar_title" : "הגלוקוז שלי",
+  "main_page_appbar_glucose_title" : "אחרון",
+  "main_page_appbar_glucose_average_value" : "{} מג'/דצ' ",
+
+  "main_page_add_glucose" : "הוספת ערך גלוקוז",
+  "main_page_add_medicine" : "הוספת תרופות",
+  "main_page_add_weight" : "הוספת משקל",
+  "main_page_add_workout" : "הוספת אימון",
+  "main_page_glucose_graph" : "גרף גלוקוז",
 
   "login_page_google": "כניסה באמצעות גוגל",
   "login_page_title": "כניסה",

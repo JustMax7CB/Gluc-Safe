@@ -288,8 +288,8 @@ class _LoginPageState extends State<LoginPage> {
           try {
             if (_resetKey.currentState!.validate()) {
               Future<bool>? result;
-              if (_firebaseService?.resetPassword(email: resetEmail!) == false)
-                throw Exception();
+              _firebaseService?.resetPassword(email: resetEmail!);
+
               Navigator.pop(context);
               sleep(Duration(milliseconds: 500));
               AwesomeDialog(
@@ -302,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
                     seconds: 3,
                   )).show();
             }
-          } catch (e) {
+          } on FirebaseAuthException {
             snackBarWithDismiss("login_page_reset_failed".tr());
           }
         },

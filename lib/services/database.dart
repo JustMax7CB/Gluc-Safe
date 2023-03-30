@@ -79,7 +79,7 @@ class FirebaseService {
       return true;
     } catch (e) {
       dev.log("Failed to reset password");
-      return false;
+      throw FirebaseAuthException(code: 'auth/user-not-found');
     }
   }
 

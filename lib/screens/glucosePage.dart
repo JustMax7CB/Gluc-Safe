@@ -23,32 +23,19 @@ class GlucosePage extends StatefulWidget {
 }
 
 class _GlucosePageState extends State<GlucosePage> {
-  late double _deviceWidth, _deviceHeight;
-
-  FirebaseService? _firebaseService = GetIt.instance.get<FirebaseService>();
-
-  GlucUser? _glucUser;
-
-  final _formkey = GlobalKey<FormState>();
-
+  TextEditingController carbsController = TextEditingController();
+  int? carbsValue;
   TextEditingController dateinput = TextEditingController();
-
+  TextEditingController glucoseController = TextEditingController();
+  late int glucoseValue;
+  TextEditingController mealController = TextEditingController();
+  String? mealValue;
   TextEditingController noteText = TextEditingController();
 
-  late int glucoseValue;
-
-  int? carbsValue;
-
-  String? mealValue;
-
-  @override
-  Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: buttonsContainer(),
-    );
-  }
+  late double _deviceWidth, _deviceHeight;
+  FirebaseService? _firebaseService = GetIt.instance.get<FirebaseService>();
+  final _formkey = GlobalKey<FormState>();
+  GlucUser? _glucUser;
 
   Future<GlucUser> getGlucUser() async {
     String uid = _firebaseService!.user.uid;
@@ -132,7 +119,7 @@ class _GlucosePageState extends State<GlucosePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              MedHistory medhis=MedHistory("Advil",2,DateTime.now());
+              MedHistory medhis = MedHistory("Advil", 2, DateTime.now());
               _firebaseService!.saveMedHistoryData(medhis);
             },
             child: const Text("Madication History Test"),
@@ -147,6 +134,8 @@ class _GlucosePageState extends State<GlucosePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TextFormField(
+          controller: glucoseController,
+          onEditingComplete: () => dev.log(glucoseController.text),
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
               border: OutlineInputBorder(),
@@ -155,9 +144,6 @@ class _GlucosePageState extends State<GlucosePage> {
               icon: FaIcon(FontAwesomeIcons.bolt, size: 20),
               hintStyle: TextStyle(fontSize: 10),
               labelText: "glucose_page_entry_glucose_value".tr()),
-          onChanged: (value) {
-            glucoseValue = int.parse(value);
-          },
         ),
         SizedBox(
           height: _deviceHeight * 0.01,
@@ -296,5 +282,14 @@ class _GlucosePageState extends State<GlucosePage> {
     } else {
       print("Date is not selected");
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+    return SafeArea(
+      child: buttonsContainer(),
+    );
   }
 }
