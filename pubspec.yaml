@@ -38,16 +38,16 @@ dependencies:
   firebase_auth: ^4.2.1
   cloud_firestore: ^4.2.0
   age_calculator: ^1.0.0
-  dropdown_button2: ^1.9.1
+  dropdown_button2: ^2.0.0
   intl: ^0.18.0
-  syncfusion_flutter_charts: ^20.3.61
-  syncfusion_flutter_datepicker: ^20.3.61
+  syncfusion_flutter_charts: ^21.1.37
+  syncfusion_flutter_datepicker: ^21.1.37
   flutter_cupertino_datetime_picker: ^3.0.0
   numberpicker: ^2.1.1
-  google_sign_in: ^5.4.2
+  google_sign_in: ^6.0.2
   font_awesome_flutter: ^10.2.1
   get_it: ^7.2.0
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.12.0
   folding_cell: ^1.0.2
   awesome_dialog: ^3.0.2
   easy_localization: ^3.0.1
