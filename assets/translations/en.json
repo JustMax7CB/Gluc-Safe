@@ -18,6 +18,16 @@
   "main_page_add_workout" : "Add Workout",
   "main_page_glucose_graph" : "Glucose Graph",
 
+  "main_page_glucose_form_title" : "New Glucose Entry",
+  "main_page_glucose_form_glocuse" : "Glucose",
+  "main_page_glucose_form_carbs" : "Carbs*",
+  "main_page_glucose_form_date" : "Date",
+  "main_page_glucose_form_meal" : "Meal*",
+  "main_page_glucose_form_notes" : "Notes*",
+  "main_page_glucose_form_optional" : "*Optional Field",
+  "main_page_glucose_form_save_btn" : "Save Entry",
+  "main_page_glucose_form_cancel_btn" : "Cancel",
+
 
   "login_page_google": "Login Using Google",
   "login_page_title": "Login",
