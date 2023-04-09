@@ -1,16 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:gluc_safe/Models/enums/enumsExport.dart';
+import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
+import 'package:gluc_safe/screens/mainPage/widgets/glucose_form_modal_sheet.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/navbar_button.dart';
 import 'package:gluc_safe/screens/screens.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
+import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
 
 class MainPage extends StatefulWidget {
@@ -25,7 +30,13 @@ class _MainPageState extends State<MainPage> {
   FirebaseService? _firebaseService;
   GlucUser? _glucUser;
   GlucUser nullUser = GlucUser("", "", DateTime.now(), 0, "", "", "", "");
-  GlobalKey _formKey = GlobalKey<FormState>();
+
+  TextEditingController glucoseController = TextEditingController();
+  TextEditingController carbsController = TextEditingController();
+  TextEditingController dateContoller = TextEditingController(
+      text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
+  TextEditingController mealController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
 
   @override
   void initState() {
@@ -49,7 +60,7 @@ class _MainPageState extends State<MainPage> {
         userData['contactName'],
         userData['contactNumber']);
     _glucUser = user;
-    return await user;
+    return user;
   }
 
   @override
@@ -57,6 +68,7 @@ class _MainPageState extends State<MainPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavBar(
         logout: _firebaseService!.logout,
         emergency: () => dev.log("Emergency Pressed"),
@@ -77,14 +89,23 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "main_page_appbar_welcome".tr(),
-              style: TextStyle(
-                fontFamily: "DM_Sans",
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-                color: Color.fromRGBO(89, 180, 98, 1),
-              ),
+            FutureBuilder(
+              future: getGlucUser(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    "main_page_appbar_welcome".tr(args: [_glucUser!.firstName]),
+                    style: TextStyle(
+                      fontFamily: "DM_Sans",
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(89, 180, 98, 1),
+                    ),
+                  );
+                } else {
+                  return Text("");
+                }
+              },
             ),
             Container(
               height: _deviceHeight * 0.37,
@@ -97,10 +118,16 @@ class _MainPageState extends State<MainPage> {
                 mainAxisSpacing: 10,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      dev.log("add glucose button pressed");
-                      showDialogForm();
-                    },
+                    onTap: () => showModalBottomSheet(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(34),
+                          topRight: Radius.circular(34),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => GlucoseFormModalSheet(),
+                    ),
                     child: CardButton(
                       title: "main_page_add_glucose".tr(),
                       icon: SvgPicture.asset(
@@ -173,32 +200,6 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  showDialogForm() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("glucose_page_glucose_entry".tr()),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: _deviceHeight * 0.6,
-                child: Form(
-                  key: _formKey,
-                  child: Container(),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("misc_snackbar_dismiss".tr()),
-              ),
-            ],
-          ),
         ),
       ),
     );

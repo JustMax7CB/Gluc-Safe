@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CardButton extends StatelessWidget {
+  final String title;
+  final Widget icon;
+  double? width;
+  double? height;
+
   CardButton(
       {super.key,
       required this.title,
       required this.icon,
       this.width,
       this.height});
-  final String title;
-  final Widget icon;
-  double? width;
-  double? height;
 
   @override
   Widget build(BuildContext context) {

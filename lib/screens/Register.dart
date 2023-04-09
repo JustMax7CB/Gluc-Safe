@@ -19,7 +19,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late double _deviceHeight, _deviceWidth;
+  late double _deviceWidth;
   final _formkey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -35,7 +35,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
 
     return Stack(
@@ -46,141 +45,144 @@ class _RegisterPageState extends State<RegisterPage> {
           body: Container(
             margin: EdgeInsets.only(bottom: 10, top: 20),
             width: _deviceWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "login_page_signup_btn".tr(),
-                  style: TextStyle(
-                    fontFamily: "DM_Sans",
-                    fontSize: 60,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromRGBO(59, 178, 67, 1),
-                    shadows: <Shadow>[
-                      Shadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.6),
-                        blurRadius: 0,
-                        offset: Offset(0, 3),
+            child: Form(
+              key: _formkey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "login_page_signup_btn".tr(),
+                    style: TextStyle(
+                      fontFamily: "DM_Sans",
+                      fontSize: 60,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(59, 178, 67, 1),
+                      shadows: <Shadow>[
+                        Shadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                          blurRadius: 0,
+                          offset: Offset(0, 3),
+                        ),
+                      ]..addAll(
+                          textStroke(
+                            0.8,
+                            Color.fromRGBO(0, 0, 0, 0.6),
+                          ),
+                        ),
+                    ),
+                  ),
+                  Container(
+                    // Email Input
+                    margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
+                    child: InputFieldWidget(
+                      hint: "input_email_hint".tr(),
+                      label: "input_email_label".tr(),
+                      controller: _emailController,
+                      leadingIcon: SvgPicture.asset(
+                          "lib/assets/icons_svg/email_envelope.svg"),
+                      onChanged: () {},
+                      validator: () {},
+                    ),
+                  ),
+                  Container(
+                    // Password input
+                    margin: EdgeInsets.fromLTRB(35, 0, 35, 10),
+                    child: InputFieldWidget(
+                      hint: "input_password_hint".tr(),
+                      label: "input_password_label".tr(),
+                      obscure: obscurePassword,
+                      controller: _passwordController,
+                      leadingIcon: SvgPicture.asset(
+                          "lib/assets/icons_svg/password_lock.svg"),
+                      actionIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                            "lib/assets/icons_svg/password_view_enabled.svg",
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.scaleDown),
                       ),
-                    ]..addAll(
-                        textStroke(
-                          0.8,
-                          Color.fromRGBO(0, 0, 0, 0.6),
+                      onChanged: () {},
+                      validator: () {},
+                    ),
+                  ),
+                  Container(
+                    // Confirm Password input
+                    margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
+                    child: InputFieldWidget(
+                      hint: "input_confirm_password_hint".tr(),
+                      label: "input_confirm_password_label".tr(),
+                      obscure: obscurePassword,
+                      controller: _confirmPasswordController,
+                      leadingIcon: SvgPicture.asset(
+                          "lib/assets/icons_svg/password_lock.svg"),
+                      actionIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                            "lib/assets/icons_svg/password_view_enabled.svg",
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.scaleDown),
+                      ),
+                      onChanged: () {},
+                      validator: () {},
+                    ),
+                  ),
+                  Container(
+                    // Sign in Outline Button
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.3),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                        )
+                      ],
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(45),
+                      gradient: RadialGradient(
+                        radius: 13,
+                        focal: Alignment.topRight,
+                        colors: <Color>[
+                          Color.fromRGBO(23, 154, 40, 1),
+                          Color.fromRGBO(86, 180, 98, 0)
+                        ],
+                      ),
+                    ),
+                    child: OutlinedButton(
+                      onPressed: checkRegistration,
+                      style: OutlinedButton.styleFrom(
+                        fixedSize: Size(220, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45),
                         ),
                       ),
-                  ),
-                ),
-                Container(
-                  // Email Input
-                  margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
-                  child: InputFieldWidget(
-                    hint: "input_email_hint".tr(),
-                    label: "input_email_label".tr(),
-                    controller: _emailController,
-                    leadingIcon: SvgPicture.asset(
-                        "lib/assets/icons_svg/email_envelope.svg"),
-                    onChanged: () {},
-                    validator: () {},
-                  ),
-                ),
-                Container(
-                  // Password input
-                  margin: EdgeInsets.fromLTRB(35, 0, 35, 10),
-                  child: InputFieldWidget(
-                    hint: "input_password_hint".tr(),
-                    label: "input_password_label".tr(),
-                    obscure: obscurePassword,
-                    controller: _passwordController,
-                    leadingIcon: SvgPicture.asset(
-                        "lib/assets/icons_svg/password_lock.svg"),
-                    actionIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          obscurePassword = !obscurePassword;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                          "lib/assets/icons_svg/password_view_enabled.svg",
-                          height: 30,
-                          width: 30,
-                          fit: BoxFit.scaleDown),
-                    ),
-                    onChanged: () {},
-                    validator: () {},
-                  ),
-                ),
-                Container(
-                  // Confirm Password input
-                  margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
-                  child: InputFieldWidget(
-                    hint: "input_confirm_password_hint".tr(),
-                    label: "input_confirm_password_label".tr(),
-                    obscure: obscurePassword,
-                    controller: _confirmPasswordController,
-                    leadingIcon: SvgPicture.asset(
-                        "lib/assets/icons_svg/password_lock.svg"),
-                    actionIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          obscurePassword = !obscurePassword;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                          "lib/assets/icons_svg/password_view_enabled.svg",
-                          height: 30,
-                          width: 30,
-                          fit: BoxFit.scaleDown),
-                    ),
-                    onChanged: () {},
-                    validator: () {},
-                  ),
-                ),
-                Container(
-                  // Sign in Outline Button
-                  decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                      )
-                    ],
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.circular(45),
-                    gradient: RadialGradient(
-                      radius: 13,
-                      focal: Alignment.topRight,
-                      colors: <Color>[
-                        Color.fromRGBO(23, 154, 40, 1),
-                        Color.fromRGBO(86, 180, 98, 0)
-                      ],
-                    ),
-                  ),
-                  child: OutlinedButton(
-                    onPressed: checkRegistration,
-                    style: OutlinedButton.styleFrom(
-                      fixedSize: Size(220, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(45),
+                      child: Text(
+                        "login_page_signup_btn".tr(),
+                        style: TextStyle(
+                            fontFamily: "DM_Sans",
+                            fontSize: 30,
+                            color: Colors.white,
+                            shadows: <Shadow>[
+                              Shadow(
+                                color: Color.fromRGBO(0, 0, 0, 0.25),
+                                blurRadius: 2,
+                                offset: Offset(2, 4),
+                              )
+                            ]),
                       ),
                     ),
-                    child: Text(
-                      "login_page_signup_btn".tr(),
-                      style: TextStyle(
-                          fontFamily: "DM_Sans",
-                          fontSize: 30,
-                          color: Colors.white,
-                          shadows: <Shadow>[
-                            Shadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              blurRadius: 2,
-                              offset: Offset(2, 4),
-                            )
-                          ]),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
