@@ -47,6 +47,7 @@ class _MainPageState extends State<MainPage> {
 
   Future<GlucUser> getGlucUser() async {
     String uid = _firebaseService!.user.uid;
+
     Map userData = await _firebaseService!.getUserData() as Map;
     var timestamp = userData['birthdate'].seconds;
     DateTime birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);

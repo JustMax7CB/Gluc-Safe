@@ -62,6 +62,7 @@
   "details_page_user_birthday_hint" : "Choose your date of birth",
   "details_page_user_height_label" : "Height",
   "details_page_user_height_hint" : "enter your height (in cm)",
+  "details_page_user_gender_label" : "Gender",
   "details_page_user_gender_hint" : "Select your gender",
   "details_page_user_gender_error": "Please select a gender",
   "details_page_contact_title": "Contact",

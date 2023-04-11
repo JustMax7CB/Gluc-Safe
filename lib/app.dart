@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  if (snapshot.data!.displayName == null) {
+                    return const UserDetails();
+                  } else if (!snapshot.data!.emailVerified)
+                    return const LoginPage();
                   return const MainPage();
                 } else if (snapshot.hasError) {
                   ScaffoldMessenger.of(context).showSnackBar(
