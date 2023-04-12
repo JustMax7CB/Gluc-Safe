@@ -44,8 +44,9 @@ class FirebaseService {
     // the function will try to register the user to the firebase database
     // and will return true if successful otherwise return false
     try {
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      result.user!.sendEmailVerification();
       return true;
     } catch (e) {
       dev.log(e.toString());
@@ -63,13 +64,13 @@ class FirebaseService {
     try {
       UserCredential _userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      if (_userCredential != null) {
-        currentUser = await getUserData();
-        return true;
-      }
+      return true;
+    } on FirebaseAuthException catch (e) {
+      dev.log("Signing in failed with firebase error: " + e.toString());
       return false;
     } catch (e) {
-      throw FirebaseAuthException(code: 'Log in failed');
+      dev.log("Signing in failed with error: " + e.toString());
+      return false;
     }
   }
 
@@ -96,7 +97,7 @@ class FirebaseService {
     String mobileNum = glucUser.mobileNum;
     String contactName = glucUser.contactName;
     String contactMobile = glucUser.contactNum;
-
+    await _auth.currentUser!.updateDisplayName(firstName);
     try {
       await _database.collection(USER_COLLECTION).doc(userId).set(
         {
@@ -113,7 +114,7 @@ class FirebaseService {
       openUserCollections();
       return true;
     } catch (e) {
-      dev.log("Failed to save user data");
+      dev.log("Database Service Failed to save user data");
       return false;
     }
   }
@@ -410,15 +411,14 @@ class FirebaseService {
     try {
       var document =
           await _database.collection(MEDHISTORY_COLLECTION).doc(userID).get();
-      var docList=[];
-      if(document.exists){
+      var docList = [];
+      if (document.exists) {
         docList = document.data()![MEDHISTORY_RECORDS];
-      }
-      else{
+      } else {
         await _database
-        .collection(MEDHISTORY_COLLECTION)
-        .doc(userID)
-        .set({MEDHISTORY_RECORDS: []});
+            .collection(MEDHISTORY_COLLECTION)
+            .doc(userID)
+            .set({MEDHISTORY_RECORDS: []});
       }
       if (document.exists && docList != null) {
         recordsList = docList;

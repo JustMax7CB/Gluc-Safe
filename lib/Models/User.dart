@@ -33,4 +33,7 @@ class GlucUser {
   get mobileNum => _mobileNum;
   get contactName => _contactName;
   get contactNum => _contactNum;
+
+  factory GlucUser.nullUser() =>
+      GlucUser("", "", DateTime.now(), 0, "", "", "", "");
 }

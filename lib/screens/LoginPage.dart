@@ -44,10 +44,19 @@ class _LoginPageState extends State<LoginPage> {
 
     return Stack(
       children: [
-        Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: glucSafeAppbar(context),
-          body: loginContainer(),
+        GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: glucSafeAppbar(context),
+            body: loginContainer(),
+          ),
         ),
         GestureDetector(
           onTap: () {
@@ -268,8 +277,11 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> checkLogin() async {
     try {
       snackBarWithDismiss("Checking credentials...");
-      await _firebaseService!.loginUser(
+      bool result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
+      if (result) {
+        Navigator.popAndPushNamed(context, '/');
+      }
     } on FirebaseAuthException catch (e) {
       dev.log("error is: $e");
       snackBarWithDismiss(e.code);

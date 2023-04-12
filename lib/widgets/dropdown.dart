@@ -33,7 +33,7 @@ Widget DropDown(
         filled: true,
         contentPadding: EdgeInsets.only(bottom: 15),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(14),
         ),
       ),
       isExpanded: true,

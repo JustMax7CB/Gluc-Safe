@@ -104,7 +104,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                       controller: dateContoller,
                       deviceWidth: _deviceWidth,
                       hintText: "main_page_glucose_form_date".tr(),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.datetime,
                       readOnly: true,
                       onTap: () {
                         DatePicker.showDatePicker(
