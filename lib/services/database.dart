@@ -55,22 +55,32 @@ class FirebaseService {
     }
   }
 
-  Future<bool> loginUser(
+  Future<dynamic> loginUser(
       {required String email, required String password}) async {
-    // gets email and password as string
-    // the function will try to sign in the user using the email and password provided
-    // by checking the the firebase authentication database
-    // and will return true if successful otherwise return false
     try {
       UserCredential _userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      return true;
+      if (!_userCredential.user!.emailVerified) {
+        await _auth
+            .signOut(); // Sign out the user if their email isn't verified
+        return 'Email not verified';
+      }
+      return _userCredential;
     } on FirebaseAuthException catch (e) {
-      dev.log("Signing in failed with firebase error: " + e.toString());
-      return false;
+      switch (e.code) {
+        case 'user-not-found':
+          dev.log('User not found');
+          return 'User not found';
+        case 'wrong-password':
+          dev.log('Wrong password');
+          return 'Wrong password';
+        // Add additional cases for other error codes as needed
+        default:
+          dev.log('An error occurred: ${e.message}');
+          break;
+      }
     } catch (e) {
-      dev.log("Signing in failed with error: " + e.toString());
-      return false;
+      dev.log('An error occurred: $e');
     }
   }
 
