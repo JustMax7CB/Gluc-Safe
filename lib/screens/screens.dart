@@ -3,7 +3,6 @@ export 'homePage.dart';
 export 'register.dart';
 export 'userDetails.dart';
 export 'userProfile.dart';
-export 'chartPage.dart';
 export 'Medications.dart';
 export 'weightPage.dart';
 export 'workoutPage.dart';
