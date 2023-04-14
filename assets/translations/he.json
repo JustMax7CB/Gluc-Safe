@@ -76,7 +76,7 @@
   "input_confirm_password_label": "אישור סיסמא",
   "input_confirm_password_hint": "אשר/י את הסיסמא שלך",
 
-  "chart_page_select_option": "בחירת תצוגה",
+  "chart_page_select_option": "סינון",
 
   "chart_graph_header" : "גלוקוז",
   "chart_graph_tooltip_format" : "מ''ג/ד''ל {}\n{}",

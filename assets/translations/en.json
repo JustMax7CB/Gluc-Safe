@@ -79,13 +79,14 @@
   "input_confirm_password_hint": "Confirm your password",
   "input_confirm_password_label": "Confirm Password",
 
-  "chart_page_select_option": "Select Option",
+  "chart_page_select_option": "Filter",
   
   "chart_graph_header" : "Glucose",
   "chart_graph_tooltip_format" : "{} mg/DL\n{}",
   "chart_option_month" : "Month",
   "chart_option_year" : "Year",
   "chart_option_range" : "Range",
+
 
   "glucose_page_chart_page_route": "Chart Page Route",
   "glucose_page_glucose_entry": "Glucose Entry",

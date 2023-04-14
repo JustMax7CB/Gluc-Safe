@@ -30,19 +30,27 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       enable: true,
       header: "chart_graph_header".tr(),
       format: "chart_graph_tooltip_format".tr(args: ['point.y', 'point.x']),
-      borderColor: Colors.red,
       borderWidth: 2,
     );
     return Container(
-      color: Colors.brown[900],
       width: widget.deviceWidth,
       height: widget.deviceHeight! * 0.3,
       child: SfCartesianChart(
         tooltipBehavior: _tooltipBehavior,
-        primaryXAxis: CategoryAxis(),
+        primaryXAxis: CategoryAxis(
+          labelRotation: -40,
+          labelStyle: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            fontFamily: "DM_Sans",
+          ),
+        ),
+        plotAreaBackgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         series: <ChartSeries>[
           LineSeries<ChartData, String>(
-            width: 4,
+            width: 2,
+            color: Colors.black,
             enableTooltip: true,
             dataSource: widget.glucoseValues
                 .map((glucTuple) => ChartData(glucTuple[1], glucTuple[0]))

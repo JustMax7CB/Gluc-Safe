@@ -210,7 +210,7 @@ class _GlucosePageState extends State<GlucosePage> {
   mealDropDown() {
     List meals = Meal.values.map((e) => e.toString().split(".")[1]).toList();
     return DropDown(
-        enumsList: meals,
+        optionList: meals,
         height: _deviceHeight,
         width: _deviceWidth,
         hint: "glucose_page_entry_meal_select".tr(),
