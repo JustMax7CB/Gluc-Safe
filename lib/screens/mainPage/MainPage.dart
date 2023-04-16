@@ -120,6 +120,7 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   CardButton(
                     onTap: () => showModalBottomSheet(
+                      isDismissible: false,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(34),
