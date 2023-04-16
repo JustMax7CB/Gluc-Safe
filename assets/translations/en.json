@@ -26,7 +26,6 @@
   "main_page_glucose_form_notes" : "Notes*",
   "main_page_glucose_form_optional" : "*Optional Field",
   "main_page_glucose_form_save_btn" : "Save Entry",
-  "main_page_glucose_form_cancel_btn" : "Cancel",
 
 
   "login_page_google": "Login Using Google",
@@ -103,6 +102,10 @@
   "glucose_alert_low_sugar_message": "Your blood sugar level is low. We recommend that you consume 15-20 grams of fast-acting carbohydrates, such as glucose tablets, fruit juice, or candy, immediately to raise your blood sugar level and prevent hypoglycemia. Pressing the confirm button will create a reminder for you to check your blood sugar level again in 15 minutes . If symptoms persist or worsen, seek medical attention immediately.",
   "glucose_alert_high_sugar_title": "High Blood Sugar Alert",
   "glucose_alert_high_sugar_message": "Your blood sugar level is high. Please avoid consuming sugary or high-carbohydrate foods and drinks, and drink plenty of water to stay hydrated. Pressing the confirm button will create a reminder for you to check your blood sugar level again in 2-3 hours. If symptoms persist or worsen, seek medical attention immediately.",
+  
+  "glucose_notification_title": "Glucose Check Reminder",
+  "glucose_notification_message": "its time to take new measurement of your blood sugar",
+
 
   "misc_email_cant_be_empty": "Email cannot be empty",
   "misc_email_not_valid": "The email address is not valid",
@@ -115,4 +118,6 @@
   "misc_label_empty": "Field {} cannot be empty",
   "misc_cancel": "Cancel",
   "misc_confirm": "Confirm"
+
+  
 }

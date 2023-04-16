@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
@@ -8,8 +7,10 @@ import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/form_input_field.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/warning_glucose_dialog.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/notification_api.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
+
 import 'dart:developer' as dev;
 
 class GlucoseFormModalSheet extends StatefulWidget {
@@ -48,6 +49,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
   void initState() {
     _firebaseService = GetIt.instance.get<FirebaseService>();
     _focusNode.addListener(glucoseValueTest);
+
     super.initState();
   }
 
@@ -74,7 +76,12 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           dev.log("Low Glucose Value");
           showGlucoseWarningDialog(
             context,
-            () => Navigator.pop(context),
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             () {
               overrideWarning = true;
               Navigator.pop(context);
@@ -86,7 +93,12 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           dev.log("High Glucose Value");
           showGlucoseWarningDialog(
             context,
-            () => Navigator.pop(context),
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(hours: 3));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             () {
               overrideWarning = true;
               Navigator.pop(context);
@@ -100,7 +112,12 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           dev.log("Low Glucose Value");
           showGlucoseWarningDialog(
             context,
-            () => Navigator.pop(context),
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             () {
               overrideWarning = true;
               Navigator.pop(context);
@@ -112,7 +129,12 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           dev.log("High Glucose Value");
           showGlucoseWarningDialog(
             context,
-            () => Navigator.pop(context),
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(hours: 3));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
             () {
               overrideWarning = true;
               Navigator.pop(context);
@@ -123,6 +145,11 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
         }
       }
     }
+  }
+
+  void setScheduledAlert(String title, String message, Duration time) {
+    NotificationApi.showScheduledNotification(
+        title: title, body: message, scheduledDate: DateTime.now().add(time));
   }
 
   @override
@@ -141,7 +168,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
       width: _deviceWidth,
-      height: _deviceHeight * 0.5,
+      height: _deviceHeight * 0.55,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
