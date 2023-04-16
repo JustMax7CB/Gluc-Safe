@@ -212,9 +212,13 @@ class _RegisterPageState extends State<RegisterPage> {
               context.setLocale(Locale('en'));
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 75, right: 15),
+            padding: context.locale == Locale('en')
+                ? const EdgeInsets.only(top: 75, right: 15)
+                : const EdgeInsets.only(top: 75, left: 15),
             child: Align(
-              alignment: Alignment.topRight,
+              alignment: context.locale == Locale('en')
+                  ? Alignment.topRight
+                  : Alignment.topLeft,
               child: Container(
                 child: Image.asset(
                   "lib/assets/icons_svg/globe_lang.png",

@@ -40,6 +40,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    isLoading = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
 
@@ -285,9 +291,7 @@ class _LoginPageState extends State<LoginPage> {
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
       if (result is UserCredential) {
-        isLoading = false;
         Navigator.popAndPushNamed(context, '/');
-        return;
       } else if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         throw FirebaseAuthException(code: result);
@@ -295,9 +299,6 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       dev.log("error is: $e");
       snackBarWithDismiss(e.code);
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
