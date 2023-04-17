@@ -9,19 +9,25 @@ class FormInputField extends StatefulWidget {
       hintText,
       deviceWidth,
       onTap,
-      readOnly})
+      readOnly,
+      onTapOutside,
+      focusNode})
       : _controller = controller,
         this.keyboardType = keyboardType,
         this.hintText = hintText,
         this._deviceWidth = deviceWidth,
         this.onTap = onTap,
-        this.readOnly = readOnly;
+        this.readOnly = readOnly,
+        this.onTapOutside = onTapOutside,
+        this.focusNode = focusNode;
   final TextEditingController _controller;
   final TextInputType? keyboardType;
   final String? hintText;
   final double _deviceWidth;
   final Function? onTap;
   final bool? readOnly;
+  final Function? onTapOutside;
+  final FocusNode? focusNode;
 
   @override
   State<FormInputField> createState() => _FormInputFieldState();
@@ -35,8 +41,9 @@ class _FormInputFieldState extends State<FormInputField> {
       height: 40,
       width: widget._deviceWidth * 0.35,
       child: TextFormField(
+        focusNode: widget.focusNode ?? FocusNode(),
         readOnly: widget.readOnly ?? false,
-        onTap: () => widget.onTap ?? {},
+        onTap: () => widget.onTap == null ? {} : widget.onTap!(),
         controller: widget._controller,
         keyboardType: widget.keyboardType,
         decoration: InputDecoration(

@@ -31,11 +31,18 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseService? _firebaseService;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
+  @override
+  void dispose() {
+    isLoading = false;
+    super.dispose();
   }
 
   @override
@@ -86,175 +93,176 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.only(bottom: 10, top: 20),
       width: _deviceWidth,
-      child: Form(
-        key: _formkey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "login_page_title".tr(),
-              style: TextStyle(
-                fontFamily: "DM_Sans",
-                fontSize: 60,
-                fontWeight: FontWeight.w500,
-                color: Color.fromRGBO(59, 178, 67, 1),
-                shadows: <Shadow>[
-                  Shadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.6),
-                    blurRadius: 0,
-                    offset: Offset(0, 3),
-                  ),
-                ]..addAll(
-                    textStroke(
-                      0.8,
-                      Color.fromRGBO(0, 0, 0, 0.6),
-                    ),
-                  ),
-              ),
-            ),
-            Container(
-              // Email Input
-              margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
-              child: InputFieldWidget(
-                hint: "input_email_hint".tr(),
-                label: "input_email_label".tr(),
-                controller: emailController,
-                leadingIcon:
-                    SvgPicture.asset("lib/assets/icons_svg/email_envelope.svg"),
-                onChanged: () {},
-                validator: () {},
-              ),
-            ),
-            Container(
-              // Password input
-              margin: EdgeInsets.symmetric(horizontal: 35),
-              child: InputFieldWidget(
-                hint: "input_password_hint".tr(),
-                label: "input_password_label".tr(),
-                obscure: obscurePassword,
-                controller: passwordController,
-                leadingIcon:
-                    SvgPicture.asset("lib/assets/icons_svg/password_lock.svg"),
-                actionIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      obscurePassword = !obscurePassword;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                      "lib/assets/icons_svg/password_view_enabled.svg",
-                      height: 30,
-                      width: 30,
-                      fit: BoxFit.scaleDown),
-                ),
-                onChanged: () {},
-                validator: () {},
-              ),
-            ),
-            Container(
-              // Forgot Password Text Button
-              margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+      child: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Form(
+              key: _formkey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    child: Text(
-                      "login_page_forgot_password".tr(),
-                      style: TextStyle(
-                        fontFamily: "DM_Sans",
-                        color: Colors.black,
-                      ),
-                    ),
-                    onPressed: () => resetPopup(context),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              // Sign in Outline Button
-              decoration: BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.3),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                  )
-                ],
-                border: Border.all(color: Colors.black, width: 1),
-                borderRadius: BorderRadius.circular(45),
-                gradient: RadialGradient(
-                  radius: 13,
-                  focal: Alignment.topRight,
-                  colors: <Color>[
-                    Color.fromRGBO(23, 154, 40, 1),
-                    Color.fromRGBO(86, 180, 98, 0)
-                  ],
-                ),
-              ),
-              child: OutlinedButton(
-                onPressed: checkLogin,
-                style: OutlinedButton.styleFrom(
-                  fixedSize: Size(220, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                ),
-                child: Text(
-                  "login_page_signin_btn".tr(),
-                  style: TextStyle(
+                  Text(
+                    "login_page_title".tr(),
+                    style: TextStyle(
                       fontFamily: "DM_Sans",
-                      fontSize: 30,
-                      color: Colors.white,
+                      fontSize: 60,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(59, 178, 67, 1),
                       shadows: <Shadow>[
                         Shadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          blurRadius: 2,
-                          offset: Offset(2, 4),
+                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                          blurRadius: 0,
+                          offset: Offset(0, 3),
+                        ),
+                      ]..addAll(
+                          textStroke(
+                            0.8,
+                            Color.fromRGBO(0, 0, 0, 0.6),
+                          ),
+                        ),
+                    ),
+                  ),
+                  Container(
+                    // Email Input
+                    margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
+                    child: InputFieldWidget(
+                      hint: "input_email_hint".tr(),
+                      label: "input_email_label".tr(),
+                      controller: emailController,
+                      leadingIcon: SvgPicture.asset(
+                          "lib/assets/icons_svg/email_envelope.svg"),
+                      validator: () {},
+                    ),
+                  ),
+                  Container(
+                    // Password input
+                    margin: EdgeInsets.symmetric(horizontal: 35),
+                    child: InputFieldWidget(
+                      hint: "input_password_hint".tr(),
+                      label: "input_password_label".tr(),
+                      obscure: obscurePassword,
+                      controller: passwordController,
+                      leadingIcon: SvgPicture.asset(
+                          "lib/assets/icons_svg/password_lock.svg"),
+                      actionIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                            "lib/assets/icons_svg/password_view_enabled.svg",
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.scaleDown),
+                      ),
+                      validator: () {},
+                    ),
+                  ),
+                  Container(
+                    // Forgot Password Text Button
+                    margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          child: Text(
+                            "login_page_forgot_password".tr(),
+                            style: TextStyle(
+                              fontFamily: "DM_Sans",
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () => resetPopup(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    // Sign in Outline Button
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.3),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
                         )
-                      ]),
-                ),
-              ),
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("login_page_no_account".tr(),
+                      ],
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(45),
+                      gradient: RadialGradient(
+                        radius: 13,
+                        focal: Alignment.topRight,
+                        colors: <Color>[
+                          Color.fromRGBO(23, 154, 40, 1),
+                          Color.fromRGBO(86, 180, 98, 0)
+                        ],
+                      ),
+                    ),
+                    child: OutlinedButton(
+                      onPressed: checkLogin,
+                      style: OutlinedButton.styleFrom(
+                        fixedSize: Size(220, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45),
+                        ),
+                      ),
+                      child: Text(
+                        "login_page_signin_btn".tr(),
                         style: TextStyle(
-                            fontSize: 20,
                             fontFamily: "DM_Sans",
+                            fontSize: 30,
+                            color: Colors.white,
                             shadows: <Shadow>[
                               Shadow(
                                 color: Color.fromRGBO(0, 0, 0, 0.25),
-                                blurRadius: 1,
-                                offset: Offset(0, 2),
+                                blurRadius: 2,
+                                offset: Offset(2, 4),
                               )
-                            ])),
-                    TextButton(
-                      child: Text(
-                        "login_page_signup_btn".tr(),
-                        style: TextStyle(
-                          fontFamily: "DM_Sans",
-                          fontSize: 20,
-                          color: Color.fromRGBO(48, 185, 67, 1),
-                          shadows: <Shadow>[
-                            Shadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              blurRadius: 1,
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                        ),
+                            ]),
                       ),
-                      onPressed: () =>
-                          Navigator.of(context).push(registerPageRoute()),
                     ),
-                  ],
-                )),
-          ],
-        ),
-      ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("login_page_no_account".tr(),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: "DM_Sans",
+                                shadows: <Shadow>[
+                                  Shadow(
+                                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                                    blurRadius: 1,
+                                    offset: Offset(0, 2),
+                                  )
+                                ])),
+                        TextButton(
+                          child: Text(
+                            "login_page_signup_btn".tr(),
+                            style: TextStyle(
+                              fontFamily: "DM_Sans",
+                              fontSize: 20,
+                              color: Color.fromRGBO(48, 185, 67, 1),
+                              shadows: <Shadow>[
+                                Shadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  blurRadius: 1,
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                            ),
+                          ),
+                          onPressed: () =>
+                              Navigator.of(context).push(registerPageRoute()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -276,11 +284,17 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> checkLogin() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       snackBarWithDismiss("Checking credentials...");
-      bool result = await _firebaseService!.loginUser(
+      var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
-      if (result) {
+      if (result is UserCredential) {
         Navigator.popAndPushNamed(context, '/');
+      } else if (result is String) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        throw FirebaseAuthException(code: result);
       }
     } on FirebaseAuthException catch (e) {
       dev.log("error is: $e");

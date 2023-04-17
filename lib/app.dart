@@ -1,14 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gluc_safe/screens/chartPage/chartPage.dart';
 import 'package:gluc_safe/screens/mainPage/MainPage.dart';
 import 'screens/screens.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    tz.initializeTimeZones();
     return MaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

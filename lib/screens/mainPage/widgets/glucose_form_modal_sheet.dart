@@ -5,9 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/mealsEnum.dart';
 import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/form_input_field.dart';
+import 'package:gluc_safe/screens/mainPage/widgets/warning_glucose_dialog.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/notification_api.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
+
 import 'dart:developer' as dev;
 
 class GlucoseFormModalSheet extends StatefulWidget {
@@ -18,19 +21,135 @@ class GlucoseFormModalSheet extends StatefulWidget {
 }
 
 class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
-  FirebaseService? _firebaseService;
-  final GlobalKey _formKey = GlobalKey<FormState>();
-  final TextEditingController glucoseController = TextEditingController();
   final TextEditingController carbsController = TextEditingController();
   final TextEditingController dateContoller = TextEditingController(
       text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
+
+  final TextEditingController glucoseController = TextEditingController();
   final TextEditingController mealController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  bool overrideWarning = false;
+
+  FirebaseService? _firebaseService;
+  FocusNode _focusNode = FocusNode();
+  final GlobalKey _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    dateContoller.text = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+    mealController.clear();
+    glucoseController.clear();
+    carbsController.clear();
+    notesController.clear();
+    overrideWarning = false;
+    super.dispose();
+  }
 
   @override
   void initState() {
     _firebaseService = GetIt.instance.get<FirebaseService>();
+    _focusNode.addListener(glucoseValueTest);
+
     super.initState();
+  }
+
+  void glucoseValueTest() async {
+    if (!_focusNode.hasFocus &&
+        glucoseController.text.length >= 2 &&
+        !overrideWarning) {
+      int glucoseValue = int.parse(glucoseController.text);
+      int userAge = await _firebaseService!.getUserData().then((value) {
+        DateTime dateOfBirth = value!["birthdate"].toDate();
+        Duration difference = DateTime.now().difference(dateOfBirth);
+        return difference.inDays ~/ 365;
+      });
+      if (userAge >= 0 &&
+          userAge <= 64 &&
+          glucoseValue >= 70 &&
+          glucoseValue <= 200)
+        return;
+      else if (userAge >= 65 && glucoseValue >= 80 && glucoseValue <= 200)
+        return;
+      dev.log("Age: $userAge");
+      if (userAge >= 0 && userAge <= 64) {
+        if (glucoseValue < 70) {
+          dev.log("Low Glucose Value");
+          showGlucoseWarningDialog(
+            context,
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            () {
+              overrideWarning = true;
+              Navigator.pop(context);
+            },
+            "glucose_alert_low_sugar_title".tr(),
+            "glucose_alert_low_sugar_message".tr(),
+          );
+        } else if (glucoseValue > 200) {
+          dev.log("High Glucose Value");
+          showGlucoseWarningDialog(
+            context,
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(hours: 3));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            () {
+              overrideWarning = true;
+              Navigator.pop(context);
+            },
+            "glucose_alert_high_sugar_title".tr(),
+            "glucose_alert_high_sugar_message".tr(),
+          );
+        }
+      } else if (userAge >= 65) {
+        if (glucoseValue < 80) {
+          dev.log("Low Glucose Value");
+          showGlucoseWarningDialog(
+            context,
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            () {
+              overrideWarning = true;
+              Navigator.pop(context);
+            },
+            "glucose_alert_low_sugar_title".tr(),
+            "glucose_alert_low_sugar_message".tr(),
+          );
+        } else if (glucoseValue > 200) {
+          dev.log("High Glucose Value");
+          showGlucoseWarningDialog(
+            context,
+            () {
+              setScheduledAlert("glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(), Duration(hours: 3));
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            () {
+              overrideWarning = true;
+              Navigator.pop(context);
+            },
+            "glucose_alert_high_sugar_title".tr(),
+            "glucose_alert_high_sugar_message".tr(),
+          );
+        }
+      }
+    }
+  }
+
+  void setScheduledAlert(String title, String message, Duration time) {
+    NotificationApi.showScheduledNotification(
+        title: title, body: message, scheduledDate: DateTime.now().add(time));
   }
 
   @override
@@ -49,7 +168,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
       width: _deviceWidth,
-      height: _deviceHeight * 0.5,
+      height: _deviceHeight * 0.55,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,6 +203,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FormInputField(
+                      focusNode: _focusNode,
                       controller: glucoseController,
                       deviceWidth: _deviceWidth,
                       hintText: "main_page_glucose_form_glocuse".tr(),
@@ -211,14 +331,6 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
 
                     await _firebaseService!.saveGlucoseData(glucoseData);
 
-                    setState(() {
-                      dateContoller.text =
-                          DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
-                      mealController.clear();
-                      glucoseController.clear();
-                      carbsController.clear();
-                      notesController.clear();
-                    });
                     Navigator.pop(context);
                   },
                   child: Text(
@@ -253,7 +365,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "main_page_glucose_form_cancel_btn".tr(),
+                    "misc_cancel".tr(),
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: "DM_Sans",

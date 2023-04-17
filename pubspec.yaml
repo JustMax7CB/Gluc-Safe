@@ -52,6 +52,8 @@ dependencies:
   awesome_dialog: ^3.0.2
   easy_localization: ^3.0.1
   flutter_svg: ^2.0.4
+  flutter_local_notifications: ^13.0.0
+  permission_handler: ^10.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

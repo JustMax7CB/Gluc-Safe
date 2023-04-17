@@ -3,10 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/navbar_button.dart';
 
 class BottomNavBar extends StatelessWidget {
-  const BottomNavBar(
-      {super.key, required this.logout, required this.emergency});
-  final Function logout;
-  final Function emergency;
+  const BottomNavBar({super.key, this.logout, this.emergency});
+  final Function? logout;
+  final Function? emergency;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +24,19 @@ class BottomNavBar extends StatelessWidget {
       width: _deviceWidth,
       padding: EdgeInsets.all(12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: logout != null
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.end,
         children: [
-          NavbarButton(
-              icon: SvgPicture.asset("lib/assets/icons_svg/logout_icon.svg"),
-              onPressed: () => logout()),
-          NavbarButton(
-              icon: SvgPicture.asset("lib/assets/icons_svg/emergency_call.svg"),
-              onPressed: () => emergency())
+          if (logout != null)
+            NavbarButton(
+                icon: SvgPicture.asset("lib/assets/icons_svg/logout_icon.svg"),
+                onPressed: () => logout!()),
+          if (emergency != null)
+            NavbarButton(
+                icon:
+                    SvgPicture.asset("lib/assets/icons_svg/emergency_call.svg"),
+                onPressed: () => emergency!())
         ],
       ),
     );

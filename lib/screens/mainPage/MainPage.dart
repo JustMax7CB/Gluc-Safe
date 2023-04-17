@@ -118,8 +118,9 @@ class _MainPageState extends State<MainPage> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 children: [
-                  GestureDetector(
+                  CardButton(
                     onTap: () => showModalBottomSheet(
+                      isDismissible: false,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(34),
@@ -129,73 +130,63 @@ class _MainPageState extends State<MainPage> {
                       context: context,
                       builder: (context) => GlucoseFormModalSheet(),
                     ),
-                    child: CardButton(
-                      title: "main_page_add_glucose".tr(),
-                      icon: SvgPicture.asset(
-                          "lib/assets/icons_svg/glucose_meter.svg",
-                          height: 95),
-                    ),
+                    title: "main_page_add_glucose".tr(),
+                    icon: SvgPicture.asset(
+                        "lib/assets/icons_svg/glucose_meter.svg",
+                        height: 95),
                   ),
-                  GestureDetector(
+                  CardButton(
                     onTap: () {
                       dev.log("add medicine button pressed");
                     },
-                    child: CardButton(
-                      title: "main_page_add_medicine".tr(),
-                      icon: Padding(
-                        padding: const EdgeInsets.only(top: 35.0),
-                        child: SvgPicture.asset(
-                            "lib/assets/icons_svg/medicine_icon.svg",
-                            height: 30),
-                      ),
+                    title: "main_page_add_medicine".tr(),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 35.0),
+                      child: SvgPicture.asset(
+                          "lib/assets/icons_svg/medicine_icon.svg",
+                          height: 30),
                     ),
                   ),
-                  GestureDetector(
+                  CardButton(
                     onTap: () {
                       dev.log("add weight button pressed");
                     },
-                    child: CardButton(
-                      title: "main_page_add_weight".tr(),
-                      icon: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: SvgPicture.asset(
-                            "lib/assets/icons_svg/scale_icon.svg",
-                            height: 65),
-                      ),
+                    title: "main_page_add_weight".tr(),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: SvgPicture.asset(
+                          "lib/assets/icons_svg/scale_icon.svg",
+                          height: 65),
                     ),
                   ),
-                  GestureDetector(
+                  CardButton(
                     onTap: () {
                       dev.log("add workout button pressed");
                     },
-                    child: CardButton(
-                      title: "main_page_add_workout".tr(),
-                      icon: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: SvgPicture.asset(
-                            "lib/assets/icons_svg/dumbbell_icon.svg",
-                            height: 50),
-                      ),
+                    title: "main_page_add_workout".tr(),
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SvgPicture.asset(
+                          "lib/assets/icons_svg/dumbbell_icon.svg",
+                          height: 50),
                     ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  dev.log("graph button pressed");
-                },
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  child: CardButton(
-                    width: _deviceWidth,
-                    title: "main_page_glucose_graph".tr(),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
-                          height: 60),
-                    ),
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: CardButton(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/chart');
+                  },
+                  width: _deviceWidth,
+                  title: "main_page_glucose_graph".tr(),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
+                        height: 60),
                   ),
                 ),
               ),

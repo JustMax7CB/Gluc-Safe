@@ -26,7 +26,6 @@
   "main_page_glucose_form_notes" : "הערות*",
   "main_page_glucose_form_optional" : "*שדה לא חובה",
   "main_page_glucose_form_save_btn" : "שמירה",
-  "main_page_glucose_form_cancel_btn" : "ביטול",
 
   "login_page_google": "כניסה באמצעות גוגל",
   "login_page_title": "כניסה",
@@ -76,7 +75,7 @@
   "input_confirm_password_label": "אישור סיסמא",
   "input_confirm_password_hint": "אשר/י את הסיסמא שלך",
 
-  "chart_page_select_option": "בחירת תצוגה",
+  "chart_page_select_option": "סינון",
 
   "chart_graph_header" : "גלוקוז",
   "chart_graph_tooltip_format" : "מ''ג/ד''ל {}\n{}",
@@ -95,6 +94,14 @@
   "glucose_page_entry_note_label": "הערות",
   "glucose_page_entry_note_hint": "כאן ניתו לכתוב ולשמור הערות",
 
+  "glucose_alert_low_sugar_title": "התראת רמת סוכר בדם נמוכה",
+  "glucose_alert_low_sugar_message": "רמת הסוכר בדם שלך נמוכה. אנו ממליצים לך לצרוך 15-20 גרם של פחמימות מהירות, כמו טבליות גלוקוז, מיץ פירות או ממתקים, על מנת להעלות מיידית את רמת הסוכר בדם ולמנוע היפוגליקמיה. לחיצה על לחצן האישור תפעיל תזכורת לבדוק את רמת הסוכר שוב בעוד 15 דקות. אם הסימפטומים ממשיכים או מחמירים, יש לפנות לטיפול רפואי מיידי.",
+  "glucose_alert_high_sugar_title": "התראת רמת סוכר בדם גבוהה",
+  "glucose_alert_high_sugar_message": "רמת הסוכר בדם שלך גבוהה. אנא הימנע/י מצריכת מזון ומשקאות מתוקים או מכילי פחמימות רבות, וצריך לשתות מים במידה רבה כדי לשמור על הריווי בגוף. לחיצה על לחצן האישור תפעיל תזכורת לבדוק את רמת הסוכר שוב בעוד 3 שעות. אם הסימפטומים ממשיכים או מחמירים, יש לפנות לטיפול רפואי מיידי.",
+  
+  "glucose_notification_title": "תזכורת בדיקת סוכר בדם",
+  "glucose_notification_message": "הגיע הזמן לקחת מדידה נוספת של הסוכר בדם",
+
   "misc_email_cant_be_empty": "כתובת המייל אינה יכולה להיות ריקה",
   "misc_email_not_valid": "כתובת המייל אינה תקינה",
   "misc_snackbar_dismiss": "ביטול",
@@ -103,6 +110,9 @@
   "misc_change_lang" : "שינוי שפה",
   "misc_or" : "או",
   "misc_field_empty": "שדה {} לא יכול להיות ריק",
-  "misc_label_empty": "שדה {} לא יכול להיות ריק"
+  "misc_label_empty": "שדה {} לא יכול להיות ריק",
+  "misc_cancel": "ביטול",
+  "misc_confirm": "אישור"
+  
 }
 
