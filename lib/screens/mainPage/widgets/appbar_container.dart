@@ -4,8 +4,10 @@ import 'package:gluc_safe/screens/mainPage/widgets/appbar_details.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
 
 class AppbarContainer extends StatelessWidget {
-  const AppbarContainer({super.key, required this.changeLanguage});
-  final Function changeLanguage;
+  const AppbarContainer({super.key, required this.func, required this.glucoseLatest, required this.glucoseAverage});
+  final Function func;
+  final double glucoseLatest;
+  final double glucoseAverage;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class AppbarContainer extends StatelessWidget {
                 child: IconButton(
                   onPressed: () {
                     debugPrint("Hamburger button pressed");
-                    changeLanguage();
+                    func();
                   },
                   icon: Icon(
                     Icons.menu,
@@ -71,12 +73,12 @@ class AppbarContainer extends StatelessWidget {
             children: [
               AppbarDetailsContainer(
                   valueType: "Latest",
-                  glucoseValue: 56,
+                  glucoseValue: glucoseLatest,
                   width: 130,
                   height: 56),
               AppbarDetailsContainer(
                   valueType: "Average",
-                  glucoseValue: 50,
+                  glucoseValue: glucoseAverage,
                   width: 130,
                   height: 56),
             ],

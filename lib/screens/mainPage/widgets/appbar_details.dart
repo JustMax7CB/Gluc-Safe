@@ -43,7 +43,7 @@ class AppbarDetailsContainer extends StatelessWidget {
           ),
           Text(
             "main_page_appbar_glucose_average_value"
-                .tr(args: [glucoseValue.toString()]),
+                .tr(args: [glucoseValue.toStringAsFixed(1)]),
             style: TextStyle(
               fontFamily: "DM_Sans",
               fontSize: 15,

@@ -1,22 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/enums/enumsExport.dart';
-import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
+import 'package:gluc_safe/screens/mainPage/widgets/drawer.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/glucose_form_modal_sheet.dart';
-import 'package:gluc_safe/screens/mainPage/widgets/navbar_button.dart';
-import 'package:gluc_safe/screens/screens.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
-import 'package:gluc_safe/widgets/dropdown.dart';
-import 'package:gluc_safe/widgets/textStroke.dart';
+import './widgets/pdf_preview.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -43,6 +38,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
     getGlucUser();
+    glucosePdfData();
   }
 
   Future<GlucUser> getGlucUser() async {
@@ -64,24 +60,93 @@ class _MainPageState extends State<MainPage> {
     return user;
   }
 
+  Future<List> glucosePdfData() async {
+    List? glucoseData = await _firebaseService!.getGlucoseData();
+    if (glucoseData != null) {
+      glucoseData = glucoseData
+          .map((e) => [
+                DateTime.fromMillisecondsSinceEpoch(e['Date']),
+                e['Glucose'].toString()
+              ])
+          .toList();
+      return glucoseData;
+    }
+    return [];
+  }
+
+  Future<Map> getGlucoseAverageLatest() async {
+    List? glucoseData = await _firebaseService!.getGlucoseData();
+    num average = 0;
+    Map glucoseLatestAndAverage = {'Latest': 0, 'Average': 0};
+    if (glucoseData != null) {
+      glucoseData = glucoseData.map((e) => e['Glucose']).toList();
+      glucoseLatestAndAverage['Latest'] = glucoseData.last.toDouble();
+      average = glucoseData.reduce((value, element) => value + element);
+      average = average / glucoseData.length;
+      glucoseLatestAndAverage['Average'] = average;
+    }
+    return glucoseLatestAndAverage;
+  }
+
   @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      endDrawer: MainDrawer(
+        ChangeLanguage: () {
+          if (context.locale == Locale('en'))
+            context.setLocale(Locale('he'));
+          else
+            context.setLocale(Locale('en'));
+        },
+        exportPDF: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FutureBuilder(
+                future: glucosePdfData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return PdfPreviewPage(
+                        locale: context.locale,
+                        name: '${_glucUser!.firstName} ${_glucUser!.lastName}',
+                        glucoseValues: snapshot.data as List);
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+          );
+        },
+      ),
       bottomNavigationBar: BottomNavBar(
         logout: _firebaseService!.logout,
         emergency: () => dev.log("Emergency Pressed"),
       ),
       appBar: AppBar(
+        actions: [Container()],
+        automaticallyImplyLeading: false,
         toolbarHeight: _deviceHeight * 0.22,
-        flexibleSpace: AppbarContainer(changeLanguage: () {
-          if (context.locale == Locale('en'))
-            context.setLocale(Locale('he'));
-          else
-            context.setLocale(Locale('en'));
-        }),
+        flexibleSpace: FutureBuilder(
+          future: getGlucoseAverageLatest(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return AppbarContainer(
+                glucoseAverage: (snapshot.data as Map)['Average'],
+                glucoseLatest: (snapshot.data as Map)['Latest'],
+                func: () => Scaffold.of(context).openEndDrawer(),
+              );
+            } else {
+              return AppbarContainer(
+                glucoseAverage: 0,
+                glucoseLatest: 0,
+                func: () => Scaffold.of(context).openEndDrawer(),
+              );
+            }
+          },
+        ),
       ),
       body: Container(
         margin: EdgeInsets.only(top: 10),
@@ -120,6 +185,7 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   CardButton(
                     onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
                       isDismissible: false,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
@@ -128,7 +194,11 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       context: context,
-                      builder: (context) => GlucoseFormModalSheet(),
+                      builder: (context) => Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: GlucoseFormModalSheet(),
+                      ),
                     ),
                     title: "main_page_add_glucose".tr(),
                     icon: SvgPicture.asset(
