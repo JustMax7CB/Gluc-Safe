@@ -170,6 +170,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
       width: _deviceWidth,
       height: _deviceHeight * 0.55,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
