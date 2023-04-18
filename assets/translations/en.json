@@ -11,6 +11,8 @@
   "main_page_appbar_title" : "My Glucose",
   "main_page_appbar_glucose_title" : "{}",
   "main_page_appbar_glucose_average_value" : "{} mg/DL",
+  "main_page_drawer_change_language" : "Change Language",
+  "main_page_drawer_pdf" : "Export PDF",
 
   "main_page_add_glucose" : "Add Glucose",
   "main_page_add_medicine" : "Add Medicine",
@@ -105,6 +107,9 @@
   
   "glucose_notification_title": "Glucose Check Reminder",
   "glucose_notification_message": "its time to take new measurement of your blood sugar",
+
+  "pdf_date_time_title" : "Date & Time",
+  "pdf_glucose_title" : "Glucose Value (mg/DL)",
 
 
   "misc_email_cant_be_empty": "Email cannot be empty",
