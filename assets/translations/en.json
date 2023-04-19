@@ -29,6 +29,17 @@
   "main_page_glucose_form_optional" : "*Optional Field",
   "main_page_glucose_form_save_btn" : "Save Entry",
 
+  "main_page_weight_form_title": "New Weight Entry",
+  "main_page_weight_form_weight" : "Weight (kg)",
+  "main_page_weight_form_date": "Date",
+
+  "main_page_workout_form_title": "New Workout Entry",
+  "main_page_workout_form_workout" : "Workout",
+  "main_page_workout_form_date": "Date",
+  "main_page_workout_form_duration": "Duration (hours)",
+  "main_page_workout_form_distance": "Distance (km)*",
+  "main_page_workout_form_optional" : "*Optional Field - Only For Walking, Running and Cycling",
+
 
   "login_page_google": "Login Using Google",
   "login_page_title": "Login",

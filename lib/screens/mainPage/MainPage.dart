@@ -7,11 +7,13 @@ import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/drawer.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/glucose_form_modal_sheet.dart';
+import 'package:gluc_safe/screens/mainPage/widgets/weight_form_modal_sheet.dart';
+import 'package:gluc_safe/screens/mainPage/widgets/workout_form_modal_sheet.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
-import './widgets/pdf_preview.dart';
+import '../pdf_preview.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -218,9 +220,22 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   CardButton(
-                    onTap: () {
-                      dev.log("add weight button pressed");
-                    },
+                    onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(34),
+                          topRight: Radius.circular(34),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: WeightFormModalSheet(),
+                      ),
+                    ),
                     title: "main_page_add_weight".tr(),
                     icon: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
@@ -230,9 +245,22 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   CardButton(
-                    onTap: () {
-                      dev.log("add workout button pressed");
-                    },
+                    onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(34),
+                          topRight: Radius.circular(34),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: WorkoutFormModalSheet(),
+                      ),
+                    ),
                     title: "main_page_add_workout".tr(),
                     icon: Padding(
                       padding: const EdgeInsets.only(top: 20.0),
