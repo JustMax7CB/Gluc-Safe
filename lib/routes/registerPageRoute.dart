@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/screens/screens.dart';
+import 'package:gluc_safe/screens/register_page.dart';
 
 PageRouteBuilder registerPageRoute() {
   List<Curve> curveList = [Curves.ease];
