@@ -28,7 +28,9 @@ class MainDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: context.locale == Locale('en')
+                          ? const EdgeInsets.only(right: 8.0)
+                          : const EdgeInsets.only(left: 8.0),
                       child: Image.asset(
                         "lib/assets/icons_svg/globe_lang.png",
                         height: 35,
@@ -57,7 +59,9 @@ class MainDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: context.locale == Locale('en')
+                          ? const EdgeInsets.only(right: 8.0)
+                          : const EdgeInsets.only(left: 8.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/page-export-pdf.svg",
                           height: 35),
