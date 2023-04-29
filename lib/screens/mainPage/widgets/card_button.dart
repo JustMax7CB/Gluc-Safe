@@ -35,15 +35,18 @@ class CardButton extends StatelessWidget {
             )
           ],
         ),
-        child: Column(
+        child: ListView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontFamily: "DM_Sans",
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Color.fromRGBO(89, 180, 98, 1),
+            Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontFamily: "DM_Sans",
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Color.fromRGBO(89, 180, 98, 1),
+                ),
               ),
             ),
             icon,

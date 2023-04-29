@@ -11,6 +11,8 @@
   "main_page_appbar_title" : "My Glucose",
   "main_page_appbar_glucose_title" : "{}",
   "main_page_appbar_glucose_average_value" : "{} mg/DL",
+  "main_page_drawer_change_language" : "Change Language",
+  "main_page_drawer_pdf" : "Export PDF",
 
   "main_page_add_glucose" : "Add Glucose",
   "main_page_add_medicine" : "Add Medicine",
@@ -26,6 +28,17 @@
   "main_page_glucose_form_notes" : "Notes*",
   "main_page_glucose_form_optional" : "*Optional Field",
   "main_page_glucose_form_save_btn" : "Save Entry",
+
+  "main_page_weight_form_title": "New Weight Entry",
+  "main_page_weight_form_weight" : "Weight (kg)",
+  "main_page_weight_form_date": "Date",
+
+  "main_page_workout_form_title": "New Workout Entry",
+  "main_page_workout_form_workout" : "Workout",
+  "main_page_workout_form_date": "Date",
+  "main_page_workout_form_duration": "Duration (hours)",
+  "main_page_workout_form_distance": "Distance (km)*",
+  "main_page_workout_form_optional" : "*Optional Field - Only For Walking, Running and Cycling",
 
 
   "login_page_google": "Login Using Google",
@@ -105,6 +118,9 @@
   
   "glucose_notification_title": "Glucose Check Reminder",
   "glucose_notification_message": "its time to take new measurement of your blood sugar",
+
+  "pdf_date_time_title" : "Date & Time",
+  "pdf_glucose_title" : "Glucose Value (mg/DL)",
 
 
   "misc_email_cant_be_empty": "Email cannot be empty",

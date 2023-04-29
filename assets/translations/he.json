@@ -11,6 +11,8 @@
   "main_page_appbar_title" : "הגלוקוז שלי",
   "main_page_appbar_glucose_title" : "אחרון",
   "main_page_appbar_glucose_average_value" : "{} מג'/דצ' ",
+  "main_page_drawer_change_language" : "שנה שפה",
+  "main_page_drawer_pdf" : "ייצא לPDF",
 
   "main_page_add_glucose" : "הוספת ערך גלוקוז",
   "main_page_add_medicine" : "הוספת תרופות",
@@ -26,6 +28,17 @@
   "main_page_glucose_form_notes" : "הערות*",
   "main_page_glucose_form_optional" : "*שדה לא חובה",
   "main_page_glucose_form_save_btn" : "שמירה",
+
+  "main_page_weight_form_title": "רשומת משקל חדשה",
+  "main_page_weight_form_weight" : "משקל (ק''ג)",
+  "main_page_weight_form_date": "תאריך",
+
+  "main_page_workout_form_title": "רשומת פעילות גופנית חדשה",
+  "main_page_workout_form_workout" : "פעילות גופנית",
+  "main_page_workout_form_date": "תאריך",
+  "main_page_workout_form_duration": "משך (שעות)",
+  "main_page_workout_form_distance": "מרחק (ק''מ)*",
+  "main_page_workout_form_optional" : "*שדה לא חובה - נדרש עבור הליכה, ריצה ואופניים",
 
   "login_page_google": "כניסה באמצעות גוגל",
   "login_page_title": "כניסה",
@@ -101,6 +114,9 @@
   
   "glucose_notification_title": "תזכורת בדיקת סוכר בדם",
   "glucose_notification_message": "הגיע הזמן לקחת מדידה נוספת של הסוכר בדם",
+
+  "pdf_date_time_title" : "תאריך ושעה",
+  "pdf_glucose_title" : "ערך גלוקוז (מג'/דצ')",
 
   "misc_email_cant_be_empty": "כתובת המייל אינה יכולה להיות ריקה",
   "misc_email_not_valid": "כתובת המייל אינה תקינה",

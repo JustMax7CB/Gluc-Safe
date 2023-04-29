@@ -291,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
       if (result is UserCredential) {
-        Navigator.popAndPushNamed(context, '/');
+        isLoading = false;
       } else if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         throw FirebaseAuthException(code: result);

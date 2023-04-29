@@ -39,7 +39,7 @@ dependencies:
   cloud_firestore: ^4.2.0
   age_calculator: ^1.0.0
   dropdown_button2: ^2.0.0
-  intl: ^0.18.0
+  intl: ^0.17.0
   syncfusion_flutter_charts: ^21.1.37
   syncfusion_flutter_datepicker: ^21.1.37
   flutter_cupertino_datetime_picker: ^3.0.0
@@ -54,6 +54,9 @@ dependencies:
   flutter_svg: ^2.0.4
   flutter_local_notifications: ^13.0.0
   permission_handler: ^10.2.0
+  pdf: ^3.10.1
+  path_provider: ^2.0.14
+  printing: ^5.10.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -100,6 +103,22 @@ flutter:
     - family: BebasNeue
       fonts:
         - asset: lib\assets\fonts\BebasNeue-Regular.ttf
+    - family: Rubik
+      fonts:
+        - asset : lib\assets\fonts\Rubik\Rubik-Light.ttf
+          weight: 100
+        - asset : lib\assets\fonts\Rubik\Rubik-Medium.ttf
+          weight: 200
+        - asset : lib\assets\fonts\Rubik\Rubik-Regular.ttf
+          weight: 300
+        - asset : lib\assets\fonts\Rubik\Rubik-Black.ttf
+          weight: 400
+        - asset : lib\assets\fonts\Rubik\Rubik-SemiBold.ttf
+          weight: 500
+        - asset : lib\assets\fonts\Rubik\Rubik-Bold.ttf
+          weight: 600
+        - asset : lib\assets\fonts\Rubik\Rubik-ExtraBold.ttf
+          weight: 700
 
         
 
@@ -112,6 +131,7 @@ flutter:
   assets:
     - assets/translations/
     - lib/assets/icons_svg/
+    - lib/assets/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
