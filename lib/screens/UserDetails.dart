@@ -105,7 +105,7 @@ class _UserDetailsState extends State<UserDetails> {
             child: Row(
               children: [
                 Text(
-                  "Your Details",
+                  "details_page_title".tr(),
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w500,
@@ -215,7 +215,7 @@ class _UserDetailsState extends State<UserDetails> {
             child: Row(
               children: [
                 Text(
-                  "Emergency Contact Info",
+                  "details_page_contact_title".tr(),
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w500,

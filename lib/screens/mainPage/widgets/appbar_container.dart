@@ -4,10 +4,14 @@ import 'package:gluc_safe/screens/mainPage/widgets/appbar_details.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
 
 class AppbarContainer extends StatelessWidget {
-  const AppbarContainer({super.key, required this.func, required this.glucoseLatest, required this.glucoseAverage});
+  const AppbarContainer(
+      {super.key,
+      required this.func,
+      required this.glucoseLatest,
+      required this.glucoseAverage});
   final Function func;
-  final double glucoseLatest;
-  final double glucoseAverage;
+  final num glucoseLatest;
+  final num glucoseAverage;
 
   @override
   Widget build(BuildContext context) {
