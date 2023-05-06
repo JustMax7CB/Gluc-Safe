@@ -9,7 +9,7 @@ class AppbarDetailsContainer extends StatelessWidget {
       required this.width,
       required this.height});
   final String valueType;
-  final double glucoseValue;
+  final num glucoseValue;
   final double width;
   final double height;
 

@@ -287,13 +287,15 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         isLoading = true;
       });
-      snackBarWithDismiss("Checking credentials...");
+      snackBarWithDismiss("login_page_signin_checking".tr());
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
-      if (result is UserCredential) {
-        isLoading = false;
-      } else if (result is String) {
+      if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        dev.log("Check: " + result);
+        setState(() {
+          isLoading = false;
+        });
         throw FirebaseAuthException(code: result);
       }
     } on FirebaseAuthException catch (e) {

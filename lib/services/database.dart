@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
@@ -63,17 +64,17 @@ class FirebaseService {
       if (!_userCredential.user!.emailVerified) {
         await _auth
             .signOut(); // Sign out the user if their email isn't verified
-        return 'Email not verified';
+        return "login_page_signin_error_email_not_verified".tr();
       }
       return _userCredential;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
           dev.log('User not found');
-          return 'User not found';
+          return "login_page_signin_error_user_not_found".tr();
         case 'wrong-password':
           dev.log('Wrong password');
-          return 'Wrong password';
+          return "login_page_signin_error_wrong_password".tr();
         // Add additional cases for other error codes as needed
         default:
           dev.log('An error occurred: ${e.message}');

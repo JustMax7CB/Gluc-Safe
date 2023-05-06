@@ -55,6 +55,11 @@
   "login_page_email_not_valid" : "כתובת מייל לא תקינה",
   "login_page_welcome_title" : "ברוכים הבאים",
   "login_page_glucsafe_title": "גלוק-סייף",
+  "login_page_signin_checking": "בודק נתונים...",
+  "login_page_signin_error_user_not_found" :"משתמש לא נמצא",
+  "login_page_signin_error_wrong_password" :"סיסמא שגויה",
+  "login_page_signin_error_email_not_verified" :"מייל לא מאושר",
+  "login_page_signin_error_occured" :"אירעה תקלת שרת",
 
   "register_page_invalid_data": "נתוני משתמש שגויים",
   "register_page_passwords_no_match": "סיסמאות לא תואמות",
@@ -72,9 +77,10 @@
   "details_page_user_birthday_hint" : "בחר/י את תאריך הלידה",
   "details_page_user_height_label" : "גובה",
   "details_page_user_height_hint" : "הזן/י גובה (ב-ס''מ)",
+  "details_page_user_gender_label" : "מגדר",
   "details_page_user_gender_hint" : "בחר/י מגדר",
   "details_page_user_gender_error": "נא לבחור מגדר",
-  "details_page_contact_title": "איש קשר",
+  "details_page_contact_title": "פרטי איש קשר לחירום",
   "details_page_contact_name_label": "שם איש קשר",
   "details_page_contact_name_hint": "שם האיש קשר שלך",
   "details_page_contact_phone_label": "מס' טלפון של איש קשר",
@@ -128,7 +134,13 @@
   "misc_field_empty": "שדה {} לא יכול להיות ריק",
   "misc_label_empty": "שדה {} לא יכול להיות ריק",
   "misc_cancel": "ביטול",
-  "misc_confirm": "אישור"
+  "misc_confirm": "אישור",
+
+  "emergency_call_title" : "שיחת חירום",
+  "emergency_call_who_call" : "בחר/י למי להתקשר",
+  "emergency_call_contact" : "{}",
+  "emergency_call_ambulance" : "אמבולנס",
+  "emergency_call_tap_outside": "לחץ/י מחוץ לחלון על מנת לסגור אותו"
   
 }
 

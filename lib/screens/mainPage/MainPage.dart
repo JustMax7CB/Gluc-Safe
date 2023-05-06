@@ -13,6 +13,7 @@ import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
+import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import '../pdf_preview.dart';
 
 class MainPage extends StatefulWidget {
@@ -80,7 +81,7 @@ class _MainPageState extends State<MainPage> {
     List? glucoseData = await _firebaseService!.getGlucoseData();
     num average = 0;
     Map glucoseLatestAndAverage = {'Latest': 0, 'Average': 0};
-    if (glucoseData != null) {
+    if (glucoseData != null && glucoseData.isNotEmpty) {
       glucoseData = glucoseData.map((e) => e['Glucose']).toList();
       glucoseLatestAndAverage['Latest'] = glucoseData.last.toDouble();
       average = glucoseData.reduce((value, element) => value + element);
@@ -89,6 +90,8 @@ class _MainPageState extends State<MainPage> {
     }
     return glucoseLatestAndAverage;
   }
+
+  void _updateState() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +128,10 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: BottomNavBar(
         logout: _firebaseService!.logout,
-        emergency: () => dev.log("Emergency Pressed"),
+        emergency: () => showEmergencyDialog(
+            context,
+            {'name': _glucUser!.contactName, 'phone': _glucUser!.contactNum},
+            _deviceWidth),
       ),
       appBar: AppBar(
         actions: [Container()],
@@ -186,22 +192,24 @@ class _MainPageState extends State<MainPage> {
                 mainAxisSpacing: 10,
                 children: [
                   CardButton(
-                    onTap: () => showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(34),
-                          topRight: Radius.circular(34),
+                    onTap: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        isDismissible: false,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(34),
+                            topRight: Radius.circular(34),
+                          ),
                         ),
-                      ),
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: GlucoseFormModalSheet(),
-                      ),
-                    ),
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: GlucoseFormModalSheet(),
+                        ),
+                      ).then((value) => _updateState());
+                    },
                     title: "main_page_add_glucose".tr(),
                     icon: SvgPicture.asset(
                         "lib/assets/icons_svg/glucose_meter.svg",

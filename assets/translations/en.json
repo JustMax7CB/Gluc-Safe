@@ -56,6 +56,11 @@
   "login_page_email_not_valid" : "Email is not valid",
   "login_page_welcome_title" : "Welcome to",
   "login_page_glucsafe_title": "Gluc Safe",
+  "login_page_signin_checking": "Checking Credentials...",
+  "login_page_signin_error_user_not_found" :"User Not Found",
+  "login_page_signin_error_wrong_password" :"Wrong Password",
+  "login_page_signin_error_email_not_verified" :"Email Not Verified",
+  "login_page_signin_error_occured" :"Server Error Occured",
 
 
   "register_page_invalid_data": "Invalid user data",
@@ -77,7 +82,7 @@
   "details_page_user_gender_label" : "Gender",
   "details_page_user_gender_hint" : "Select your gender",
   "details_page_user_gender_error": "Please select a gender",
-  "details_page_contact_title": "Contact",
+  "details_page_contact_title": "Emergency Contact Info",
   "details_page_contact_name_label": "Contact Name",
   "details_page_contact_name_hint": "your emergency contact name",
   "details_page_contact_phone_label": "Contact Phone Number",
@@ -133,7 +138,13 @@
   "misc_field_empty": "Field {} cannot be empty",
   "misc_label_empty": "Field {} cannot be empty",
   "misc_cancel": "Cancel",
-  "misc_confirm": "Confirm"
+  "misc_confirm": "Confirm",
+  
+  "emergency_call_title" : "Emergency Call",
+  "emergency_call_who_call" : "Choose who to call",
+  "emergency_call_contact" : "{}",
+  "emergency_call_ambulance" : "Ambulance",
+  "emergency_call_tap_outside": "Tap outside to close the popup"
 
   
 }
