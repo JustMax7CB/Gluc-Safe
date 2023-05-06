@@ -105,8 +105,7 @@ class _GraphContainerState extends State<GraphContainer> {
       widget.startDate = userGlucoseRecords[0][1];
       widget.endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
     }
-    dev.log(
-        "startDate: ${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.fromMillisecondsSinceEpoch(widget.startDate!))} \nendDate: ${DateFormat("dd/MM/yyyy HH:mm").format(DateTime.fromMillisecondsSinceEpoch(widget.endDate!))}");
+
     userGlucoseRecords = userGlucoseRecords
         .where((element) =>
             element[1] >= widget.startDate && element[1] <= widget.endDate)

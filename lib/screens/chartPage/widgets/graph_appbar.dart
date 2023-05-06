@@ -58,7 +58,7 @@ class GraphAppBar extends StatelessWidget {
                 child: IconButton(
                   onPressed: () {
                     debugPrint("Hamburger button pressed");
-                    changeLanguage();
+                    Scaffold.of(context).openEndDrawer();
                   },
                   icon: Icon(
                     Icons.menu,
