@@ -57,8 +57,8 @@ dependencies:
   pdf: ^3.10.1
   path_provider: ^2.0.14
   printing: ^5.10.3
+  horizontal_calendar: 1.0.0
   flutter_phone_direct_caller: ^2.1.1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

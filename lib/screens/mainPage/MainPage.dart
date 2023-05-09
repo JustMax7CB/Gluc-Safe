@@ -15,6 +15,7 @@ import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import '../pdf_preview.dart';
+import 'package:gluc_safe/screens/Medications.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -218,6 +219,11 @@ class _MainPageState extends State<MainPage> {
                   CardButton(
                     onTap: () {
                       dev.log("add medicine button pressed");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MedicationPage()),
+                      );
                     },
                     title: "main_page_add_medicine".tr(),
                     icon: Padding(
