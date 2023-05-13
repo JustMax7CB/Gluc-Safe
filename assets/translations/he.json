@@ -124,6 +124,16 @@
   "pdf_date_time_title" : "תאריך ושעה",
   "pdf_glucose_title" : "ערך גלוקוז (מג'/דצ')",
 
+  "medication_page_title" : "התרופות שלי",
+  "medication_entry_title" : "הוספת תרופה",
+  "medication_entry_medication_name" : "שם התרופה",
+  "medication_entry_medication_dose" : "מינון",
+  "medication_entry_medication_per_day" : "מס' פעמים ביום",
+  "medication_entry_medication_day" : "יום",
+  "medication_entry_medication_time" : "שעה",
+  "medication_entry_add_another_reminder" : "הוסף תזכורת נוספת",
+  "medication_entry_reminders_max" : "תזכורות (מקסימום 5 תזכורות) :",
+  
   "misc_email_cant_be_empty": "כתובת המייל אינה יכולה להיות ריקה",
   "misc_email_not_valid": "כתובת המייל אינה תקינה",
   "misc_snackbar_dismiss": "ביטול",
