@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/app.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:gluc_safe/services/notification_handler.dart';
 import 'firebase_options.dart';
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,11 +11,12 @@ import 'dart:developer' as dev;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.notification.request();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await NotificationHandler.requestPermission();
+  await NotificationHandler.createChannel();
 
   GetIt.instance.registerSingleton<FirebaseService>(FirebaseService());
   try {

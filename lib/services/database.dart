@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
@@ -10,8 +11,6 @@ import 'package:gluc_safe/Models/MedHistory.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/Models/weight.dart';
 import 'package:gluc_safe/Models/workout.dart';
-import 'package:gluc_safe/Models/enums/workoutsEnum.dart';
-import 'package:path/path.dart' as p;
 import 'dart:developer' as dev;
 
 const String USER_COLLECTION = 'users';
@@ -20,6 +19,7 @@ const String WEIGHT_COLLECTION = 'weight';
 const String MEDICATION_COLLECTION = 'medication';
 const String WORKOUT_COLLECTION = 'workout';
 const String MEDHISTORY_COLLECTION = 'medHistory';
+const String DEVICETOKENS_COLLECTION = 'userTokens';
 
 const String GLUCOSE_RECORDS = 'glucose_records';
 const String WEIGHT_RECORDS = 'weight_records';
@@ -30,6 +30,7 @@ const String MEDHISTORY_RECORDS = 'medHistory_records';
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _database = FirebaseFirestore.instance;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   Map? currentUser;
 
@@ -61,6 +62,7 @@ class FirebaseService {
     try {
       UserCredential _userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+
       if (!_userCredential.user!.emailVerified) {
         await _auth
             .signOut(); // Sign out the user if their email isn't verified
@@ -126,6 +128,26 @@ class FirebaseService {
       return true;
     } catch (e) {
       dev.log("Database Service Failed to save user data");
+      return false;
+    }
+  }
+
+  Future<bool> saveUserDeviceToken() async {
+    String userId = user!.uid;
+    String? token = await _messaging.getToken();
+    dev.log(userId);
+    try {
+      if (token != null) {
+        dev.log(token);
+        await _database.collection(DEVICETOKENS_COLLECTION).doc(userId).set(
+          {
+            'token': token,
+          },
+        );
+      }
+      return true;
+    } catch (e) {
+      dev.log("Database Service Failed to save user device token");
       return false;
     }
   }
