@@ -1,0 +1,19 @@
+{
+  "name": "gluc_safe_notif",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/firestore": "^6.5.0",
+    "@grpc/grpc-js": "^1.8.14",
+    "fcm-node": "^1.6.1",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.1",
+    "firestore": "^1.1.6"
+  }
+}
