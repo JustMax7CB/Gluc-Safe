@@ -35,7 +35,7 @@ Changes to Privacy Policy:
 We may update this Privacy Policy from time to time. If we make material changes to this Privacy Policy, we will notify you by email or by posting a notice on the app.
 
 Contact Us:
-If you have any questions about this Privacy Policy or the Gluc Safe app, please contact us at [itsjustmax9@gmail.com].
+If you have any questions about this Privacy Policy or the Gluc Safe app, please contact us at itsjustmax9@gmail.com.
 
 Effective Date:
-This Privacy Policy is effective as of [13/5/2023].
+This Privacy Policy is effective as of 13/5/2023.
