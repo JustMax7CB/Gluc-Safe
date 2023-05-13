@@ -15,7 +15,7 @@ import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import '../pdf_preview.dart';
-import 'package:gluc_safe/screens/Medications.dart';
+import 'package:gluc_safe/screens/medicationPage/Medications.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

@@ -290,6 +290,9 @@ class _LoginPageState extends State<LoginPage> {
       snackBarWithDismiss("login_page_signin_checking".tr());
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
+      if (result is UserCredential) {
+        _firebaseService!.saveUserDeviceToken();
+      }
       if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         dev.log("Check: " + result);
