@@ -64,8 +64,10 @@
 
 
   "register_page_invalid_data": "Invalid user data",
-  "register_page_passwords_no_match": "Passwords doe not match",
+  "register_page_passwords_no_match": "Passwords doess not match",
   "register_page_register_btn": "Register",
+  "register_info_dialog_title": "Email Verification",
+  "register_info_dialog_description": "Verification email has been sent to your email address",
 
   "details_page_title": "User Details",
   "details_page_user_title": "User",

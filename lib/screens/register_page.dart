@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/widgets/infoDialog.dart';
 
 import '../widgets/customAppBar.dart';
 import '../widgets/glucsafeAppbar.dart';
@@ -19,7 +22,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late double _deviceWidth;
+  late double _deviceWidth, _deviceHeight;
   final _formkey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -38,6 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
 
     return Stack(
       children: [
@@ -176,13 +180,34 @@ class _RegisterPageState extends State<RegisterPage> {
                                   isLoading = true;
                                 });
                                 await checkRegistration().then((value) {
-                                  if (value) {
-                                    Navigator.pushNamed(context, '/details');
-                                  } else {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (!value) {
                                     snackBarWithDismiss("Registration Failed");
+                                  } else {
+                                    showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        Future.delayed(Duration(seconds: 3),
+                                            () {
+                                          Navigator.popUntil(context,
+                                              ModalRoute.withName('/'));
+                                          Navigator.popAndPushNamed(
+                                              context, '/details');
+                                        });
+                                        return InfoDialog(
+                                          title:
+                                              "register_info_dialog_title".tr(),
+                                          details:
+                                              "register_info_dialog_description"
+                                                  .tr(),
+                                          height: _deviceHeight * 0.2,
+                                          width: _deviceWidth * 0.9,
+                                        );
+                                      },
+                                    );
                                   }
                                 });
                               },

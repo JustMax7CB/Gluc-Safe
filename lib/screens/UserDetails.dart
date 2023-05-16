@@ -4,15 +4,11 @@ import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_pic
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/widgets/customAppBar.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/glucsafeAppbar.dart';
 import 'package:gluc_safe/widgets/textField.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
-import 'package:intl/intl.dart';
-import 'package:gluc_safe/widgets/details_card.dart';
 import 'dart:developer' as dev;
 
 class UserDetails extends StatefulWidget {
@@ -23,7 +19,7 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
-  late double _deviceHeight, _deviceWidth;
+  late double _deviceWidth;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
@@ -53,6 +49,7 @@ class _UserDetailsState extends State<UserDetails> {
   @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         Scaffold(

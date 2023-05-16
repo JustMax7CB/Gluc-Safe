@@ -64,6 +64,8 @@
   "register_page_invalid_data": "נתוני משתמש שגויים",
   "register_page_passwords_no_match": "סיסמאות לא תואמות",
   "register_page_register_btn": "רישום",
+  "register_info_dialog_title": "ווידוא מייל",
+  "register_info_dialog_description": "מייל ווידוא נשלח לכתובת המייל שלך",
 
   "details_page_title": "פרטי משתמש",
   "details_page_user_title": "משתמש",
