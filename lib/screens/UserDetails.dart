@@ -4,9 +4,11 @@ import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_pic
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
+import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/glucsafeAppbar.dart';
+import 'package:gluc_safe/widgets/infoDialog.dart';
 import 'package:gluc_safe/widgets/textField.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
 import 'dart:developer' as dev;
@@ -19,16 +21,7 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
-  late double _deviceWidth;
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _contactNameController = TextEditingController();
-  final TextEditingController _contactPhoneController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
-  FirebaseService? _firebaseService;
+  bool isLoading = false;
   Map userData = {
     "firstName": null,
     "lastName": null,
@@ -40,56 +33,21 @@ class _UserDetailsState extends State<UserDetails> {
     "contactNumber": null,
   };
 
+  final TextEditingController _contactNameController = TextEditingController();
+  final TextEditingController _contactPhoneController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  late double _deviceWidth, _deviceHeight;
+  FirebaseService? _firebaseService;
+  final TextEditingController _firstNameController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-
-    return Stack(
-      children: [
-        Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: glucSafeAppbar(context),
-          body: Container(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  userInfoContainer(),
-                  contactInfoContainer(),
-                  saveButton(),
-                ],
-              ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            if (context.locale == Locale('en'))
-              context.setLocale(Locale('he'));
-            else
-              context.setLocale(Locale('en'));
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 80, right: 15),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                child: Image.asset(
-                  "lib/assets/icons_svg/globe_lang.png",
-                  height: 45,
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
   }
 
   Container userInfoContainer() {
@@ -150,9 +108,7 @@ class _UserDetailsState extends State<UserDetails> {
                 height: 50,
                 width: _deviceWidth * 0.4,
                 child: DropDown(
-                  optionList: Gender.values
-                      .map((e) => e.toString().split(".")[1])
-                      .toList(),
+                  optionList: gendersToString(context.locale),
                   height: 40,
                   width: 30,
                   hint: "details_page_user_gender_label".tr(),
@@ -299,6 +255,9 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   saveDetails() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       DateTime date = DateFormat("dd/MM/yyy").parse(_dateController.text);
 
@@ -317,10 +276,84 @@ class _UserDetailsState extends State<UserDetails> {
       bool saveResult =
           await _firebaseService!.saveUserData(glucUser: glucUser);
       if (saveResult) {
-        Navigator.popAndPushNamed(context, '/');
+        setState(() {
+          isLoading = false;
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ));
+        });
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return InfoDialog(
+                title: "details_page_info_dialog_title".tr(),
+                details: "details_page_info_dialog_description".tr(),
+                height: _deviceWidth * 0.2,
+                width: _deviceWidth * 0.9);
+          },
+        );
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       dev.log("Saving user data failed with error: " + e.toString());
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
+
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: glucSafeAppbar(context),
+          body: Container(
+            child: isLoading
+                ? Center(child: const CircularProgressIndicator())
+                : Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        userInfoContainer(),
+                        contactInfoContainer(),
+                        saveButton(),
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (context.locale == Locale('en'))
+              context.setLocale(Locale('he'));
+            else
+              context.setLocale(Locale('en'));
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 80, right: 15),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: Image.asset(
+                  alignment: Alignment.topRight,
+                  "lib/assets/icons_svg/globe_lang.png",
+                  height: _deviceHeight * 0.11,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

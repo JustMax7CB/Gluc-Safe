@@ -87,6 +87,8 @@
   "details_page_contact_name_hint": "שם האיש קשר שלך",
   "details_page_contact_phone_label": "מס' טלפון של איש קשר",
   "details_page_contact_phone_hint": "מס' הטלפון של איש הקשר שלך",
+  "details_page_info_dialog_title": "פרטים נשמרו",
+  "details_page_info_dialog_description": "הפרטים שלך נשמרו בהצלחה",
 
   "form_checking_data": "בודק נתונים...",
   "input_email_label": "כתובת מייל",
