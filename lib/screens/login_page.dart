@@ -23,7 +23,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late double _deviceWidth;
+  late double _deviceWidth, _deviceHeight;
   final _formkey = GlobalKey<FormState>();
   final _resetKey = GlobalKey<FormState>();
   bool obscurePassword = true;
@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
 
     return Stack(
       children: [
@@ -78,8 +79,9 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.topRight,
               child: Container(
                 child: Image.asset(
+                  alignment: Alignment.topRight,
                   "lib/assets/icons_svg/globe_lang.png",
-                  height: 45,
+                  height: _deviceHeight * 0.11,
                 ),
               ),
             ),

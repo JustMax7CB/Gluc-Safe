@@ -95,7 +95,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               label: "input_email_label".tr(),
                               controller: _emailController,
                               leadingIcon: SvgPicture.asset(
-                                  "lib/assets/icons_svg/email_envelope.svg"),
+                                "lib/assets/icons_svg/email_envelope.svg",
+                              ),
                               onChanged: () {},
                               validator: (value) {},
                             ),
@@ -256,8 +257,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   : Alignment.topLeft,
               child: Container(
                 child: Image.asset(
+                  alignment: context.locale == Locale('en')
+                      ? Alignment.topRight
+                      : Alignment.topLeft,
                   "lib/assets/icons_svg/globe_lang.png",
-                  height: 45,
+                  height: _deviceHeight * 0.11,
                 ),
               ),
             ),

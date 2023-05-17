@@ -98,6 +98,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
+    dev.log("width: ${_deviceWidth} height: ${_deviceHeight}");
     return Scaffold(
       endDrawer: MainDrawer(
         ChangeLanguage: () {
@@ -214,7 +215,7 @@ class _MainPageState extends State<MainPage> {
                     title: "main_page_add_glucose".tr(),
                     icon: SvgPicture.asset(
                         "lib/assets/icons_svg/glucose_meter.svg",
-                        height: 95),
+                        width: _deviceWidth * 0.23),
                   ),
                   CardButton(
                     onTap: () {
@@ -230,7 +231,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 35.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/medicine_icon.svg",
-                          height: 30),
+                          width: _deviceWidth * 0.21),
                     ),
                   ),
                   CardButton(
@@ -255,7 +256,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/scale_icon.svg",
-                          height: 65),
+                          width: _deviceWidth * 0.158),
                     ),
                   ),
                   CardButton(
@@ -280,7 +281,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 20.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/dumbbell_icon.svg",
-                          height: 50),
+                          width: _deviceWidth * 0.2),
                     ),
                   ),
                 ],
@@ -298,7 +299,7 @@ class _MainPageState extends State<MainPage> {
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
-                        height: 60),
+                        width: _deviceWidth * 0.4),
                   ),
                 ),
               ),
