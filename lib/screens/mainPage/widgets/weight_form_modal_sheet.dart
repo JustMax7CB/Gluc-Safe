@@ -10,7 +10,9 @@ import 'dart:developer' as dev;
 import 'form_input_field.dart';
 
 class WeightFormModalSheet extends StatefulWidget {
-  const WeightFormModalSheet({super.key});
+  const WeightFormModalSheet(
+      {super.key, required this.deviceHeight, required this.deviceWidth});
+  final double deviceHeight, deviceWidth;
 
   @override
   State<WeightFormModalSheet> createState() => _WeightFormModalSheetState();
@@ -39,9 +41,6 @@ class _WeightFormModalSheetState extends State<WeightFormModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -53,8 +52,8 @@ class _WeightFormModalSheetState extends State<WeightFormModalSheet> {
             topRight: Radius.circular(34),
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
-      width: _deviceWidth,
-      height: _deviceHeight * 0.35,
+      width: widget.deviceHeight,
+      height: widget.deviceWidth * 0.35,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,14 +89,16 @@ class _WeightFormModalSheetState extends State<WeightFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: weightController,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_weight_form_weight".tr(),
                       keyboardType: TextInputType.number,
                     ),
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: dateContoller,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_weight_form_date".tr(),
                       keyboardType: TextInputType.datetime,
                       readOnly: true,
@@ -141,7 +142,7 @@ class _WeightFormModalSheetState extends State<WeightFormModalSheet> {
                         dateTime,
                         int.parse(weightController.text),
                       );
-                
+
                       await _firebaseService!.saveWeightData(weightData);
                       Navigator.pop(context);
                     },

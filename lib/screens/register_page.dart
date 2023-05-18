@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/infoDialog.dart';
 
 import '../widgets/customAppBar.dart';
@@ -22,7 +23,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   final _formkey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -40,8 +41,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
 
     return Stack(
       children: [
@@ -204,8 +207,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           details:
                                               "register_info_dialog_description"
                                                   .tr(),
-                                          height: _deviceHeight * 0.2,
-                                          width: _deviceWidth * 0.9,
+                                          height: _deviceHeight! * 0.2,
+                                          width: _deviceWidth! * 0.9,
                                         );
                                       },
                                     );
@@ -261,7 +264,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ? Alignment.topRight
                       : Alignment.topLeft,
                   "lib/assets/icons_svg/globe_lang.png",
-                  height: _deviceHeight * 0.11,
+                  height: _deviceHeight! * 0.11,
                 ),
               ),
             ),

@@ -4,13 +4,16 @@ import 'package:gluc_safe/screens/mainPage/widgets/appbar_details.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
 
 class GraphAppBar extends StatelessWidget {
-  const GraphAppBar({super.key, required this.changeLanguage});
+  const GraphAppBar(
+      {super.key,
+      required this.changeLanguage,
+      required this.deviceWidth,
+      required this.deviceHeight});
   final Function changeLanguage;
+  final double deviceWidth, deviceHeight;
 
   @override
   Widget build(BuildContext context) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
-    double _deviceHeight = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(width: 0.6, color: Colors.black)),
@@ -32,8 +35,8 @@ class GraphAppBar extends StatelessWidget {
             children: [
               Padding(
                 padding: context.locale == Locale('en')
-                    ? EdgeInsets.only(left: _deviceWidth * 0.14)
-                    : EdgeInsets.only(right: _deviceWidth * 0.14),
+                    ? EdgeInsets.only(left: deviceWidth * 0.14)
+                    : EdgeInsets.only(right: deviceWidth * 0.14),
                 child: Center(
                   child: Text(
                     "main_page_glucose_graph".tr(),
@@ -54,7 +57,7 @@ class GraphAppBar extends StatelessWidget {
                 ),
               ),
               Container(
-                width: _deviceWidth * 0.12,
+                width: deviceWidth * 0.12,
                 child: IconButton(
                   onPressed: () {
                     debugPrint("Hamburger button pressed");

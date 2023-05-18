@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MedicationPageDrawer extends StatelessWidget {
-  const MedicationPageDrawer({super.key, required this.ChangeLanguage});
+  const MedicationPageDrawer(
+      {super.key, required this.ChangeLanguage, required this.height});
 
   final Function ChangeLanguage;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class MedicationPageDrawer extends StatelessWidget {
                           : const EdgeInsets.only(left: 8.0),
                       child: Image.asset(
                         "lib/assets/icons_svg/globe_lang.png",
-                        height: 35,
+                        height: height * 0.04,
                         color: Colors.black,
                       ),
                     ),

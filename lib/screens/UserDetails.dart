@@ -6,6 +6,7 @@ import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/glucsafeAppbar.dart';
 import 'package:gluc_safe/widgets/infoDialog.dart';
@@ -36,7 +37,7 @@ class _UserDetailsState extends State<UserDetails> {
   final TextEditingController _contactNameController = TextEditingController();
   final TextEditingController _contactPhoneController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   final TextEditingController _firstNameController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
@@ -48,6 +49,58 @@ class _UserDetailsState extends State<UserDetails> {
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
+
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: glucSafeAppbar(context),
+          body: Container(
+            child: isLoading
+                ? Center(child: const CircularProgressIndicator())
+                : Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        userInfoContainer(),
+                        contactInfoContainer(),
+                        saveButton(),
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (context.locale == Locale('en'))
+              context.setLocale(Locale('he'));
+            else
+              context.setLocale(Locale('en'));
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 80, right: 15),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: Image.asset(
+                  alignment: Alignment.topRight,
+                  "lib/assets/icons_svg/globe_lang.png",
+                  height: _deviceHeight! * 0.11,
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Container userInfoContainer() {
@@ -83,7 +136,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_first_name_label".tr(),
                   controller: _firstNameController,
@@ -92,7 +145,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_last_name_label".tr(),
                   controller: _lastNameController,
@@ -106,7 +159,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: DropDown(
                   optionList: gendersToString(context.locale),
                   height: 40,
@@ -118,7 +171,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_birthday_label".tr(),
                   controller: _dateController,
@@ -148,7 +201,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_user_phone_label".tr(),
                 controller: _phoneController),
@@ -188,7 +241,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_contact_name_label".tr(),
                 controller: _contactNameController),
@@ -196,7 +249,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_contact_phone_label".tr(),
                 controller: _contactPhoneController),
@@ -294,8 +347,8 @@ class _UserDetailsState extends State<UserDetails> {
             return InfoDialog(
                 title: "details_page_info_dialog_title".tr(),
                 details: "details_page_info_dialog_description".tr(),
-                height: _deviceWidth * 0.2,
-                width: _deviceWidth * 0.9);
+                height: _deviceWidth! * 0.2,
+                width: _deviceWidth! * 0.9);
           },
         );
       }
@@ -305,55 +358,5 @@ class _UserDetailsState extends State<UserDetails> {
       });
       dev.log("Saving user data failed with error: " + e.toString());
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
-
-    return Stack(
-      children: [
-        Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: glucSafeAppbar(context),
-          body: Container(
-            child: isLoading
-                ? Center(child: const CircularProgressIndicator())
-                : Form(
-                    key: _formkey,
-                    child: Column(
-                      children: [
-                        userInfoContainer(),
-                        contactInfoContainer(),
-                        saveButton(),
-                      ],
-                    ),
-                  ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            if (context.locale == Locale('en'))
-              context.setLocale(Locale('he'));
-            else
-              context.setLocale(Locale('en'));
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 80, right: 15),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                child: Image.asset(
-                  alignment: Alignment.topRight,
-                  "lib/assets/icons_svg/globe_lang.png",
-                  height: _deviceHeight * 0.11,
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
   }
 }

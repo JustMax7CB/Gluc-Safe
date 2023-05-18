@@ -8,6 +8,7 @@ import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/drawer.dart';
 import 'package:gluc_safe/screens/pdf_preview.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'dart:developer' as dev;
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -20,7 +21,7 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   int? startDate, endDate, selectedYear, selectedMonth;
   FirebaseService? _firebaseService;
   List options = [
@@ -111,11 +112,13 @@ class _ChartPageState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceHeight = MediaQuery.of(context).size.height;
-    _deviceWidth = MediaQuery.of(context).size.width;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
     return Scaffold(
       endDrawer: MainDrawer(
-        height: _deviceHeight,
+        height: _deviceHeight!,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));
@@ -148,27 +151,35 @@ class _ChartPageState extends State<ChartPage> {
       ),
       appBar: AppBar(
         actions: [Container()],
-        toolbarHeight: _deviceHeight * 0.11,
-        flexibleSpace: GraphAppBar(changeLanguage: () {
-          if (context.locale == Locale('en'))
-            context.setLocale(Locale('he'));
-          else
-            context.setLocale(Locale('en'));
-        }),
+        toolbarHeight: _deviceHeight! * 0.11,
+        flexibleSpace: GraphAppBar(
+            deviceHeight: _deviceHeight!,
+            deviceWidth: _deviceWidth!,
+            changeLanguage: () {
+              if (context.locale == Locale('en'))
+                context.setLocale(Locale('he'));
+              else
+                context.setLocale(Locale('en'));
+            }),
       ),
       bottomNavigationBar: FutureBuilder(
         future: userContactData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
               emergency: () => showEmergencyDialog(
                 context,
                 snapshot.data as Map,
-                _deviceWidth,
+                _deviceWidth!,
               ),
             );
           } else {
-            return BottomNavBar();
+            return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
+            );
           }
         },
       ),
@@ -179,6 +190,8 @@ class _ChartPageState extends State<ChartPage> {
           Expanded(
             flex: 7,
             child: GraphContainer(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
               optionChoice: changeOptionSelected,
               selectedYear: selectedYear,
               selectedMonth: selectedMonth,

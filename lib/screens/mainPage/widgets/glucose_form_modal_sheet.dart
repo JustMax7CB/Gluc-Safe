@@ -14,7 +14,9 @@ import 'package:gluc_safe/widgets/textStroke.dart';
 import 'dart:developer' as dev;
 
 class GlucoseFormModalSheet extends StatefulWidget {
-  GlucoseFormModalSheet({super.key});
+  GlucoseFormModalSheet(
+      {super.key, required this.deviceHeight, required this.deviceWidth});
+  final double deviceHeight, deviceWidth;
 
   @override
   State<GlucoseFormModalSheet> createState() => _GlucoseFormModalSheetState();
@@ -154,8 +156,6 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-    final double _deviceHeight = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -167,8 +167,8 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
             topRight: Radius.circular(34),
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
-      width: _deviceWidth,
-      height: _deviceHeight * 0.55,
+      width: widget.deviceWidth,
+      height: widget.deviceHeight * 0.55,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -204,15 +204,17 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       focusNode: _focusNode,
                       controller: glucoseController,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_glucose_form_glocuse".tr(),
                       keyboardType: TextInputType.number,
                     ),
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: carbsController,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_glucose_form_carbs".tr(),
                       keyboardType: TextInputType.number,
                     ),
@@ -222,8 +224,9 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: dateContoller,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_glucose_form_date".tr(),
                       keyboardType: TextInputType.datetime,
                       readOnly: true,
@@ -248,7 +251,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                     Container(
                         margin:
                             EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                        width: _deviceWidth * 0.35,
+                        width: widget.deviceWidth * 0.35,
                         child: DropDown(
                             optionList: Meal.values
                                 .map((e) => e.toString().split(".")[1])
@@ -268,7 +271,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                   children: [
                     Container(
                       margin: EdgeInsets.symmetric(
-                          horizontal: _deviceWidth * 0.13, vertical: 5),
+                          horizontal: widget.deviceWidth * 0.13, vertical: 5),
                       child: TextField(
                         controller: notesController,
                         maxLines: 3,
@@ -288,8 +291,8 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                     ),
                     Padding(
                       padding: context.locale == Locale('en')
-                          ? EdgeInsets.only(left: _deviceWidth * 0.13)
-                          : EdgeInsets.only(right: _deviceWidth * 0.13),
+                          ? EdgeInsets.only(left: widget.deviceWidth * 0.13)
+                          : EdgeInsets.only(right: widget.deviceWidth * 0.13),
                       child: Text(
                         "main_page_glucose_form_optional".tr(),
                         style: TextStyle(

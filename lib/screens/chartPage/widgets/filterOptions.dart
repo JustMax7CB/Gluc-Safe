@@ -2,8 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class FilterOptionsContainer extends StatefulWidget {
-  const FilterOptionsContainer({super.key, required this.optionChoice});
+  const FilterOptionsContainer(
+      {super.key,
+      required this.optionChoice,
+      required this.deviceWidth,
+      required this.deviceHeight});
   final Function optionChoice;
+  final double deviceWidth, deviceHeight;
 
   @override
   State<FilterOptionsContainer> createState() => _FilterOptionsContainerState();
@@ -14,14 +19,12 @@ class _FilterOptionsContainerState extends State<FilterOptionsContainer> {
 
   @override
   Widget build(BuildContext context) {
-    double _deviceHeight = MediaQuery.of(context).size.height;
-    double _deviceWidth = MediaQuery.of(context).size.width;
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
-          width: _deviceWidth * 0.62,
-          height: _deviceHeight * 0.04,
+          width: widget.deviceWidth * 0.62,
+          height: widget.deviceHeight * 0.04,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             border: Border.all(width: 1, color: Colors.black),
@@ -29,8 +32,8 @@ class _FilterOptionsContainerState extends State<FilterOptionsContainer> {
           ),
         ),
         Container(
-          width: _deviceWidth * 0.62,
-          height: _deviceHeight * 0.05,
+          width: widget.deviceWidth * 0.62,
+          height: widget.deviceHeight * 0.05,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -59,7 +62,7 @@ class _FilterOptionsContainerState extends State<FilterOptionsContainer> {
                 ),
               ),
               Container(
-                height: _deviceHeight * 0.04,
+                height: widget.deviceHeight * 0.04,
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.5),
                 ),
@@ -89,7 +92,7 @@ class _FilterOptionsContainerState extends State<FilterOptionsContainer> {
                 ),
               ),
               Container(
-                height: _deviceHeight * 0.04,
+                height: widget.deviceHeight * 0.04,
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.5),
                 ),

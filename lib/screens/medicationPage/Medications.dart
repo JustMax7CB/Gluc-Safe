@@ -6,6 +6,7 @@ import 'package:gluc_safe/screens/medicationPage/widgets/drawer.dart';
 import 'package:gluc_safe/screens/medicationPage/widgets/medication_page_appbar.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'package:horizontal_calendar/horizontal_calendar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
@@ -22,7 +23,7 @@ class MedicationPage extends StatefulWidget {
 }
 
 class _MedicationPageState extends State<MedicationPage> {
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   late DateTime _date = DateTime.now();
   List<dynamic>? medList = [];
@@ -37,31 +38,39 @@ class _MedicationPageState extends State<MedicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: _deviceHeight * 0.11,
-        flexibleSpace: MedicationAppBar(changeLanguage: () {}),
+        toolbarHeight: _deviceHeight! * 0.11,
+        flexibleSpace:
+            MedicationAppBar(changeLanguage: () {}, width: _deviceWidth!),
       ),
       bottomNavigationBar: FutureBuilder(
         future: userContactData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
               emergency: () => showEmergencyDialog(
                 context,
                 snapshot.data as Map,
-                _deviceWidth,
+                _deviceWidth!,
               ),
             );
           } else {
-            return BottomNavBar();
+            return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
+            );
           }
         },
       ),
       endDrawer: MedicationPageDrawer(
-        height: _deviceHeight,
+        height: _deviceHeight!,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));
@@ -120,7 +129,10 @@ class _MedicationPageState extends State<MedicationPage> {
           builder: (context) => Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: MedicationFormModalSheet(),
+            child: MedicationFormModalSheet(
+              deviceWidth: _deviceWidth!,
+              deviceHeight: _deviceHeight!,
+            ),
           ),
         ),
       ),
@@ -157,7 +169,7 @@ class _MedicationPageState extends State<MedicationPage> {
                   padding: const EdgeInsets.only(top: 35.0),
                   child: SvgPicture.asset(
                       "lib/assets/icons_svg/medicine_icon.svg",
-                      height: _deviceHeight * 0.04))),
+                      height: _deviceHeight! * 0.04))),
         );
     }
     return ListWidgets;
