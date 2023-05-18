@@ -101,6 +101,7 @@ class _MainPageState extends State<MainPage> {
     dev.log("width: ${_deviceWidth} height: ${_deviceHeight}");
     return Scaffold(
       endDrawer: MainDrawer(
+        height: _deviceHeight,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));

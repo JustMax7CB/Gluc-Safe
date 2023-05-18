@@ -115,6 +115,7 @@ class _ChartPageState extends State<ChartPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       endDrawer: MainDrawer(
+        height: _deviceHeight,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));

@@ -61,6 +61,7 @@ class _MedicationPageState extends State<MedicationPage> {
         },
       ),
       endDrawer: MedicationPageDrawer(
+        height: _deviceHeight,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));
@@ -156,7 +157,7 @@ class _MedicationPageState extends State<MedicationPage> {
                   padding: const EdgeInsets.only(top: 35.0),
                   child: SvgPicture.asset(
                       "lib/assets/icons_svg/medicine_icon.svg",
-                      height: 30))),
+                      height: _deviceHeight * 0.04))),
         );
     }
     return ListWidgets;
