@@ -1,4 +1,4 @@
-*.cpp linguist-detectable=false
-*.h linguist-detectable=false
-*.html linguist-detectable=false
+Gluc-Safe/*.cpp linguist-detectable=false
+Gluc-Safe/*.h linguist-detectable=false
+Gluc-Safe/*.html linguist-detectable=false
 
