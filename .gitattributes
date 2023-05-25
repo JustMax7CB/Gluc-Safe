@@ -1,4 +1,8 @@
-Gluc-Safe/*.cpp linguist-detectable=false
-Gluc-Safe/*.h linguist-detectable=false
-Gluc-Safe/*.html linguist-detectable=false
-
+*.cpp linguist-detectable=false
+*.h linguist-detectable=false
+*.html linguist-detectable=false
+*.java linguist-detectable=false
+*.kt linguist-detectable=false
+*.swift linguist-detectable=false
+*.cmake linguist-detectable=false
+*.makefile linguist-detectable=false
