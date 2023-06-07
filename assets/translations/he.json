@@ -64,6 +64,8 @@
   "register_page_invalid_data": "נתוני משתמש שגויים",
   "register_page_passwords_no_match": "סיסמאות לא תואמות",
   "register_page_register_btn": "רישום",
+  "register_info_dialog_title": "ווידוא מייל",
+  "register_info_dialog_description": "מייל ווידוא נשלח לכתובת המייל שלך",
 
   "details_page_title": "פרטי משתמש",
   "details_page_user_title": "משתמש",
@@ -85,6 +87,8 @@
   "details_page_contact_name_hint": "שם האיש קשר שלך",
   "details_page_contact_phone_label": "מס' טלפון של איש קשר",
   "details_page_contact_phone_hint": "מס' הטלפון של איש הקשר שלך",
+  "details_page_info_dialog_title": "פרטים נשמרו",
+  "details_page_info_dialog_description": "הפרטים שלך נשמרו בהצלחה",
 
   "form_checking_data": "בודק נתונים...",
   "input_email_label": "כתובת מייל",

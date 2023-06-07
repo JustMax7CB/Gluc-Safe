@@ -12,7 +12,9 @@ import 'form_input_field.dart';
 import 'dart:developer' as dev;
 
 class MedicationFormModalSheet extends StatefulWidget {
-  const MedicationFormModalSheet({super.key});
+  const MedicationFormModalSheet(
+      {super.key, required this.deviceHeight, required this.deviceWidth});
+  final double deviceHeight, deviceWidth;
 
   @override
   State<MedicationFormModalSheet> createState() =>
@@ -56,9 +58,6 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -70,7 +69,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
             topRight: Radius.circular(34),
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
-      height: formHeight == 0 ? _deviceHeight * 0.55 : formHeight,
+      height: formHeight == 0 ? widget.deviceHeight * 0.55 : formHeight,
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,13 +108,14 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                 children: [
                   Padding(
                     padding: context.locale == Locale('en')
-                        ? EdgeInsets.only(left: _deviceWidth * 0.1)
-                        : EdgeInsets.only(right: _deviceWidth * 0.1),
+                        ? EdgeInsets.only(left: widget.deviceWidth * 0.1)
+                        : EdgeInsets.only(right: widget.deviceWidth * 0.1),
                     child: Row(
                       children: [
                         FormInputField(
+                          deviceHeight: widget.deviceHeight,
                           controller: medicationNameController,
-                          deviceWidth: _deviceWidth + 100,
+                          deviceWidth: widget.deviceWidth + 100,
                           hintText: "medication_entry_medication_name".tr(),
                           keyboardType: TextInputType.text,
                         ),
@@ -124,19 +124,23 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                   ),
                   Padding(
                     padding: context.locale == Locale('en')
-                        ? EdgeInsets.only(left: _deviceWidth * 0.1, top: 15)
-                        : EdgeInsets.only(right: _deviceWidth * 0.1, top: 15),
+                        ? EdgeInsets.only(
+                            left: widget.deviceWidth * 0.1, top: 15)
+                        : EdgeInsets.only(
+                            right: widget.deviceWidth * 0.1, top: 15),
                     child: Row(
                       children: [
                         FormInputField(
+                          deviceHeight: widget.deviceHeight,
                           controller: DoseController,
-                          deviceWidth: _deviceWidth,
+                          deviceWidth: widget.deviceWidth,
                           hintText: "medication_entry_medication_dose".tr(),
                           keyboardType: TextInputType.number,
                         ),
                         FormInputField(
+                          deviceHeight: widget.deviceHeight,
                           controller: PerDayController,
-                          deviceWidth: _deviceWidth,
+                          deviceWidth: widget.deviceWidth,
                           hintText: "medication_entry_medication_per_day".tr(),
                           keyboardType: TextInputType.number,
                         ),
@@ -145,8 +149,10 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                   ),
                   Padding(
                     padding: context.locale == Locale('en')
-                        ? EdgeInsets.only(left: _deviceWidth * 0.1, top: 15)
-                        : EdgeInsets.only(right: _deviceWidth * 0.1, top: 15),
+                        ? EdgeInsets.only(
+                            left: widget.deviceWidth * 0.1, top: 15)
+                        : EdgeInsets.only(
+                            right: widget.deviceWidth * 0.1, top: 15),
                     child: Row(
                       children: [
                         Text(
@@ -158,14 +164,16 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                   for (int i = 0; i < numRem; i++)
                     Padding(
                       padding: context.locale == Locale('en')
-                          ? EdgeInsets.only(left: _deviceWidth * 0.1, top: 4)
-                          : EdgeInsets.only(right: _deviceWidth * 0.1, top: 4),
+                          ? EdgeInsets.only(
+                              left: widget.deviceWidth * 0.1, top: 4)
+                          : EdgeInsets.only(
+                              right: widget.deviceWidth * 0.1, top: 4),
                       child: Row(
                         children: [
                           Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
-                            width: _deviceWidth * 0.35,
+                            width: widget.deviceWidth * 0.35,
                             child: DropDown(
                                 optionList: Day.values
                                     .map((e) => e.toString().split(".")[1])
@@ -180,8 +188,9 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                                 save: (value) => DayController[i].text = value),
                           ),
                           FormInputField(
+                            deviceHeight: widget.deviceHeight,
                             controller: dateContoller[i],
-                            deviceWidth: _deviceWidth,
+                            deviceWidth: widget.deviceWidth,
                             hintText: "medication_entry_medication_time".tr(),
                             keyboardType: TextInputType.datetime,
                             readOnly: true,
@@ -223,8 +232,8 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         setState(() {
                           if (numRem < 5) {
                             numRem = numRem + 1;
-                            formHeight = _deviceHeight * 0.55 +
-                                (_deviceHeight * 0.055 * numRem);
+                            formHeight = widget.deviceHeight * 0.55 +
+                                (widget.deviceHeight * 0.055 * numRem);
                           }
                         });
                       },

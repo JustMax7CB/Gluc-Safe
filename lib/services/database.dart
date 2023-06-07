@@ -80,7 +80,7 @@ class FirebaseService {
         // Add additional cases for other error codes as needed
         default:
           dev.log('An error occurred: ${e.message}');
-          break;
+          return "login_page_signin_error_occured".tr();
       }
     } catch (e) {
       dev.log('An error occurred: $e');

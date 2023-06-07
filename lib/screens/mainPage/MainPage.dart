@@ -13,6 +13,7 @@ import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'dart:developer' as dev;
 import 'package:gluc_safe/screens/mainPage/widgets/appbar_container.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import '../pdf_preview.dart';
 import 'package:gluc_safe/screens/medicationPage/Medications.dart';
@@ -25,7 +26,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   GlucUser? _glucUser;
   GlucUser nullUser = GlucUser("", "", DateTime.now(), 0, "", "", "", "");
@@ -96,10 +97,14 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
+    dev.log("width: ${_deviceWidth} height: ${_deviceHeight}");
     return Scaffold(
       endDrawer: MainDrawer(
+        height: _deviceHeight!,
         ChangeLanguage: () {
           if (context.locale == Locale('en'))
             context.setLocale(Locale('he'));
@@ -128,27 +133,33 @@ class _MainPageState extends State<MainPage> {
         },
       ),
       bottomNavigationBar: BottomNavBar(
+        deviceHeight: _deviceHeight!,
+        deviceWidth: _deviceWidth!,
         logout: _firebaseService!.logout,
         emergency: () => showEmergencyDialog(
             context,
             {'name': _glucUser!.contactName, 'phone': _glucUser!.contactNum},
-            _deviceWidth),
+            _deviceWidth!),
       ),
       appBar: AppBar(
         actions: [Container()],
         automaticallyImplyLeading: false,
-        toolbarHeight: _deviceHeight * 0.22,
+        toolbarHeight: _deviceHeight! * 0.22,
         flexibleSpace: FutureBuilder(
           future: getGlucoseAverageLatest(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return AppbarContainer(
+                height: _deviceHeight!,
+                width: _deviceWidth!,
                 glucoseAverage: (snapshot.data as Map)['Average'],
                 glucoseLatest: (snapshot.data as Map)['Latest'],
                 func: () => Scaffold.of(context).openEndDrawer(),
               );
             } else {
               return AppbarContainer(
+                height: _deviceHeight!,
+                width: _deviceWidth!,
                 glucoseAverage: 0,
                 glucoseLatest: 0,
                 func: () => Scaffold.of(context).openEndDrawer(),
@@ -160,7 +171,7 @@ class _MainPageState extends State<MainPage> {
       body: Container(
         margin: EdgeInsets.only(top: 10),
         width: _deviceWidth,
-        height: _deviceHeight * 0.62,
+        height: _deviceHeight! * 0.62,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -183,7 +194,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             Container(
-              height: _deviceHeight * 0.37,
+              height: _deviceHeight! * 0.37,
               margin: EdgeInsets.fromLTRB(20, 15, 20, 0),
               child: GridView.count(
                 physics: NeverScrollableScrollPhysics(),
@@ -207,14 +218,17 @@ class _MainPageState extends State<MainPage> {
                         builder: (context) => Padding(
                           padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: GlucoseFormModalSheet(),
+                          child: GlucoseFormModalSheet(
+                            deviceWidth: _deviceWidth!,
+                            deviceHeight: _deviceHeight!,
+                          ),
                         ),
                       ).then((value) => _updateState());
                     },
                     title: "main_page_add_glucose".tr(),
                     icon: SvgPicture.asset(
                         "lib/assets/icons_svg/glucose_meter.svg",
-                        height: 95),
+                        width: _deviceWidth! * 0.23),
                   ),
                   CardButton(
                     onTap: () {
@@ -230,7 +244,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 35.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/medicine_icon.svg",
-                          height: 30),
+                          width: _deviceWidth! * 0.21),
                     ),
                   ),
                   CardButton(
@@ -247,7 +261,10 @@ class _MainPageState extends State<MainPage> {
                       builder: (context) => Padding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: WeightFormModalSheet(),
+                        child: WeightFormModalSheet(
+                          deviceWidth: _deviceWidth!,
+                          deviceHeight: _deviceHeight!,
+                        ),
                       ),
                     ),
                     title: "main_page_add_weight".tr(),
@@ -255,7 +272,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/scale_icon.svg",
-                          height: 65),
+                          width: _deviceWidth! * 0.158),
                     ),
                   ),
                   CardButton(
@@ -272,7 +289,10 @@ class _MainPageState extends State<MainPage> {
                       builder: (context) => Padding(
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: WorkoutFormModalSheet(),
+                        child: WorkoutFormModalSheet(
+                          deviceHeight: _deviceHeight!,
+                          deviceWidth: _deviceWidth!,
+                        ),
                       ),
                     ),
                     title: "main_page_add_workout".tr(),
@@ -280,7 +300,7 @@ class _MainPageState extends State<MainPage> {
                       padding: const EdgeInsets.only(top: 20.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/dumbbell_icon.svg",
-                          height: 50),
+                          width: _deviceWidth! * 0.2),
                     ),
                   ),
                 ],
@@ -298,7 +318,7 @@ class _MainPageState extends State<MainPage> {
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
-                        height: 60),
+                        width: _deviceWidth! * 0.4),
                   ),
                 ),
               ),

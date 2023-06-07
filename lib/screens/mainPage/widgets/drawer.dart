@@ -4,10 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer(
-      {super.key, required this.ChangeLanguage, required this.exportPDF});
+      {super.key,
+      required this.ChangeLanguage,
+      required this.exportPDF,
+      required this.height});
 
   final Function ChangeLanguage;
   final Function exportPDF;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class MainDrawer extends StatelessWidget {
                           : const EdgeInsets.only(left: 8.0),
                       child: Image.asset(
                         "lib/assets/icons_svg/globe_lang.png",
-                        height: 35,
+                        height: height * 0.04,
                         color: Colors.black,
                       ),
                     ),
@@ -64,7 +68,7 @@ class MainDrawer extends StatelessWidget {
                           : const EdgeInsets.only(left: 8.0),
                       child: SvgPicture.asset(
                           "lib/assets/icons_svg/page-export-pdf.svg",
-                          height: 35),
+                          height: height * 0.04),
                     ),
                     Text(
                       "main_page_drawer_pdf".tr(),

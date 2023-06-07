@@ -64,8 +64,10 @@
 
 
   "register_page_invalid_data": "Invalid user data",
-  "register_page_passwords_no_match": "Passwords doe not match",
+  "register_page_passwords_no_match": "Passwords doess not match",
   "register_page_register_btn": "Register",
+  "register_info_dialog_title": "Email Verification",
+  "register_info_dialog_description": "Verification email has been sent to your email address",
 
   "details_page_title": "User Details",
   "details_page_user_title": "User",
@@ -87,6 +89,9 @@
   "details_page_contact_name_hint": "your emergency contact name",
   "details_page_contact_phone_label": "Contact Phone Number",
   "details_page_contact_phone_hint": "your emergency contact phone number",
+  "details_page_info_dialog_title": "Details Saved",
+  "details_page_info_dialog_description": "Your details saved successfully",
+  
 
   "form_checking_data": "Checking Data...",
   "input_email_hint": "Enter your email",
@@ -151,6 +156,10 @@
   "misc_label_empty": "Field {} cannot be empty",
   "misc_cancel": "Cancel",
   "misc_confirm": "Confirm",
+
+
+  "gender_male": "Male",
+  "gender_female": "Female",
   
   "emergency_call_title" : "Emergency Call",
   "emergency_call_who_call" : "Choose who to call",

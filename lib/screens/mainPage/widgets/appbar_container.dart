@@ -8,15 +8,16 @@ class AppbarContainer extends StatelessWidget {
       {super.key,
       required this.func,
       required this.glucoseLatest,
-      required this.glucoseAverage});
+      required this.glucoseAverage,
+      required this.width,
+      required this.height});
   final Function func;
   final num glucoseLatest;
   final num glucoseAverage;
+  final double width, height;
 
   @override
   Widget build(BuildContext context) {
-    double _deviceWidth = MediaQuery.of(context).size.width;
-    double _deviceHeight = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(width: 0.6, color: Colors.black)),
@@ -37,7 +38,7 @@ class AppbarContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: _deviceWidth * 0.88,
+                width: width * 0.88,
                 child: Center(
                   child: Text(
                     "main_page_appbar_title".tr(),
@@ -58,7 +59,7 @@ class AppbarContainer extends StatelessWidget {
                 ),
               ),
               Container(
-                width: _deviceWidth * 0.12,
+                width: width * 0.12,
                 child: IconButton(
                   onPressed: () {
                     debugPrint("Hamburger button pressed");
