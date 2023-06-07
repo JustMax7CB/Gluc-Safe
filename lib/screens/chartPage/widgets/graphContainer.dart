@@ -17,9 +17,12 @@ class GraphContainer extends StatefulWidget {
     this.selectedMonth,
     this.startDate,
     this.endDate,
+    required this.deviceWidth,
+    required this.deviceHeight,
   });
   final Function optionChoice;
   int? startDate, endDate, selectedYear, selectedMonth;
+  final double deviceWidth, deviceHeight;
 
   @override
   State<GraphContainer> createState() => _GraphContainerState();
@@ -46,9 +49,6 @@ class _GraphContainerState extends State<GraphContainer> {
 
   @override
   Widget build(BuildContext context) {
-    double _deviceHeight = MediaQuery.of(context).size.height;
-    double _deviceWidth = MediaQuery.of(context).size.width;
-
     return Container(
       decoration: BoxDecoration(
         color: Color.fromRGBO(213, 233, 217, 1),
@@ -70,6 +70,8 @@ class _GraphContainerState extends State<GraphContainer> {
                 ),
               ),
               FilterOptionsContainer(
+                deviceWidth: widget.deviceWidth,
+                deviceHeight: widget.deviceHeight,
                 optionChoice: (option) {
                   widget.optionChoice(option);
                   setState(() {
@@ -86,8 +88,8 @@ class _GraphContainerState extends State<GraphContainer> {
                 if (snapshot.hasData) {
                   return LineChartWidget(
                       glucoseValues: snapshot.data as List,
-                      deviceHeight: _deviceHeight,
-                      deviceWidth: _deviceWidth);
+                      deviceHeight: widget.deviceHeight,
+                      deviceWidth: widget.deviceWidth);
                 }
                 return const CircularProgressIndicator();
               },

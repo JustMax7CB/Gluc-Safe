@@ -1,16 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/screens/mainPage/widgets/appbar_details.dart';
-import 'package:gluc_safe/widgets/textStroke.dart';
 
-class GraphAppBar extends StatelessWidget {
-  const GraphAppBar(
-      {super.key,
-      required this.changeLanguage,
-      required this.deviceWidth,
-      required this.deviceHeight});
+class MedicationAppBar extends StatelessWidget {
+  const MedicationAppBar(
+      {super.key, required this.changeLanguage, required this.width});
   final Function changeLanguage;
-  final double deviceWidth, deviceHeight;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +30,11 @@ class GraphAppBar extends StatelessWidget {
             children: [
               Padding(
                 padding: context.locale == Locale('en')
-                    ? EdgeInsets.only(left: deviceWidth * 0.14)
-                    : EdgeInsets.only(right: deviceWidth * 0.14),
+                    ? EdgeInsets.only(left: width * 0.14)
+                    : EdgeInsets.only(right: width * 0.14),
                 child: Center(
                   child: Text(
-                    "main_page_glucose_graph".tr(),
+                    "medication_page_title".tr(),
                     style: TextStyle(
                       fontFamily: "DM_Sans",
                       fontSize: 40,
@@ -53,19 +48,6 @@ class GraphAppBar extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                width: deviceWidth * 0.12,
-                child: IconButton(
-                  onPressed: () {
-                    debugPrint("Hamburger button pressed");
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
                   ),
                 ),
               ),

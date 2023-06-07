@@ -11,7 +11,8 @@ class FormInputField extends StatefulWidget {
       onTap,
       readOnly,
       onTapOutside,
-      focusNode})
+      focusNode,
+      required this.deviceHeight})
       : _controller = controller,
         this.keyboardType = keyboardType,
         this.hintText = hintText,
@@ -23,7 +24,7 @@ class FormInputField extends StatefulWidget {
   final TextEditingController _controller;
   final TextInputType? keyboardType;
   final String? hintText;
-  final double _deviceWidth;
+  final double _deviceWidth, deviceHeight;
   final Function? onTap;
   final bool? readOnly;
   final Function? onTapOutside;

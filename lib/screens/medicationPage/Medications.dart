@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/enums/enumsExport.dart';
-import 'package:gluc_safe/Models/glucose.dart';
-import 'package:gluc_safe/Models/medications.dart';
+
+import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/drawer.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/medication_page_appbar.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
-import 'package:gluc_safe/Models/weight.dart';
-import 'package:gluc_safe/Models/workout.dart';
-import 'package:gluc_safe/widgets/customAppBar.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
+import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'package:horizontal_calendar/horizontal_calendar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/medication_form_modal_sheet.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:developer' as dev;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class MedicationPage extends StatefulWidget {
   const MedicationPage({super.key});
@@ -27,7 +23,7 @@ class MedicationPage extends StatefulWidget {
 }
 
 class _MedicationPageState extends State<MedicationPage> {
-  late double _deviceWidth, _deviceHeight;
+  double? _deviceWidth, _deviceHeight;
   FirebaseService? _firebaseService;
   late DateTime _date = DateTime.now();
   List<dynamic>? medList = [];
@@ -37,48 +33,87 @@ class _MedicationPageState extends State<MedicationPage> {
   void initState() {
     super.initState();
     _firebaseService = GetIt.instance.get<FirebaseService>();
-    getMedicine(_date.toString());
+    getMedicine(_date);
   }
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
-    _deviceHeight = MediaQuery.of(context).size.height;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Medicine Reminder"),
-        backgroundColor: Color.fromARGB(255, 66, 146, 75),
+        toolbarHeight: _deviceHeight! * 0.11,
+        flexibleSpace:
+            MedicationAppBar(changeLanguage: () {}, width: _deviceWidth!),
+      ),
+      bottomNavigationBar: FutureBuilder(
+        future: userContactData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
+              emergency: () => showEmergencyDialog(
+                context,
+                snapshot.data as Map,
+                _deviceWidth!,
+              ),
+            );
+          } else {
+            return BottomNavBar(
+              deviceHeight: _deviceHeight!,
+              deviceWidth: _deviceWidth!,
+            );
+          }
+        },
+      ),
+      endDrawer: MedicationPageDrawer(
+        height: _deviceHeight!,
+        ChangeLanguage: () {
+          if (context.locale == Locale('en'))
+            context.setLocale(Locale('he'));
+          else
+            context.setLocale(Locale('en'));
+        },
       ),
       body: Container(
         margin: EdgeInsets.only(top: 10),
         width: _deviceWidth,
-        height: _deviceHeight * 0.8,
         child: Column(
           children: [
-            HorizontalCalendar(
-              date: DateTime.now(),
-              textColor: Colors.black45,
-              backgroundColor: Colors.white,
-              selectedColor: Color.fromARGB(255, 66, 146, 75),
-              showMonth: true,
-              onDateSelected: (date) {
-                getMedicine(date);
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: HorizontalCalendar(
+                date: DateTime.now(),
+                textColor: Colors.black45,
+                backgroundColor: Colors.white,
+                selectedColor: Color.fromARGB(255, 66, 146, 75),
+                showMonth: true,
+                locale: context.locale,
+                onDateSelected: (date) {
+                  getMedicine(date);
+                },
+              ),
             ),
-            Container(
-                height: _deviceHeight * 0.6,
+            Expanded(
+              child: Container(
                 margin: EdgeInsets.fromLTRB(20, 60, 20, 0),
                 child: GridView.count(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.32,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 15,
-                    children: MedicationsDisplay())),
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.32,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 15,
+                  children: MedicationsDisplay(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, size: 35),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         onPressed: () => showModalBottomSheet(
@@ -94,16 +129,28 @@ class _MedicationPageState extends State<MedicationPage> {
           builder: (context) => Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: MedicationFormModalSheet(),
+            child: MedicationFormModalSheet(
+              deviceWidth: _deviceWidth!,
+              deviceHeight: _deviceHeight!,
+            ),
           ),
         ),
       ),
     );
   }
 
-  void getMedicine(dynamic date) async {
+  Future<Map> userContactData() async {
+    Map contactData = {};
+    contactData = await _firebaseService!.getUserData() as Map;
+    return {
+      'name': contactData['contactName'],
+      'phone': contactData['contactNumber']
+    };
+  }
+
+  void getMedicine(DateTime date) async {
     List? medtemp = await _firebaseService!.getMedicationData();
-    DateTime dt = DateTime.parse(date);
+    DateTime dt = date;
     setState(() {
       medList = medtemp;
       _date = dt;
@@ -122,7 +169,7 @@ class _MedicationPageState extends State<MedicationPage> {
                   padding: const EdgeInsets.only(top: 35.0),
                   child: SvgPicture.asset(
                       "lib/assets/icons_svg/medicine_icon.svg",
-                      height: 30))),
+                      height: _deviceHeight! * 0.04))),
         );
     }
     return ListWidgets;

@@ -11,7 +11,9 @@ import 'form_input_field.dart';
 import 'dart:developer' as dev;
 
 class WorkoutFormModalSheet extends StatefulWidget {
-  const WorkoutFormModalSheet({super.key});
+  const WorkoutFormModalSheet(
+      {super.key, required this.deviceHeight, required this.deviceWidth});
+  final double deviceHeight, deviceWidth;
 
   @override
   State<WorkoutFormModalSheet> createState() => _WorkoutFormModalSheetState();
@@ -43,9 +45,6 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final double _deviceWidth = MediaQuery.of(context).size.width;
-    final double _deviceHeight = MediaQuery.of(context).size.height;
-
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -57,8 +56,8 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
             topRight: Radius.circular(34),
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
-      width: _deviceWidth,
-      height: _deviceHeight * 0.45,
+      width: widget.deviceWidth,
+      height: widget.deviceHeight * 0.45,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -95,14 +94,16 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: durationController,
-                      deviceWidth: _deviceWidth + 50,
+                      deviceWidth: widget.deviceWidth + 50,
                       hintText: "main_page_workout_form_duration".tr(),
                       keyboardType: TextInputType.number,
                     ),
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: distanceController,
-                      deviceWidth: _deviceWidth + 50,
+                      deviceWidth: widget.deviceHeight + 50,
                       hintText: "main_page_workout_form_distance".tr(),
                       keyboardType: TextInputType.number,
                     ),
@@ -113,7 +114,7 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                   children: [
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      width: _deviceWidth * 0.4,
+                      width: widget.deviceWidth * 0.4,
                       child: DropDown(
                           optionList: Workouts.values
                               .map((e) => e.toString().split(".")[1])
@@ -128,8 +129,9 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                           save: (value) => workoutController.text = value),
                     ),
                     FormInputField(
+                      deviceHeight: widget.deviceHeight,
                       controller: dateContoller,
-                      deviceWidth: _deviceWidth,
+                      deviceWidth: widget.deviceWidth,
                       hintText: "main_page_weight_form_date".tr(),
                       keyboardType: TextInputType.datetime,
                       readOnly: true,
@@ -157,8 +159,8 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                   children: [
                     Padding(
                       padding: context.locale == Locale('en')
-                          ? EdgeInsets.only(left: _deviceWidth * 0.11)
-                          : EdgeInsets.only(right: _deviceWidth * 0.11),
+                          ? EdgeInsets.only(left: widget.deviceWidth * 0.11)
+                          : EdgeInsets.only(right: widget.deviceWidth * 0.11),
                       child: Text(
                         "main_page_workout_form_optional".tr(),
                         style: TextStyle(

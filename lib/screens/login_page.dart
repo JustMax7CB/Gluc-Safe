@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/services/database.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/customAppBar.dart';
 import 'package:gluc_safe/widgets/textField.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,7 +24,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late double _deviceWidth;
+  double? _deviceWidth, _deviceHeight;
   final _formkey = GlobalKey<FormState>();
   final _resetKey = GlobalKey<FormState>();
   bool obscurePassword = true;
@@ -47,7 +48,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
 
     return Stack(
       children: [
@@ -78,8 +82,9 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.topRight,
               child: Container(
                 child: Image.asset(
+                  alignment: Alignment.topRight,
                   "lib/assets/icons_svg/globe_lang.png",
-                  height: 45,
+                  height: _deviceHeight! * 0.11,
                 ),
               ),
             ),
@@ -290,6 +295,9 @@ class _LoginPageState extends State<LoginPage> {
       snackBarWithDismiss("login_page_signin_checking".tr());
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
+      if (result is UserCredential) {
+        _firebaseService!.saveUserDeviceToken();
+      }
       if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         dev.log("Check: " + result);

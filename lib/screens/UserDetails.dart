@@ -4,15 +4,14 @@ import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_pic
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/Models/enums/enumsExport.dart';
 import 'package:gluc_safe/Models/user.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/widgets/customAppBar.dart';
+import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/glucsafeAppbar.dart';
+import 'package:gluc_safe/widgets/infoDialog.dart';
 import 'package:gluc_safe/widgets/textField.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
-import 'package:intl/intl.dart';
-import 'package:gluc_safe/widgets/details_card.dart';
 import 'dart:developer' as dev;
 
 class UserDetails extends StatefulWidget {
@@ -23,16 +22,7 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
-  late double _deviceHeight, _deviceWidth;
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _contactNameController = TextEditingController();
-  final TextEditingController _contactPhoneController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
-  FirebaseService? _firebaseService;
+  bool isLoading = false;
   Map userData = {
     "firstName": null,
     "lastName": null,
@@ -44,6 +34,17 @@ class _UserDetailsState extends State<UserDetails> {
     "contactNumber": null,
   };
 
+  final TextEditingController _contactNameController = TextEditingController();
+  final TextEditingController _contactPhoneController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  double? _deviceWidth, _deviceHeight;
+  FirebaseService? _firebaseService;
+  final TextEditingController _firstNameController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -52,23 +53,29 @@ class _UserDetailsState extends State<UserDetails> {
 
   @override
   Widget build(BuildContext context) {
-    _deviceWidth = MediaQuery.of(context).size.width;
+    if (_deviceWidth == null || _deviceHeight == null) {
+      _deviceWidth = getDeviceWidth(context);
+      _deviceHeight = getDeviceHeight(context);
+    }
+
     return Stack(
       children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: glucSafeAppbar(context),
           body: Container(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  userInfoContainer(),
-                  contactInfoContainer(),
-                  saveButton(),
-                ],
-              ),
-            ),
+            child: isLoading
+                ? Center(child: const CircularProgressIndicator())
+                : Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        userInfoContainer(),
+                        contactInfoContainer(),
+                        saveButton(),
+                      ],
+                    ),
+                  ),
           ),
         ),
         GestureDetector(
@@ -84,8 +91,9 @@ class _UserDetailsState extends State<UserDetails> {
               alignment: Alignment.topRight,
               child: Container(
                 child: Image.asset(
+                  alignment: Alignment.topRight,
                   "lib/assets/icons_svg/globe_lang.png",
-                  height: 45,
+                  height: _deviceHeight! * 0.11,
                 ),
               ),
             ),
@@ -128,7 +136,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_first_name_label".tr(),
                   controller: _firstNameController,
@@ -137,7 +145,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_last_name_label".tr(),
                   controller: _lastNameController,
@@ -151,11 +159,9 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: DropDown(
-                  optionList: Gender.values
-                      .map((e) => e.toString().split(".")[1])
-                      .toList(),
+                  optionList: gendersToString(context.locale),
                   height: 40,
                   width: 30,
                   hint: "details_page_user_gender_label".tr(),
@@ -165,7 +171,7 @@ class _UserDetailsState extends State<UserDetails> {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
                 height: 50,
-                width: _deviceWidth * 0.4,
+                width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_birthday_label".tr(),
                   controller: _dateController,
@@ -195,7 +201,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_user_phone_label".tr(),
                 controller: _phoneController),
@@ -235,7 +241,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_contact_name_label".tr(),
                 controller: _contactNameController),
@@ -243,7 +249,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             height: 50,
-            width: _deviceWidth * 0.85,
+            width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
                 hint: "details_page_contact_phone_label".tr(),
                 controller: _contactPhoneController),
@@ -302,6 +308,9 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   saveDetails() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       DateTime date = DateFormat("dd/MM/yyy").parse(_dateController.text);
 
@@ -320,9 +329,33 @@ class _UserDetailsState extends State<UserDetails> {
       bool saveResult =
           await _firebaseService!.saveUserData(glucUser: glucUser);
       if (saveResult) {
-        Navigator.popAndPushNamed(context, '/');
+        setState(() {
+          isLoading = false;
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ));
+        });
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return InfoDialog(
+                title: "details_page_info_dialog_title".tr(),
+                details: "details_page_info_dialog_description".tr(),
+                height: _deviceWidth! * 0.2,
+                width: _deviceWidth! * 0.9);
+          },
+        );
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       dev.log("Saving user data failed with error: " + e.toString());
     }
   }
