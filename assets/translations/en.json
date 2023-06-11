@@ -19,6 +19,7 @@
   "main_page_add_weight" : "Add Weight",
   "main_page_add_workout" : "Add Workout",
   "main_page_glucose_graph" : "Glucose Graph",
+  "main_page_bolus_calculator":"Bolus Calculator",
 
   "main_page_glucose_form_title" : "New Glucose Entry",
   "main_page_glucose_form_glocuse" : "Glucose",
@@ -142,7 +143,7 @@
   "medication_entry_add_another_reminder" : "Add Another Reminder",
   "medication_entry_reminders_max" : "Reminders(max 5 reminders*):",
   
-
+  "bolus_calculator_page_title" : "Calculator",
 
 
   "misc_email_cant_be_empty": "Email cannot be empty",
@@ -165,7 +166,17 @@
   "emergency_call_who_call" : "Choose who to call",
   "emergency_call_contact" : "{}",
   "emergency_call_ambulance" : "Ambulance",
-  "emergency_call_tap_outside": "Tap outside to close the popup"
+  "emergency_call_tap_outside": "Tap outside to close the popup",
 
-  
+  "bolus_caculator_meal_bolus":"Meal Bolus",
+  "bolus_caculator_correction_bolus":"Correction Bolus",
+  "bolus_caculator_carbohydrate_intake":"Carbohydrate intake(g)",
+  "bolus_caculator_carbohydrate_ratio":"Carbohydrate ratio",
+  "bolus_caculator_blood_glucose":"Blood glucose(mg/dL)",
+  "bolus_caculator_target_glucose":"Target glucose(mg/dL)",
+  "bolus_caculator_correction_factor":"Correction factor(mg/dL/U)",
+  "bolus_caculator_bolus_dose":"Bolus dose",
+  "bolus_caculator_correction_dose":"Correction Dose",
+  "bolus_caculator_calculate_bolus":"Calculate Bolus",
+  "bolus_caculator_save_entry":"Save Bolus"
 }

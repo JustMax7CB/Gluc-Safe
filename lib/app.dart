@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gluc_safe/screens/chartPage/chartPage.dart';
 import 'package:gluc_safe/screens/mainPage/MainPage.dart';
+import 'package:gluc_safe/screens/BolusCalculatorPage/BolusCalc.dart';
 import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/screens/UserDetails.dart';
 import 'package:gluc_safe/screens/register_page.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/details': (context) => const UserDetails(),
         '/chart': (context) => const ChartPage(),
+        '/bolus': (context) => const BolusCalcPage(),
       },
     );
   }

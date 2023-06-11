@@ -311,6 +311,23 @@ class _MainPageState extends State<MainPage> {
                 margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
                 child: CardButton(
                   onTap: () {
+                    Navigator.pushNamed(context, '/bolus');
+                  },
+                  width: _deviceWidth,
+                  title: "main_page_bolus_calculator".tr(),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
+                        width: _deviceWidth! * 0.4),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: CardButton(
+                  onTap: () {
                     Navigator.pushNamed(context, '/chart');
                   },
                   width: _deviceWidth,
