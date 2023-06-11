@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:gluc_safe/Models/MedReminder.dart';
 import 'package:gluc_safe/Models/enums/genders.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/bolus.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/MedHistory.dart';
 import 'package:gluc_safe/Models/user.dart';
@@ -15,6 +16,7 @@ import 'dart:developer' as dev;
 
 const String USER_COLLECTION = 'users';
 const String GLUCOSE_COLLECTION = 'glucose';
+const String BOLUS_COLLECTION = 'bolus';
 const String WEIGHT_COLLECTION = 'weight';
 const String MEDICATION_COLLECTION = 'medication';
 const String WORKOUT_COLLECTION = 'workout';
@@ -22,6 +24,7 @@ const String MEDHISTORY_COLLECTION = 'medHistory';
 const String DEVICETOKENS_COLLECTION = 'userTokens';
 
 const String GLUCOSE_RECORDS = 'glucose_records';
+const String BOLUS_RECORDS = 'bolus_records';
 const String WEIGHT_RECORDS = 'weight_records';
 const String MEDICATION_RECORDS = 'medication_records';
 const String WORKOUT_RECORDS = 'workout_records';
@@ -160,6 +163,10 @@ class FirebaseService {
         .collection(GLUCOSE_COLLECTION)
         .doc(userID)
         .set({GLUCOSE_RECORDS: []});
+    await _database
+        .collection(BOLUS_COLLECTION)
+        .doc(userID)
+        .set({BOLUS_RECORDS: []});
     await _database
         .collection(WEIGHT_COLLECTION)
         .doc(userID)
@@ -469,6 +476,77 @@ class FirebaseService {
     } catch (e) {
       dev.log(e.toString());
       return false;
+    }
+  }
+
+  Future<bool> saveBolusData(Bolus bolusData) async {
+    // gets an instance of Glucose
+    // the function will try to save the glucose data to the firebase database
+    // will return true if successful otherwise return false
+    List recordsList = [];
+    String userId = user!.uid;
+    DateTime dataDate = bolusData.date;
+    bool dataisMealBolus = bolusData.isMealBolus;
+    bool dataisCorrectionBolus = bolusData.isCorrectionBolus;
+    double datacarbohydrateIntake = bolusData.carbohydrateIntake;
+    double datacarbohydrateRatio = bolusData.carbohydrateRatio;
+    double databloodGlucose = bolusData.bloodGlucose;
+    double datatargetGlucose = bolusData.targetGlucose;
+    double datacorrectionFactor = bolusData.correctionFactor;
+    double databolusDose = bolusData.bolusDose;
+    final bolusReading = {
+      "Date": dataDate,
+      "is Meal Bolus": dataisMealBolus,
+      "is Correction Bolus": dataisCorrectionBolus,
+      "carbohydrate Intake": datacarbohydrateIntake,
+      "carbohydrate Ratio": datacarbohydrateRatio,
+      "blood Glucose": databloodGlucose,
+      "target Glucose": datatargetGlucose,
+      "correction Factor": datacorrectionFactor,
+      "bolus Dose": databolusDose
+    };
+    try {
+      dev.log((userId == "SUc3GSg9FvNSYj6AhSBpidRgslw1").toString());
+      dev.log(_database.collection(BOLUS_COLLECTION).toString());
+      var document =
+          await _database.collection(BOLUS_COLLECTION).doc(userId).get();
+      var docList = document.data()![BOLUS_RECORDS];
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(bolusReading);
+      } else {
+        recordsList.add(bolusReading);
+      }
+      await _database.collection(BOLUS_COLLECTION).doc(userId).set({
+        BOLUS_RECORDS: recordsList,
+      });
+      dev.log("Bolus data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to save user bolus data");
+      return false;
+    }
+  }
+
+  Future<List?> getBolusData() async {
+    // gets user id as a string
+    // the function will try to fetch the user glucose data from the firebase database
+    List? bolusUserData;
+    String? userID = user!.uid;
+    try {
+      var document =
+          await _database.collection(BOLUS_COLLECTION).doc(userID).get();
+      bolusUserData = document.data()![BOLUS_RECORDS] as List;
+      bolusUserData.forEach((record) {
+        record['Date'] = (record['Date'] as Timestamp).millisecondsSinceEpoch;
+      });
+      dev.log("\x1B[32m" + bolusUserData.toString());
+      return bolusUserData;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to get user bolus data");
+      return null;
     }
   }
 }

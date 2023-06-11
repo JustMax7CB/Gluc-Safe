@@ -19,6 +19,7 @@
   "main_page_add_weight" : "הוספת משקל",
   "main_page_add_workout" : "הוספת אימון",
   "main_page_glucose_graph" : "גרף גלוקוז",
+  "main_page_bolus_calculator":"מחשבון בולוס",
 
   "main_page_glucose_form_title" : "רשומת גלוקוז חדשה",
   "main_page_glucose_form_glocuse" : "גלוקוז",
@@ -137,6 +138,8 @@
   "medication_entry_medication_time" : "שעה",
   "medication_entry_add_another_reminder" : "הוסף תזכורת נוספת",
   "medication_entry_reminders_max" : "תזכורות (מקסימום 5 תזכורות) :",
+
+  "bolus_calculator_page_title" : "מחשבון",
   
   "misc_email_cant_be_empty": "כתובת המייל אינה יכולה להיות ריקה",
   "misc_email_not_valid": "כתובת המייל אינה תקינה",
@@ -154,7 +157,19 @@
   "emergency_call_who_call" : "בחר/י למי להתקשר",
   "emergency_call_contact" : "{}",
   "emergency_call_ambulance" : "אמבולנס",
-  "emergency_call_tap_outside": "לחץ/י מחוץ לחלון על מנת לסגור אותו"
+  "emergency_call_tap_outside": "לחץ/י מחוץ לחלון על מנת לסגור אותו",
+
+  "bolus_caculator_meal_bolus":"בולוס לארוחה",
+  "bolus_caculator_correction_bolus":"בולוס תיקון",
+  "bolus_caculator_carbohydrate_intake":"(g)צריכת פחמימות",
+  "bolus_caculator_carbohydrate_ratio":"יחס הפחמימות למנת אינסולין",
+  "bolus_caculator_blood_glucose":"(mg/dL)רמת הגלוקוז בדם",
+  "bolus_caculator_target_glucose":"(mg/dL)מטרה של רמת הגלוקוז",
+  "bolus_caculator_correction_factor":"(mg/dL/U)פקטור תיקון",
+  "bolus_caculator_bolus_dose":"מספר יחידות בולוס",
+  "bolus_caculator_correction_dose":"יחידות תיקון",
+  "bolus_caculator_calculate_bolus":"חישוב בולוס",
+  "bolus_caculator_save_entry":"שמירה של בולוס"
   
 }
 
