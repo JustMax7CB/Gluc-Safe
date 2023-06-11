@@ -20,15 +20,17 @@ class AppbarDetailsContainer extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-          border: Border.all(width: 0.5, color: Colors.black),
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                blurRadius: 3,
-                offset: Offset(3, 3),
-                color: Color.fromRGBO(0, 0, 0, 0.25))
-          ],
-          color: Color.fromRGBO(94, 166, 61, 1)),
+        border: Border.all(width: 0.5, color: Colors.black),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            blurRadius: 3,
+            offset: Offset(3, 3),
+            color: Color.fromRGBO(0, 0, 0, 0.25),
+          )
+        ],
+        color: Color.fromRGBO(94, 166, 61, 1),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

@@ -22,9 +22,6 @@ Widget DropDown(
           ))
       .toList();
   return Container(
-    padding: EdgeInsets.symmetric(
-      vertical: height * 0.02,
-    ),
     height: height,
     child: DropdownButtonFormField2(
       decoration: InputDecoration(

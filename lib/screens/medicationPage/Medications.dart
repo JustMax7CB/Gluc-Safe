@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
-
+import 'package:gluc_safe/Models/MedReminder.dart';
+import 'package:gluc_safe/Models/medications.dart';
+import 'package:gluc_safe/Models/enums/days.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/medicationPage/widgets/drawer.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/medication_details.dart';
 import 'package:gluc_safe/screens/medicationPage/widgets/medication_page_appbar.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/Models/user.dart';
@@ -11,7 +15,7 @@ import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'package:horizontal_calendar/horizontal_calendar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gluc_safe/screens/mainPage/widgets/medication_form_modal_sheet.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/medication_form_modal_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:developer' as dev;
 
@@ -160,10 +164,32 @@ class _MedicationPageState extends State<MedicationPage> {
   List<Widget> MedicationsDisplay() {
     List<Widget> ListWidgets = [];
     for (var med in medList!) {
-      if (isTheSameDay(med))
+      if (isTheSameDay(med)) {
+        List<MedReminder> reminders = [];
+        for (var reminder in med['reminders']) {
+          DayEnum day = DayEnum.values.firstWhere((element) =>
+              element.toString().split(".").last == reminder['Day']);
+          List<String> timeString =
+              reminder['Time'].toString().split(":").toList();
+          dev.log(timeString.toString());
+          TimeOfDay time = TimeOfDay(
+              hour: int.parse(timeString[0]), minute: int.parse(timeString[1]));
+          reminders.add(MedReminder(day, time));
+        }
+        Medication medication = Medication(med['medicationName'],
+            med['numOfPills'], med['perDay'], MedReminders(reminders));
         ListWidgets.add(
           CardButton(
-              onTap: () => {},
+              onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MedicationDetails(
+                          medication: medication,
+                        ),
+                      ),
+                    )
+                  },
               title: med["medicationName"].toString(),
               icon: Padding(
                   padding: const EdgeInsets.only(top: 35.0),
@@ -171,6 +197,7 @@ class _MedicationPageState extends State<MedicationPage> {
                       "lib/assets/icons_svg/medicine_icon.svg",
                       height: _deviceHeight! * 0.04))),
         );
+      }
     }
     return ListWidgets;
   }

@@ -30,6 +30,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
   final TextEditingController glucoseController = TextEditingController();
   final TextEditingController mealController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  final TextEditingController dateTest = TextEditingController();
   bool overrideWarning = false;
 
   FirebaseService? _firebaseService;

@@ -103,7 +103,7 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                     FormInputField(
                       deviceHeight: widget.deviceHeight,
                       controller: distanceController,
-                      deviceWidth: widget.deviceHeight + 50,
+                      deviceWidth: widget.deviceWidth + 50,
                       hintText: "main_page_workout_form_distance".tr(),
                       keyboardType: TextInputType.number,
                     ),

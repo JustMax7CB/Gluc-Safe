@@ -8,7 +8,7 @@ import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/dropdown.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
-import 'form_input_field.dart';
+import '../../mainPage/widgets/form_input_field.dart';
 import 'dart:developer' as dev;
 
 class MedicationFormModalSheet extends StatefulWidget {
@@ -36,6 +36,10 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
   final GlobalKey _formKey = GlobalKey<FormState>();
   int numRem = 1;
   double formHeight = 0;
+
+  final FocusNode medicationNameFocus = FocusNode();
+  final FocusNode DoseFocus = FocusNode();
+  final FocusNode timePerDayFocus = FocusNode();
 
   @override
   void initState() {
@@ -71,8 +75,6 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
           color: Color.fromRGBO(211, 229, 214, 1)),
       height: formHeight == 0 ? widget.deviceHeight * 0.55 : formHeight,
       child: Column(
-        // mainAxisSize: MainAxisSize.min,
-        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
@@ -175,7 +177,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                                 horizontal: 5, vertical: 5),
                             width: widget.deviceWidth * 0.35,
                             child: DropDown(
-                                optionList: Day.values
+                                optionList: DayEnum.values
                                     .map((e) => e.toString().split(".")[1])
                                     .toList(),
                                 height: 40,
@@ -228,7 +230,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         ),
                         backgroundColor: Color.fromRGBO(58, 170, 96, 1),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         setState(() {
                           if (numRem < 5) {
                             numRem = numRem + 1;
@@ -274,7 +276,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         for (int i = 0; i < numRem; i++) {
                           int.parse(dateContoller[i].text.split(":")[0]);
                           lmr.add(MedReminder(
-                              Day.values.byName(DayController[i].text),
+                              DayEnum.values.byName(DayController[i].text),
                               TimeOfDay(
                                   hour: int.parse(
                                       dateContoller[i].text.split(":")[0]),

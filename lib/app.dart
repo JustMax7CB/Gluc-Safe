@@ -6,6 +6,7 @@ import 'package:gluc_safe/screens/mainPage/MainPage.dart';
 import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/screens/UserDetails.dart';
 import 'package:gluc_safe/screens/register_page.dart';
+
 import 'package:timezone/data/latest.dart' as tz;
 
 class MyApp extends StatelessWidget {

@@ -4,17 +4,16 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
-import 'package:gluc_safe/widgets/customAppBar.dart';
+
 import 'package:gluc_safe/widgets/textField.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import '../routes/registerPageRoute.dart';
 import '../widgets/glucsafeAppbar.dart';
-import '../widgets/textStroke.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,6 +52,8 @@ class _LoginPageState extends State<LoginPage> {
       _deviceHeight = getDeviceHeight(context);
     }
 
+    dev.log("Height: ${_deviceHeight}, Width: ${_deviceWidth}");
+
     return Stack(
       children: [
         GestureDetector(
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: glucSafeAppbar(context),
+            appBar: glucSafeAppbar(context, _deviceHeight!),
             body: loginContainer(),
           ),
         ),
@@ -77,7 +78,8 @@ class _LoginPageState extends State<LoginPage> {
               context.setLocale(Locale('en'));
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 80, right: 15),
+            padding: EdgeInsets.only(
+                top: _deviceHeight! * 0.08, right: _deviceWidth! * 0.04),
             child: Align(
               alignment: Alignment.topRight,
               child: Container(
@@ -96,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Container loginContainer() {
     return Container(
-      margin: EdgeInsets.only(bottom: 10, top: 20),
+      margin: EdgeInsets.only(top: _deviceHeight! * 0.005),
       width: _deviceWidth,
       child: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -107,46 +109,36 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     "login_page_title".tr(),
-                    style: TextStyle(
-                      fontFamily: "DM_Sans",
-                      fontSize: 60,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(59, 178, 67, 1),
-                      shadows: <Shadow>[
-                        Shadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.6),
-                          blurRadius: 0,
-                          offset: Offset(0, 3),
-                        ),
-                      ]..addAll(
-                          textStroke(
-                            0.8,
-                            Color.fromRGBO(0, 0, 0, 0.6),
-                          ),
-                        ),
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Container(
                     // Email Input
-                    margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
+                    margin: EdgeInsets.fromLTRB(
+                        _deviceWidth! * 0.09,
+                        _deviceHeight! * 0.05,
+                        _deviceWidth! * 0.09,
+                        _deviceHeight! * 0.015),
                     child: InputFieldWidget(
                       hint: "input_email_hint".tr(),
                       label: "input_email_label".tr(),
                       controller: emailController,
                       leadingIcon: SvgPicture.asset(
+                          width: _deviceWidth! * 0.07,
                           "lib/assets/icons_svg/email_envelope.svg"),
                       validator: () {},
                     ),
                   ),
                   Container(
                     // Password input
-                    margin: EdgeInsets.symmetric(horizontal: 35),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.09),
                     child: InputFieldWidget(
                       hint: "input_password_hint".tr(),
                       label: "input_password_label".tr(),
                       obscure: obscurePassword,
                       controller: passwordController,
                       leadingIcon: SvgPicture.asset(
+                          width: _deviceWidth! * 0.07,
                           "lib/assets/icons_svg/password_lock.svg"),
                       actionIcon: GestureDetector(
                         onTap: () {
@@ -155,27 +147,26 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                         child: SvgPicture.asset(
-                            "lib/assets/icons_svg/password_view_enabled.svg",
-                            height: 30,
-                            width: 30,
-                            fit: BoxFit.scaleDown),
+                          "lib/assets/icons_svg/password_view_enabled.svg",
+                          height: _deviceHeight! * 0.037,
+                          width: _deviceHeight! * 0.037,
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                       validator: () {},
                     ),
                   ),
                   Container(
                     // Forgot Password Text Button
-                    margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
+                    margin: EdgeInsets.fromLTRB(_deviceWidth! * 0.085, 0,
+                        _deviceWidth! * 0.085, _deviceHeight! * 0.044),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
                           child: Text(
                             "login_page_forgot_password".tr(),
-                            style: TextStyle(
-                              fontFamily: "DM_Sans",
-                              color: Colors.black,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall,
                           ),
                           onPressed: () => resetPopup(context),
                         ),
@@ -207,28 +198,15 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: checkLogin,
                       style: OutlinedButton.styleFrom(
                         fixedSize: Size(220, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(45),
-                        ),
                       ),
                       child: Text(
                         "login_page_signin_btn".tr(),
-                        style: TextStyle(
-                            fontFamily: "DM_Sans",
-                            fontSize: 30,
-                            color: Colors.white,
-                            shadows: <Shadow>[
-                              Shadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.25),
-                                blurRadius: 2,
-                                offset: Offset(2, 4),
-                              )
-                            ]),
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 100),
+                    margin: EdgeInsets.only(top: _deviceHeight! * 0.1),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -323,20 +301,20 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           try {
             if (_resetKey.currentState!.validate()) {
-              Future<bool>? result;
               _firebaseService?.resetPassword(email: resetEmail!);
 
               Navigator.pop(context);
               sleep(Duration(milliseconds: 500));
               AwesomeDialog(
-                  context: context,
-                  dialogType: DialogType.success,
-                  animType: AnimType.bottomSlide,
-                  title: "login_page_forgot_popup_title".tr(),
-                  desc: "login_page_forgot_popup_description".tr(),
-                  autoHide: Duration(
-                    seconds: 3,
-                  )).show();
+                context: context,
+                dialogType: DialogType.success,
+                animType: AnimType.bottomSlide,
+                title: "login_page_forgot_popup_title".tr(),
+                desc: "login_page_forgot_popup_description".tr(),
+                autoHide: Duration(
+                  seconds: 3,
+                ),
+              ).show();
             }
           } on FirebaseAuthException {
             snackBarWithDismiss("login_page_reset_failed".tr());
@@ -355,12 +333,16 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.symmetric(
+                horizontal: _deviceWidth! * 0.05,
+                vertical: _deviceHeight! * 0.02,
+              ),
               child: Form(
                 key: _resetKey,
                 child: TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: _deviceWidth! * 0.03),
                     border: const UnderlineInputBorder(),
                     filled: true,
                     hintStyle: const TextStyle(fontSize: 13),

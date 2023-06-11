@@ -20,7 +20,12 @@ class AppbarContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(width: 0.6, color: Colors.black)),
+        border: Border(
+          bottom: BorderSide(
+            width: 0.6,
+            color: Colors.black,
+          ),
+        ),
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.centerRight,
@@ -62,7 +67,6 @@ class AppbarContainer extends StatelessWidget {
                 width: width * 0.12,
                 child: IconButton(
                   onPressed: () {
-                    debugPrint("Hamburger button pressed");
                     func();
                   },
                   icon: Icon(
@@ -77,12 +81,12 @@ class AppbarContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppbarDetailsContainer(
-                  valueType: "Latest",
+                  valueType: "main_page_appbar_glucose_latest".tr(),
                   glucoseValue: glucoseLatest,
                   width: 130,
                   height: 56),
               AppbarDetailsContainer(
-                  valueType: "Average",
+                  valueType: "main_page_appbar_glucose_average".tr(),
                   glucoseValue: glucoseAverage,
                   width: 130,
                   height: 56),
