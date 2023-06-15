@@ -32,14 +32,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       format: "chart_graph_tooltip_format".tr(args: ['point.y', 'point.x']),
       borderWidth: 2,
     );
-    return Container(
+    return SizedBox(
       width: widget.deviceWidth,
       height: widget.deviceHeight! * 0.3,
       child: SfCartesianChart(
         tooltipBehavior: _tooltipBehavior,
         primaryXAxis: CategoryAxis(
           labelRotation: -40,
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
             fontFamily: "DM_Sans",

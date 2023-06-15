@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
-
 import 'package:gluc_safe/screens/medicationPage/widgets/drawer.dart';
 import 'package:gluc_safe/Models/bolus.dart';
 import 'package:gluc_safe/screens/BolusCalculatorPage/widgets/boluscalc_page_appbar.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
+// ignore: unused_import
 import 'dart:developer' as dev;
 
 class BolusCalcPage extends StatefulWidget {
@@ -31,7 +29,7 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
   double correctionFactor = 0;
 
   double bolusDose = 0;
-  double ResultBolus = 0;
+  double resultBolus = 0;
 
   bool isMealDose = false;
   bool isCorrectionDose = false;
@@ -67,10 +65,11 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
       endDrawer: MedicationPageDrawer(
         height: _deviceHeight!,
         ChangeLanguage: () {
-          if (context.locale == Locale('en'))
-            context.setLocale(Locale('he'));
-          else
-            context.setLocale(Locale('en'));
+          if (context.locale == const Locale('en')) {
+            context.setLocale(const Locale('he'));
+          } else {
+            context.setLocale(const Locale('en'));
+          }
         },
       ),
       body: Padding(
@@ -80,7 +79,7 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
           children: [
             Text(
               "bolus_caculator_meal_bolus".tr(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             TextField(
               keyboardType: TextInputType.number,
@@ -106,10 +105,10 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
                 carbohydrateRatio = double.tryParse(value) ?? 0;
               },
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               "bolus_caculator_correction_bolus".tr(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             TextField(
               keyboardType: TextInputType.number,
@@ -147,7 +146,7 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
                 targetGlucose = double.tryParse(value) ?? 0;
               },
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -162,8 +161,8 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
                         bolusDose + (carbohydrateIntake / carbohydrateRatio);
                     isMealDose = true;
                   }
-                  ResultBolus = bolusDose;
-                  bolusData = new Bolus(
+                  resultBolus = bolusDose;
+                  bolusData = Bolus(
                       DateTime.now(),
                       isMealDose,
                       isCorrectionDose,
@@ -188,12 +187,12 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
               },
               child: Text("bolus_caculator_calculate_bolus".tr()),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
-              '${"bolus_caculator_bolus_dose".tr()} ${ResultBolus.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 20),
+              '${"bolus_caculator_bolus_dose".tr()} ${resultBolus.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 20),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () async {
                 if (isCalculatePressed) {

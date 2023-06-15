@@ -44,6 +44,7 @@ class _UserDetailsState extends State<UserDetails> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _UserDetailsState extends State<UserDetails> {
       children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: glucSafeAppbar(context),
+          appBar: glucSafeAppbar(context, _deviceHeight!),
           body: Container(
             child: isLoading
                 ? Center(child: const CircularProgressIndicator())
@@ -134,21 +135,33 @@ class _UserDetailsState extends State<UserDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                height: 50,
+                margin: EdgeInsets.only(bottom: _deviceHeight! * 0.005),
                 width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_first_name_label".tr(),
                   controller: _firstNameController,
+                  keyboard: TextInputType.text,
+                  validator: (firstName) {
+                    if (!RegExp(r'^[a-zA-Zא-ת]+$').hasMatch(firstName)) {
+                      return 'Invalid first name';
+                    }
+                    return null;
+                  },
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                height: 50,
+                margin: EdgeInsets.only(bottom: _deviceHeight! * 0.005),
                 width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_last_name_label".tr(),
                   controller: _lastNameController,
+                  keyboard: TextInputType.text,
+                  validator: (lastName) {
+                    if (!RegExp(r'^[a-zA-Zא-ת]+$').hasMatch(lastName)) {
+                      return 'Invalid first name';
+                    }
+                    return null;
+                  },
                 ),
               ),
             ],
@@ -157,25 +170,29 @@ class _UserDetailsState extends State<UserDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                height: 50,
+                margin: EdgeInsets.only(top: _deviceHeight! * 0.015),
                 width: _deviceWidth! * 0.4,
                 child: DropDown(
                   optionList: gendersToString(context.locale),
-                  height: 40,
+                  height: _deviceHeight! * 0.085,
                   width: 30,
                   hint: "details_page_user_gender_label".tr(),
                   save: (value) => _genderController.text = value,
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                height: 50,
+                margin: EdgeInsets.only(bottom: _deviceHeight! * 0.005),
                 width: _deviceWidth! * 0.4,
                 child: InputFieldWidget(
                   hint: "details_page_user_birthday_label".tr(),
                   controller: _dateController,
                   keyboard: TextInputType.datetime,
+                  validator: (String birthdate) {
+                    if (birthdate.isEmpty) {
+                      return 'Should not be empty';
+                    }
+                    return null;
+                  },
                   read: true,
                   onTap: () {
                     DatePicker.showDatePicker(
@@ -198,13 +215,41 @@ class _UserDetailsState extends State<UserDetails> {
               ),
             ],
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            height: 50,
-            width: _deviceWidth! * 0.85,
-            child: InputFieldWidget(
-                hint: "details_page_user_phone_label".tr(),
-                controller: _phoneController),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: _deviceHeight! * 0.05),
+                width: _deviceWidth! * 0.4,
+                child: InputFieldWidget(
+                  hint: "details_page_user_phone_label".tr(),
+                  controller: _phoneController,
+                  keyboard: TextInputType.phone,
+                  validator: (phoneNum) {
+                    if (!RegExp(r'^0([23489]|[57]\d)\-?\d{7}$')
+                        .hasMatch(phoneNum)) {
+                      return 'Invalid phone number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: _deviceHeight! * 0.05),
+                width: _deviceWidth! * 0.4,
+                child: InputFieldWidget(
+                  hint: "details_page_user_height_label".tr(),
+                  controller: _heightController,
+                  keyboard: TextInputType.number,
+                  validator: (String height) {
+                    if (height.length > 3 || height.length < 2) {
+                      return 'Invalid height in (cm)';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -213,7 +258,7 @@ class _UserDetailsState extends State<UserDetails> {
 
   Container contactInfoContainer() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 40),
+      margin: EdgeInsets.fromLTRB(15, 0, 15, 10),
       child: Column(
         children: [
           Container(
@@ -239,20 +284,37 @@ class _UserDetailsState extends State<UserDetails> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            height: 50,
+            margin: EdgeInsets.only(bottom: _deviceHeight! * 0.005),
             width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
-                hint: "details_page_contact_name_label".tr(),
-                controller: _contactNameController),
+              height: _deviceHeight! * 0.085,
+              hint: "details_page_contact_name_label".tr(),
+              controller: _contactNameController,
+              keyboard: TextInputType.text,
+              validator: (name) {
+                if (!RegExp(r'^[a-zA-Zא-ת]+$').hasMatch(name)) {
+                  return 'Invalid contect name';
+                }
+                return null;
+              },
+            ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            height: 50,
+            margin: EdgeInsets.only(bottom: _deviceHeight! * 0.015),
             width: _deviceWidth! * 0.85,
             child: InputFieldWidget(
-                hint: "details_page_contact_phone_label".tr(),
-                controller: _contactPhoneController),
+              height: _deviceHeight! * 0.085,
+              hint: "details_page_contact_phone_label".tr(),
+              controller: _contactPhoneController,
+              keyboard: TextInputType.phone,
+              validator: (phoneNum) {
+                if (!RegExp(r'^0([23489]|[57]\d)\-?\d{7}$')
+                    .hasMatch(phoneNum)) {
+                  return 'Invalid phone number';
+                }
+                return null;
+              },
+            ),
           ),
         ],
       ),
@@ -308,6 +370,7 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   saveDetails() async {
+    _formkey.currentState!.validate();
     setState(() {
       isLoading = true;
     });
@@ -319,7 +382,7 @@ class _UserDetailsState extends State<UserDetails> {
         _firstNameController.text,
         _lastNameController.text,
         date,
-        180,
+        int.parse(_heightController.text),
         _genderController.text,
         _phoneController.text,
         _contactNameController.text,

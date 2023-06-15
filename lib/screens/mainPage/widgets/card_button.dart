@@ -22,12 +22,12 @@ class CardButton extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        padding: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: Border.all(width: 0.8, color: Colors.black),
-          color: Color.fromRGBO(245, 245, 245, 1),
-          boxShadow: [
+          color: const Color.fromRGBO(245, 245, 245, 1),
+          boxShadow: const [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.25),
               blurRadius: 3,
@@ -36,12 +36,12 @@ class CardButton extends StatelessWidget {
           ],
         ),
         child: ListView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             Center(
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "DM_Sans",
                   fontSize: 20,
                   fontWeight: FontWeight.w500,

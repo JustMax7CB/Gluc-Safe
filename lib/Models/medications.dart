@@ -1,4 +1,5 @@
-import 'package:gluc_safe/Models/MedReminder.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
+
 class Medication {
   late String _medicationName;
   late int _numOfPills;

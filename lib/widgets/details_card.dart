@@ -5,7 +5,8 @@ class DetailsCard extends StatelessWidget {
   double width, height;
   Widget child;
   DetailsCard(
-      {required this.title,
+      {super.key,
+      required this.title,
       required this.width,
       required this.height,
       required this.child});

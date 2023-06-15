@@ -1,5 +1,4 @@
 import 'package:age_calculator/age_calculator.dart';
-import 'package:gluc_safe/Models/enums/genders.dart';
 
 class GlucUser {
   late String _firstName;

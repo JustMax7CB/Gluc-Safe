@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -34,18 +34,18 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-  firebase_core: ^2.12.0
-  firebase_auth: ^4.6.0
-  cloud_firestore: ^4.2.0
-  firebase_messaging: ^14.6.0
-  firebase_analytics: ^10.4.0
+  firebase_core: ^2.13.1
+  firebase_auth: ^4.6.2
+  cloud_firestore: ^4.8.0
+  firebase_messaging: ^14.6.2
+  firebase_analytics: ^10.4.2
   age_calculator: ^1.0.0
   dropdown_button2: ^2.0.0
-  intl: ^0.17.0
-  syncfusion_flutter_charts: ^21.1.37
-  syncfusion_flutter_datepicker: ^21.1.37
+  intl: ^0.18.0
+  syncfusion_flutter_charts: ^21.2.9
+  syncfusion_flutter_datepicker: ^21.2.9
   flutter_cupertino_datetime_picker: ^3.0.0
-  numberpicker: ^2.1.1
+  numberpicker: ^2.1.2
   google_sign_in: ^6.0.2
   font_awesome_flutter: ^10.2.1
   get_it: ^7.2.0
@@ -61,8 +61,10 @@ dependencies:
   printing: ^5.10.3
   horizontal_calendar: ^1.1.1
   flutter_phone_direct_caller: ^2.1.1
+  gradient_borders: ^1.0.0
   
 dev_dependencies:
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
   

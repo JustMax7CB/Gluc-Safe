@@ -53,7 +53,7 @@ class _WeightFormModalSheetState extends State<WeightFormModalSheet> {
           ),
           color: Color.fromRGBO(211, 229, 214, 1)),
       width: widget.deviceHeight,
-      height: widget.deviceWidth * 0.35,
+      height: widget.deviceWidth * 0.55,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
