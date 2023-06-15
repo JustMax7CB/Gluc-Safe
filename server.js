@@ -6,7 +6,65 @@ admin.initializeApp({
   databaseURL: "https://gluc-safe.firebaseio.com",
 });
 
-// Calculate the number of milliseconds until the next minute
+// async function deleteDocs(idList) {
+//   const db = admin.firestore();
+//   const GlucoseCollection = db.collection("glucose");
+//   const MedHistoryCollection = db.collection("medHistory");
+//   const MedicationCollection = db.collection("medication");
+//   const usersCollection = db.collection("users");
+//   const weightCollection = db.collection("weight");
+//   const workoutCollection = db.collection("workout");
+//   const bolusCollection = db.collection("bolus");
+//   const userTokensCollection = db.collection("userTokens");
+
+//   idList.forEach((id) => {
+//     workoutCollection
+//       .doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     GlucoseCollection.doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     MedHistoryCollection.doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     MedicationCollection.doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     usersCollection
+//       .doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     weightCollection
+//       .doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     bolusCollection
+//       .doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//     userTokensCollection
+//       .doc(id)
+//       .delete()
+//       .then((_) => {
+//         console.log(`doc deleted id: ${id}`);
+//       });
+//   });
+// }
 
 // Calculate the number of milliseconds until the next minute
 const now = new Date();
@@ -98,8 +156,6 @@ async function getUserToken(userId) {
     console.log("User tokens not found for document ID:", doc.id);
   }
 }
-
-
 
 function createTimeObject(timeString) {
   try {
