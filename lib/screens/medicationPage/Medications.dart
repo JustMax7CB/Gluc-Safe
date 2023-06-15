@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/MedReminder.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/enums/days.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
@@ -9,13 +8,12 @@ import 'package:gluc_safe/screens/medicationPage/widgets/drawer.dart';
 import 'package:gluc_safe/screens/medicationPage/widgets/medication_details.dart';
 import 'package:gluc_safe/screens/medicationPage/widgets/medication_page_appbar.dart';
 import 'package:gluc_safe/services/database.dart';
-import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'package:horizontal_calendar/horizontal_calendar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/card_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gluc_safe/screens/medicationPage/widgets/medication_form_modal_sheet.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/medication_add_form_modal_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:developer' as dev;
 
@@ -31,7 +29,6 @@ class _MedicationPageState extends State<MedicationPage> {
   FirebaseService? _firebaseService;
   late DateTime _date = DateTime.now();
   List<dynamic>? medList = [];
-  GlucUser? _glucUser;
 
   @override
   void initState() {
@@ -49,8 +46,7 @@ class _MedicationPageState extends State<MedicationPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: _deviceHeight! * 0.11,
-        flexibleSpace:
-            MedicationAppBar(changeLanguage: () {}, width: _deviceWidth!),
+        flexibleSpace: MedicationAppBar(width: _deviceWidth!),
       ),
       bottomNavigationBar: FutureBuilder(
         future: userContactData(),
@@ -76,14 +72,15 @@ class _MedicationPageState extends State<MedicationPage> {
       endDrawer: MedicationPageDrawer(
         height: _deviceHeight!,
         ChangeLanguage: () {
-          if (context.locale == Locale('en'))
-            context.setLocale(Locale('he'));
-          else
-            context.setLocale(Locale('en'));
+          if (context.locale == const Locale('en')) {
+            context.setLocale(const Locale('he'));
+          } else {
+            context.setLocale(const Locale('en'));
+          }
         },
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         width: _deviceWidth,
         child: Column(
           children: [
@@ -93,7 +90,7 @@ class _MedicationPageState extends State<MedicationPage> {
                 date: DateTime.now(),
                 textColor: Colors.black45,
                 backgroundColor: Colors.white,
-                selectedColor: Color.fromARGB(255, 66, 146, 75),
+                selectedColor: const Color.fromARGB(255, 66, 146, 75),
                 showMonth: true,
                 locale: context.locale,
                 onDateSelected: (date) {
@@ -103,7 +100,7 @@ class _MedicationPageState extends State<MedicationPage> {
             ),
             Expanded(
               child: Container(
-                margin: EdgeInsets.fromLTRB(20, 60, 20, 0),
+                margin: const EdgeInsets.fromLTRB(20, 60, 20, 0),
                 child: GridView.count(
                   crossAxisCount: 2,
                   childAspectRatio: 1.32,
@@ -117,13 +114,12 @@ class _MedicationPageState extends State<MedicationPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add, size: 35),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         onPressed: () => showModalBottomSheet(
           isScrollControlled: true,
           isDismissible: true,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(34),
               topRight: Radius.circular(34),
@@ -139,6 +135,7 @@ class _MedicationPageState extends State<MedicationPage> {
             ),
           ),
         ),
+        child: const Icon(Icons.add, size: 35),
       ),
     );
   }

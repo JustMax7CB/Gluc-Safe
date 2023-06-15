@@ -4,16 +4,17 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
-
+import 'package:gluc_safe/widgets/customAppBar.dart';
 import 'package:gluc_safe/widgets/textField.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../routes/registerPageRoute.dart';
+import '../routes/register_page_route.dart';
 import '../widgets/glucsafeAppbar.dart';
+import '../widgets/textStroke.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -52,8 +53,6 @@ class _LoginPageState extends State<LoginPage> {
       _deviceHeight = getDeviceHeight(context);
     }
 
-    dev.log("Height: ${_deviceHeight}, Width: ${_deviceWidth}");
-
     return Stack(
       children: [
         GestureDetector(
@@ -65,29 +64,27 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
             appBar: glucSafeAppbar(context, _deviceHeight!),
+            resizeToAvoidBottomInset: false,
             body: loginContainer(),
           ),
         ),
         GestureDetector(
           onTap: () {
-            if (context.locale == Locale('en'))
-              context.setLocale(Locale('he'));
-            else
-              context.setLocale(Locale('en'));
+            if (context.locale == const Locale('en')) {
+              context.setLocale(const Locale('he'));
+            } else {
+              context.setLocale(const Locale('en'));
+            }
           },
           child: Padding(
-            padding: EdgeInsets.only(
-                top: _deviceHeight! * 0.08, right: _deviceWidth! * 0.04),
+            padding: const EdgeInsets.only(top: 80, right: 15),
             child: Align(
               alignment: Alignment.topRight,
-              child: Container(
-                child: Image.asset(
-                  alignment: Alignment.topRight,
-                  "lib/assets/icons_svg/globe_lang.png",
-                  height: _deviceHeight! * 0.11,
-                ),
+              child: Image.asset(
+                alignment: Alignment.topRight,
+                "lib/assets/icons_svg/globe_lang.png",
+                height: _deviceHeight! * 0.11,
               ),
             ),
           ),
@@ -98,10 +95,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Container loginContainer() {
     return Container(
-      margin: EdgeInsets.only(top: _deviceHeight! * 0.005),
+      margin: const EdgeInsets.only(bottom: 10, top: 20),
       width: _deviceWidth,
       child: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Form(
               key: _formkey,
               child: Column(
@@ -109,36 +106,45 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     "login_page_title".tr(),
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: TextStyle(
+                      fontFamily: "DM_Sans",
+                      fontSize: 60,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromRGBO(59, 178, 67, 1),
+                      shadows: <Shadow>[
+                        const Shadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                          blurRadius: 0,
+                          offset: Offset(0, 3),
+                        ),
+                        ...textStroke(
+                          0.8,
+                          const Color.fromRGBO(0, 0, 0, 0.6),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                     // Email Input
-                    margin: EdgeInsets.fromLTRB(
-                        _deviceWidth! * 0.09,
-                        _deviceHeight! * 0.05,
-                        _deviceWidth! * 0.09,
-                        _deviceHeight! * 0.015),
+                    margin: const EdgeInsets.fromLTRB(35, 45, 35, 10),
                     child: InputFieldWidget(
                       hint: "input_email_hint".tr(),
                       label: "input_email_label".tr(),
                       controller: emailController,
                       leadingIcon: SvgPicture.asset(
-                          width: _deviceWidth! * 0.07,
                           "lib/assets/icons_svg/email_envelope.svg"),
                       validator: () {},
                     ),
                   ),
                   Container(
                     // Password input
-                    margin:
-                        EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.09),
+                    margin: const EdgeInsets.symmetric(horizontal: 35),
                     child: InputFieldWidget(
                       hint: "input_password_hint".tr(),
                       label: "input_password_label".tr(),
                       obscure: obscurePassword,
                       controller: passwordController,
                       leadingIcon: SvgPicture.asset(
-                          width: _deviceWidth! * 0.07,
                           "lib/assets/icons_svg/password_lock.svg"),
                       actionIcon: GestureDetector(
                         onTap: () {
@@ -147,26 +153,27 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                         child: SvgPicture.asset(
-                          "lib/assets/icons_svg/password_view_enabled.svg",
-                          height: _deviceHeight! * 0.037,
-                          width: _deviceHeight! * 0.037,
-                          fit: BoxFit.scaleDown,
-                        ),
+                            "lib/assets/icons_svg/password_view_enabled.svg",
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.scaleDown),
                       ),
                       validator: () {},
                     ),
                   ),
                   Container(
                     // Forgot Password Text Button
-                    margin: EdgeInsets.fromLTRB(_deviceWidth! * 0.085, 0,
-                        _deviceWidth! * 0.085, _deviceHeight! * 0.044),
+                    margin: const EdgeInsets.fromLTRB(35, 0, 35, 35),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
                           child: Text(
                             "login_page_forgot_password".tr(),
-                            style: Theme.of(context).textTheme.labelSmall,
+                            style: const TextStyle(
+                              fontFamily: "DM_Sans",
+                              color: Colors.black,
+                            ),
                           ),
                           onPressed: () => resetPopup(context),
                         ),
@@ -176,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     // Sign in Outline Button
                     decoration: BoxDecoration(
-                      boxShadow: <BoxShadow>[
+                      boxShadow: const <BoxShadow>[
                         BoxShadow(
                           color: Color.fromRGBO(0, 0, 0, 0.3),
                           blurRadius: 4,
@@ -185,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(45),
-                      gradient: RadialGradient(
+                      gradient: const RadialGradient(
                         radius: 13,
                         focal: Alignment.topRight,
                         colors: <Color>[
@@ -197,21 +204,34 @@ class _LoginPageState extends State<LoginPage> {
                     child: OutlinedButton(
                       onPressed: checkLogin,
                       style: OutlinedButton.styleFrom(
-                        fixedSize: Size(220, 50),
+                        fixedSize: const Size(220, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(45),
+                        ),
                       ),
                       child: Text(
                         "login_page_signin_btn".tr(),
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: const TextStyle(
+                            fontFamily: "DM_Sans",
+                            fontSize: 30,
+                            color: Colors.white,
+                            shadows: <Shadow>[
+                              Shadow(
+                                color: Color.fromRGBO(0, 0, 0, 0.25),
+                                blurRadius: 2,
+                                offset: Offset(2, 4),
+                              )
+                            ]),
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: _deviceHeight! * 0.1),
+                    margin: const EdgeInsets.only(top: 100),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("login_page_no_account".tr(),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 20,
                                 fontFamily: "DM_Sans",
                                 shadows: <Shadow>[
@@ -224,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextButton(
                           child: Text(
                             "login_page_signup_btn".tr(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "DM_Sans",
                               fontSize: 20,
                               color: Color.fromRGBO(48, 185, 67, 1),
@@ -275,10 +295,11 @@ class _LoginPageState extends State<LoginPage> {
           email: emailController.text, password: passwordController.text);
       if (result is UserCredential) {
         _firebaseService!.saveUserDeviceToken();
+        isLoading = false;
       }
       if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        dev.log("Check: " + result);
+        dev.log("Check: $result");
         setState(() {
           isLoading = false;
         });
@@ -297,24 +318,35 @@ class _LoginPageState extends State<LoginPage> {
       dialogType: DialogType.noHeader,
       dismissOnTouchOutside: false,
       btnOk: OutlinedButton(
-        child: Text("login_page_forgot_confirm_btn".tr()),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.black38),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          "login_page_forgot_confirm_btn".tr(),
+          style: const TextStyle(
+            fontFamily: "DM_Sans",
+            color: Color.fromRGBO(59, 190, 65, 1),
+          ),
+        ),
         onPressed: () {
           try {
             if (_resetKey.currentState!.validate()) {
               _firebaseService?.resetPassword(email: resetEmail!);
 
               Navigator.pop(context);
-              sleep(Duration(milliseconds: 500));
+              sleep(const Duration(milliseconds: 500));
               AwesomeDialog(
-                context: context,
-                dialogType: DialogType.success,
-                animType: AnimType.bottomSlide,
-                title: "login_page_forgot_popup_title".tr(),
-                desc: "login_page_forgot_popup_description".tr(),
-                autoHide: Duration(
-                  seconds: 3,
-                ),
-              ).show();
+                  context: context,
+                  dialogType: DialogType.success,
+                  animType: AnimType.bottomSlide,
+                  title: "login_page_forgot_popup_title".tr(),
+                  desc: "login_page_forgot_popup_description".tr(),
+                  autoHide: const Duration(
+                    seconds: 3,
+                  )).show();
             }
           } on FirebaseAuthException {
             snackBarWithDismiss("login_page_reset_failed".tr());
@@ -322,50 +354,65 @@ class _LoginPageState extends State<LoginPage> {
         },
       ),
       btnCancel: OutlinedButton(
-        child: Text("login_page_forgot_cancel_btn".tr()),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.black38),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          "login_page_forgot_cancel_btn".tr(),
+          style: const TextStyle(
+            fontFamily: "DM_Sans",
+            color: Color.fromRGBO(59, 190, 65, 1),
+          ),
+        ),
         onPressed: () => Navigator.pop(context),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Text(
-              "login_page_forgot_popup_title".tr(),
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: _deviceWidth! * 0.05,
-                vertical: _deviceHeight! * 0.02,
-              ),
-              child: Form(
-                key: _resetKey,
-                child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: _deviceWidth! * 0.03),
-                    border: const UnderlineInputBorder(),
-                    filled: true,
-                    hintStyle: const TextStyle(fontSize: 13),
-                    hintText: "input_email_label".tr(),
+      body: Column(
+        children: [
+          Text(
+            "login_page_forgot_popup_title".tr(),
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            height: _deviceHeight! * 0.06,
+            child: Form(
+              key: _resetKey,
+              child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  filled: true,
+                  hintStyle: const TextStyle(fontSize: 13),
+                  hintText: "input_email_label".tr(),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: Colors.black, width: 1),
                   ),
-                  onChanged: (value) {
-                    resetEmail = value;
-                  },
-                  validator: (val) {
-                    Pattern pattern =
-                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-                    RegExp regExp = RegExp(pattern.toString());
-                    if (val == null || val.isEmpty) {
-                      return "login_page_email_empty".tr();
-                    } else if (!regExp.hasMatch(val)) {
-                      return "login_page_email_not_valid".tr();
-                    }
-                  },
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: Colors.black, width: 1),
+                  ),
                 ),
+                onChanged: (value) {
+                  resetEmail = value;
+                },
+                validator: (val) {
+                  Pattern pattern =
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                  RegExp regExp = RegExp(pattern.toString());
+                  if (val == null || val.isEmpty) {
+                    return "login_page_email_empty".tr();
+                  } else if (!regExp.hasMatch(val)) {
+                    return "login_page_email_not_valid".tr();
+                  }
+                },
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     ).show();
   }

@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:gluc_safe/Models/MedReminder.dart';
-import 'package:gluc_safe/Models/enums/genders.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
 import 'package:gluc_safe/Models/glucose.dart';
+import 'package:gluc_safe/Models/bolus.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/MedHistory.dart';
 import 'package:gluc_safe/Models/user.dart';
@@ -15,6 +14,7 @@ import 'dart:developer' as dev;
 
 const String USER_COLLECTION = 'users';
 const String GLUCOSE_COLLECTION = 'glucose';
+const String BOLUS_COLLECTION = 'bolus';
 const String WEIGHT_COLLECTION = 'weight';
 const String MEDICATION_COLLECTION = 'medication';
 const String WORKOUT_COLLECTION = 'workout';
@@ -22,6 +22,7 @@ const String MEDHISTORY_COLLECTION = 'medHistory';
 const String DEVICETOKENS_COLLECTION = 'userTokens';
 
 const String GLUCOSE_RECORDS = 'glucose_records';
+const String BOLUS_RECORDS = 'bolus_records';
 const String WEIGHT_RECORDS = 'weight_records';
 const String MEDICATION_RECORDS = 'medication_records';
 const String WORKOUT_RECORDS = 'workout_records';
@@ -70,6 +71,8 @@ class FirebaseService {
       }
       return _userCredential;
     } on FirebaseAuthException catch (e) {
+      dev.log("FirebaseAuth code: ${e.code}");
+      dev.log("FirebaseAuth message: ${e.message}");
       switch (e.code) {
         case 'user-not-found':
           dev.log('User not found');
@@ -77,6 +80,9 @@ class FirebaseService {
         case 'wrong-password':
           dev.log('Wrong password');
           return "login_page_signin_error_wrong_password".tr();
+        case 'invalid-email':
+          dev.log("Invalid Email");
+          return "login_page_signin_error_invalid_email".tr();
         // Add additional cases for other error codes as needed
         default:
           dev.log('An error occurred: ${e.message}');
@@ -160,6 +166,10 @@ class FirebaseService {
         .collection(GLUCOSE_COLLECTION)
         .doc(userID)
         .set({GLUCOSE_RECORDS: []});
+    await _database
+        .collection(BOLUS_COLLECTION)
+        .doc(userID)
+        .set({BOLUS_RECORDS: []});
     await _database
         .collection(WEIGHT_COLLECTION)
         .doc(userID)
@@ -321,8 +331,47 @@ class FirebaseService {
       return glucUserMedicationData;
     } catch (e) {
       dev.log(e.toString());
-      dev.log("Failed to get user glucose data");
+      dev.log("Failed to get user medication data");
       return null;
+    }
+  }
+
+  Future<bool> editMedicationData(
+      {required String medicationName,
+      required int numOfPills,
+      required int perDay,
+      required MedReminders reminders}) async {
+    List? glucUserMedicationData;
+    String userId = user!.uid;
+
+    try {
+      var document =
+          await _database.collection(MEDICATION_COLLECTION).doc(userId).get();
+      glucUserMedicationData = document.data()![MEDICATION_RECORDS] as List;
+      for (Map record in glucUserMedicationData) {
+        if (record['medicationName'] != medicationName) {
+          continue;
+        } else {
+          record['numOfPills'] = numOfPills;
+          record['perDay'] = perDay;
+          record['reminders'] = reminders.reminders
+              .map((e) => {
+                    "Day": e.day.toString().split(".")[1],
+                    "Time": ("${e.time.hour}:${e.time.minute}")
+                  })
+              .toList();
+        }
+      }
+
+      await _database
+          .collection(MEDICATION_COLLECTION)
+          .doc(userId)
+          .set({MEDICATION_RECORDS: glucUserMedicationData});
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to update user medication data");
+      return false;
     }
   }
 
@@ -453,7 +502,7 @@ class FirebaseService {
             .doc(userID)
             .set({MEDHISTORY_RECORDS: []});
       }
-      if (document.exists && docList != null) {
+      if (document.exists) {
         recordsList = docList;
         recordsList.add(medHistoryRecord);
       } else {
@@ -469,6 +518,77 @@ class FirebaseService {
     } catch (e) {
       dev.log(e.toString());
       return false;
+    }
+  }
+
+  Future<bool> saveBolusData(Bolus bolusData) async {
+    // gets an instance of Glucose
+    // the function will try to save the glucose data to the firebase database
+    // will return true if successful otherwise return false
+    List recordsList = [];
+    String userId = user!.uid;
+    DateTime dataDate = bolusData.date;
+    bool dataisMealBolus = bolusData.isMealBolus;
+    bool dataisCorrectionBolus = bolusData.isCorrectionBolus;
+    double datacarbohydrateIntake = bolusData.carbohydrateIntake;
+    double datacarbohydrateRatio = bolusData.carbohydrateRatio;
+    double databloodGlucose = bolusData.bloodGlucose;
+    double datatargetGlucose = bolusData.targetGlucose;
+    double datacorrectionFactor = bolusData.correctionFactor;
+    double databolusDose = bolusData.bolusDose;
+    final bolusReading = {
+      "Date": dataDate,
+      "is Meal Bolus": dataisMealBolus,
+      "is Correction Bolus": dataisCorrectionBolus,
+      "carbohydrate Intake": datacarbohydrateIntake,
+      "carbohydrate Ratio": datacarbohydrateRatio,
+      "blood Glucose": databloodGlucose,
+      "target Glucose": datatargetGlucose,
+      "correction Factor": datacorrectionFactor,
+      "bolus Dose": databolusDose
+    };
+    try {
+      dev.log((userId == "SUc3GSg9FvNSYj6AhSBpidRgslw1").toString());
+      dev.log(_database.collection(BOLUS_COLLECTION).toString());
+      var document =
+          await _database.collection(BOLUS_COLLECTION).doc(userId).get();
+      var docList = document.data()![BOLUS_RECORDS];
+      if (document.exists && docList != null) {
+        recordsList = docList;
+        recordsList.add(bolusReading);
+      } else {
+        recordsList.add(bolusReading);
+      }
+      await _database.collection(BOLUS_COLLECTION).doc(userId).set({
+        BOLUS_RECORDS: recordsList,
+      });
+      dev.log("Bolus data saved successfully");
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to save user bolus data");
+      return false;
+    }
+  }
+
+  Future<List?> getBolusData() async {
+    // gets user id as a string
+    // the function will try to fetch the user glucose data from the firebase database
+    List? bolusUserData;
+    String? userID = user!.uid;
+    try {
+      var document =
+          await _database.collection(BOLUS_COLLECTION).doc(userID).get();
+      bolusUserData = document.data()![BOLUS_RECORDS] as List;
+      bolusUserData.forEach((record) {
+        record['Date'] = (record['Date'] as Timestamp).millisecondsSinceEpoch;
+      });
+      dev.log("\x1B[32m" + bolusUserData.toString());
+      return bolusUserData;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to get user bolus data");
+      return null;
     }
   }
 }

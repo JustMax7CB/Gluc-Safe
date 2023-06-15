@@ -29,11 +29,11 @@ Future<void> main() async {
   }
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('he')],
+      supportedLocales: const [Locale('en'), Locale('he')],
       path:
           'assets/translations', // <-- change the path of the translation files
-      fallbackLocale: Locale('en'),
-      child: MyApp(),
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
     ),
   );
 }

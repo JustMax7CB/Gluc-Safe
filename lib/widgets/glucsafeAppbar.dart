@@ -14,11 +14,11 @@ AppBar glucSafeAppbar(BuildContext context, double deviceHeight) {
         children: [
           Text(
             "login_page_welcome_title".tr(),
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: welcomeTextStyle(),
           ),
           Text(
             "login_page_glucsafe_title".tr(),
-            style: Theme.of(context).textTheme.headlineLarge,
+            style: glucSafeTextStyle(),
           )
         ],
       ),
@@ -27,7 +27,7 @@ AppBar glucSafeAppbar(BuildContext context, double deviceHeight) {
     flexibleSpace: ClipPath(
       clipper: CustomAppBar(),
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -37,5 +37,35 @@ AppBar glucSafeAppbar(BuildContext context, double deviceHeight) {
             ])),
       ),
     ),
+  );
+}
+
+TextStyle welcomeTextStyle() {
+  return const TextStyle(
+    fontFamily: "DM_Sans",
+    fontSize: 28,
+    fontWeight: FontWeight.w500,
+    shadows: <Shadow>[
+      Shadow(
+        color: Color.fromRGBO(0, 0, 0, 0.6),
+        blurRadius: 0,
+        offset: Offset(0, 3),
+      ),
+    ],
+  );
+}
+
+TextStyle glucSafeTextStyle() {
+  return const TextStyle(
+    fontFamily: "DM_Sans",
+    fontSize: 50,
+    fontWeight: FontWeight.w500,
+    shadows: <Shadow>[
+      Shadow(
+        color: Color.fromRGBO(0, 0, 0, 0.6),
+        blurRadius: 0,
+        offset: Offset(0, 3),
+      ),
+    ],
   );
 }

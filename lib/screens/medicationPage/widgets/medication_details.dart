@@ -2,14 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/MedReminder.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
+import 'package:gluc_safe/Models/enums/days.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
+import 'package:gluc_safe/screens/medicationPage/widgets/medication_edit_form_modal_sheet.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/emergencyDialog.dart';
 import 'package:gluc_safe/widgets/textStroke.dart';
+import 'dart:developer' as dev;
 
 class MedicationDetails extends StatefulWidget {
   const MedicationDetails({super.key, required this.medication});
@@ -70,11 +73,14 @@ class _MedicationDetailsState extends State<MedicationDetails> {
       body: SafeArea(
         child: Stack(
           children: [
-            InkWell(
-              onTap: () => Navigator.pop(context),
-              child: SvgPicture.asset(
-                "lib/assets/icons_svg/Carret_Left.svg",
-                height: _deviceHeight! * 0.07,
+            Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: SvgPicture.asset(
+                  "lib/assets/icons_svg/Carret_Left.svg",
+                  height: _deviceHeight! * 0.07,
+                ),
               ),
             ),
             Container(
@@ -123,7 +129,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                           Text(
                                             "medication_details_page_medication_name"
                                                 .tr(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: "DM_Sans",
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14,
@@ -132,7 +138,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                           ),
                                           Text(
                                             widget.medication.medicationName,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "DM_Sans",
                                               fontSize: 25,
                                               fontWeight: FontWeight.w600,
@@ -152,7 +158,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                           Text(
                                             "medication_details_page_medication_dose"
                                                 .tr(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: "DM_Sans",
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14,
@@ -165,7 +171,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                               widget.medication.numOfPills
                                                   .toString()
                                             ]),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "DM_Sans",
                                               fontSize: 25,
                                               fontWeight: FontWeight.w600,
@@ -185,7 +191,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                           Text(
                                             "medication_details_page_medication_per_day"
                                                 .tr(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: "DM_Sans",
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14,
@@ -198,7 +204,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                                               widget.medication.perDay
                                                   .toString()
                                             ]),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "DM_Sans",
                                               fontSize: 25,
                                               fontWeight: FontWeight.w600,
@@ -223,7 +229,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                             child: Text(
                               "medication_details_page_medication_reminders"
                                   .tr(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontFamily: "DM_Sans",
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
@@ -236,8 +242,10 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                reminder.day.toString().split(".").last,
-                                style: TextStyle(
+                                dayToString(
+                                    reminder.day.toString().split(".").last,
+                                    context.locale)!,
+                                style: const TextStyle(
                                     fontFamily: "DM_Sans",
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
@@ -245,7 +253,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                               ),
                               Text(
                                 "${reminder.time.hour}:${reminder.time.minute}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: "DM_Sans",
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
@@ -264,10 +272,30 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(45),
-                            side: BorderSide(width: 0.1),
+                            side: const BorderSide(width: 0.1),
                           ),
-                          backgroundColor: Color.fromRGBO(88, 180, 97, 1)),
-                      onPressed: () {},
+                          backgroundColor:
+                              const Color.fromRGBO(88, 180, 97, 1)),
+                      onPressed: () => showModalBottomSheet(
+                        isScrollControlled: true,
+                        isDismissible: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(34),
+                            topRight: Radius.circular(34),
+                          ),
+                        ),
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: MedicationEditFormModalSheet(
+                            medication: widget.medication,
+                            deviceWidth: _deviceWidth!,
+                            deviceHeight: _deviceHeight!,
+                          ),
+                        ),
+                      ),
                       child: Text(
                         "medication_details_page_medication_edit".tr(),
                         style: TextStyle(
@@ -275,10 +303,10 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
                           shadows: [
-                            Shadow(color: Colors.black12, offset: Offset(2, 2))
-                          ]..addAll(
-                              textStroke(0.2, Colors.black),
-                            ),
+                            const Shadow(
+                                color: Colors.black12, offset: Offset(2, 2)),
+                            ...textStroke(0.2, Colors.black)
+                          ],
                         ),
                       ),
                     ),

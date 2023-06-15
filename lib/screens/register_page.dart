@@ -337,7 +337,7 @@ class _RegisterPageState extends State<RegisterPage> {
         bool result = await _firebaseService!.registerUser(
             email: _emailController.text, password: _passwordController.text);
         return result;
-      } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException catch (_) {
         snackBarWithDismiss("register_page_invalid_data".tr());
         return false;
       }

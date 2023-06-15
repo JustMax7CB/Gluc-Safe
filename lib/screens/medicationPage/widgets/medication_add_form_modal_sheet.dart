@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/MedReminder.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
 import 'package:gluc_safe/Models/enums/days.dart';
 import 'package:gluc_safe/Models/medications.dart';
 import 'package:gluc_safe/services/database.dart';
@@ -65,14 +65,14 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-              color: Color.fromRGBO(50, 108, 65, 1),
+              color: const Color.fromRGBO(50, 108, 65, 1),
               width: 5,
               style: BorderStyle.solid),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(34),
             topRight: Radius.circular(34),
           ),
-          color: Color.fromRGBO(211, 229, 214, 1)),
+          color: const Color.fromRGBO(211, 229, 214, 1)),
       height: formHeight == 0 ? widget.deviceHeight * 0.55 : formHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,32 +84,31 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
               "medication_entry_title".tr(),
               style: TextStyle(
                 fontFamily: "DM_Sans",
-                color: Color.fromRGBO(89, 180, 98, 1),
+                color: const Color.fromRGBO(89, 180, 98, 1),
                 fontSize: 35,
                 fontWeight: FontWeight.w600,
                 shadows: <Shadow>[
-                  Shadow(
+                  const Shadow(
                     blurRadius: 4,
                     offset: Offset(0, 4),
                     color: Color.fromRGBO(0, 0, 0, 0.25),
                   ),
-                ]..addAll(
-                    textStroke(
-                      0.7,
-                      Color.fromRGBO(0, 0, 0, 1),
-                    ),
+                  ...textStroke(
+                    0.7,
+                    const Color.fromRGBO(0, 0, 0, 1),
                   ),
+                ],
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 20),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   Padding(
-                    padding: context.locale == Locale('en')
+                    padding: context.locale == const Locale('en')
                         ? EdgeInsets.only(left: widget.deviceWidth * 0.1)
                         : EdgeInsets.only(right: widget.deviceWidth * 0.1),
                     child: Row(
@@ -125,7 +124,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                     ),
                   ),
                   Padding(
-                    padding: context.locale == Locale('en')
+                    padding: context.locale == const Locale('en')
                         ? EdgeInsets.only(
                             left: widget.deviceWidth * 0.1, top: 15)
                         : EdgeInsets.only(
@@ -150,7 +149,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                     ),
                   ),
                   Padding(
-                    padding: context.locale == Locale('en')
+                    padding: context.locale == const Locale('en')
                         ? EdgeInsets.only(
                             left: widget.deviceWidth * 0.1, top: 15)
                         : EdgeInsets.only(
@@ -165,7 +164,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                   ),
                   for (int i = 0; i < numRem; i++)
                     Padding(
-                      padding: context.locale == Locale('en')
+                      padding: context.locale == const Locale('en')
                           ? EdgeInsets.only(
                               left: widget.deviceWidth * 0.1, top: 4)
                           : EdgeInsets.only(
@@ -173,17 +172,15 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                       child: Row(
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
                             width: widget.deviceWidth * 0.35,
                             child: DropDown(
-                                optionList: DayEnum.values
-                                    .map((e) => e.toString().split(".")[1])
-                                    .toList(),
+                                optionList: daysEnumToString(context.locale),
                                 height: 40,
                                 width: 30,
                                 hint: "medication_entry_medication_day".tr(),
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                   fontSize: 17,
                                   fontFamily: "DM_Sans",
                                 ),
@@ -198,6 +195,30 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                             readOnly: true,
                             onTap: () {
                               DatePicker.showDatePicker(
+                                locale: DateTimePickerLocale.en_us,
+                                minuteDivider: 5,
+                                pickerTheme: DateTimePickerTheme(
+                                  cancel: Text(
+                                    "misc_cancel".tr(),
+                                    style: TextStyle(
+                                        fontFamily: "DM_Sans",
+                                        color: const Color.fromRGBO(
+                                            89, 180, 98, 1),
+                                        shadows: [
+                                          ...textStroke(0.1, Colors.black)
+                                        ]),
+                                  ),
+                                  confirm: Text(
+                                    "misc_confirm".tr(),
+                                    style: TextStyle(
+                                        fontFamily: "DM_Sans",
+                                        color: const Color.fromRGBO(
+                                            89, 180, 98, 1),
+                                        shadows: [
+                                          ...textStroke(0.1, Colors.black)
+                                        ]),
+                                  ),
+                                ),
                                 context,
                                 dateFormat: 'HH:mm',
                                 pickerMode: DateTimePickerMode.time,
@@ -224,11 +245,11 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        side: BorderSide(
+                        side: const BorderSide(
                           color: Colors.black,
                           width: 1,
                         ),
-                        backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                        backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                       ),
                       onPressed: () {
                         setState(() {
@@ -240,8 +261,8 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         });
                       },
                       child: Text(
-                        "medication_entry_add_another_reminder".tr(),
-                        style: TextStyle(
+                        "medication_entry_add_reminder".tr(),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontFamily: "DM_Sans",
                           fontSize: 17,
@@ -264,11 +285,11 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        side: BorderSide(
+                        side: const BorderSide(
                           color: Colors.black,
                           width: 1,
                         ),
-                        backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                        backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                       ),
                       onPressed: () async {
                         Medication medicationData;
@@ -276,7 +297,8 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                         for (int i = 0; i < numRem; i++) {
                           int.parse(dateContoller[i].text.split(":")[0]);
                           lmr.add(MedReminder(
-                              DayEnum.values.byName(DayController[i].text),
+                              DayEnum.values.byName(dayToString(
+                                  DayController[i].text, const Locale('en'))!),
                               TimeOfDay(
                                   hour: int.parse(
                                       dateContoller[i].text.split(":")[0]),
@@ -295,7 +317,7 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                       },
                       child: Text(
                         "main_page_glucose_form_save_btn".tr(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontFamily: "DM_Sans",
                           fontSize: 17,
@@ -316,18 +338,18 @@ class _MedicationFormModalSheetState extends State<MedicationFormModalSheet> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.black,
                         width: 1,
                       ),
-                      backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                      backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: Text(
                       "misc_cancel".tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: "DM_Sans",
                         fontSize: 17,

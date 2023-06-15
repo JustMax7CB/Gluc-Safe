@@ -2,25 +2,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class FormInputField extends StatefulWidget {
-  FormInputField(
+  const FormInputField(
       {super.key,
       controller,
-      keyboardType,
-      hintText,
+      this.keyboardType,
+      this.hintText,
       deviceWidth,
-      onTap,
-      readOnly,
-      onTapOutside,
-      focusNode,
+      this.onTap,
+      this.readOnly,
+      this.onTapOutside,
+      this.focusNode,
+      this.textAlign,
+      this.textStyle,
       required this.deviceHeight})
       : _controller = controller,
-        this.keyboardType = keyboardType,
-        this.hintText = hintText,
-        this._deviceWidth = deviceWidth,
-        this.onTap = onTap,
-        this.readOnly = readOnly,
-        this.onTapOutside = onTapOutside,
-        this.focusNode = focusNode;
+        _deviceWidth = deviceWidth;
   final TextEditingController _controller;
   final TextInputType? keyboardType;
   final String? hintText;
@@ -29,6 +25,8 @@ class FormInputField extends StatefulWidget {
   final bool? readOnly;
   final Function? onTapOutside;
   final FocusNode? focusNode;
+  final TextAlign? textAlign;
+  final TextStyle? textStyle;
 
   @override
   State<FormInputField> createState() => _FormInputFieldState();
@@ -38,30 +36,32 @@ class _FormInputFieldState extends State<FormInputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       height: 40,
       width: widget._deviceWidth * 0.35,
       child: TextFormField(
+        textAlign: widget.textAlign ?? TextAlign.start,
         focusNode: widget.focusNode ?? FocusNode(),
         readOnly: widget.readOnly ?? false,
+        style: widget.textStyle,
         onTap: () => widget.onTap == null ? {} : widget.onTap!(),
         controller: widget._controller,
         keyboardType: widget.keyboardType,
         decoration: InputDecoration(
-          contentPadding: context.locale == Locale('en')
-              ? EdgeInsets.only(
-                  top: 12.0,
-                  bottom: 12.0,
-                  left: 10.0,
+          contentPadding: context.locale == const Locale('en')
+              ? const EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0,
+                  left: 8.0,
                 )
-              : EdgeInsets.only(
-                  top: 12.0,
-                  bottom: 12.0,
-                  right: 10.0,
+              : const EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0,
+                  right: 8.0,
                 ),
           fillColor: Colors.white,
           filled: true,
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             fontFamily: "DM_Sans",
             fontSize: 17,
           ),

@@ -45,7 +45,7 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
     return Container(
       height: widget.height,
       child: TextFormField(
-          key: widget.fieldKey ?? Key(''),
+          key: widget.fieldKey ?? const Key(''),
           readOnly: widget.read ?? false,
           keyboardType: widget.keyboard,
           onTap: () => widget.onTap == null ? {} : widget.onTap!(),
@@ -55,10 +55,18 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: widget.leadingIcon,
             ),
-            prefixIconConstraints: BoxConstraints(maxHeight: 26),
+            prefixIconConstraints: const BoxConstraints(maxHeight: 26),
             suffixIcon: widget.actionIcon,
             hintText: widget.hint,
             labelText: widget.label,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: Colors.black, width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: Colors.black, width: 1),
+            ),
           ),
           obscureText: widget.obscure ?? false,
           autovalidateMode: AutovalidateMode.disabled,

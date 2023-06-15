@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gluc_safe/screens/mainPage/widgets/appbar_details.dart';
-import 'package:gluc_safe/widgets/textStroke.dart';
 
 class GraphAppBar extends StatelessWidget {
   const GraphAppBar(

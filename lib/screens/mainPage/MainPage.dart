@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,8 +46,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<GlucUser> getGlucUser() async {
-    String uid = _firebaseService!.user.uid;
-
     Map userData = await _firebaseService!.getUserData() as Map;
     var timestamp = userData['birthdate'].seconds;
     DateTime birthDate = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
@@ -304,6 +301,23 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: CardButton(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/bolus');
+                  },
+                  width: _deviceWidth,
+                  title: "main_page_bolus_calculator".tr(),
+                  icon: Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: SvgPicture.asset("lib/assets/icons_svg/graph.svg",
+                        width: _deviceWidth! * 0.4),
+                  ),
+                ),
               ),
             ),
             Expanded(

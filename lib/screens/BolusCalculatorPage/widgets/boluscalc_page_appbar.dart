@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class MedicationAppBar extends StatelessWidget {
-  const MedicationAppBar({super.key, required this.width});
-
+class BolusCalcAppBar extends StatelessWidget {
+  const BolusCalcAppBar(
+      {super.key, required this.changeLanguage, required this.width});
+  final Function changeLanguage;
   final double width;
 
   @override
@@ -33,7 +34,7 @@ class MedicationAppBar extends StatelessWidget {
                     : EdgeInsets.only(right: width * 0.14),
                 child: Center(
                   child: Text(
-                    "medication_page_title".tr(),
+                    "bolus_calculator_page_title".tr(),
                     style: const TextStyle(
                       fontFamily: "DM_Sans",
                       fontSize: 40,
