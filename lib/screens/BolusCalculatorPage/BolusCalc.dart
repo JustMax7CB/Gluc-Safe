@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/services.dart';
@@ -162,6 +163,11 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
                         bolusDose + (carbohydrateIntake / carbohydrateRatio);
                     isMealDose = true;
                   }
+                  if (bolusDose - bolusDose.toInt() > 0.5) {
+                    bolusDose = bolusDose.toInt() + 1;
+                  } else {
+                    bolusDose = bolusDose.toInt().toDouble();
+                  }
                   ResultBolus = bolusDose;
                   bolusData = new Bolus(
                       DateTime.now(),
@@ -179,6 +185,8 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
                   targetGlucose = 0;
                   correctionFactor = 0;
                   bolusDose = 0;
+                  isMealDose = false;
+                  isCorrectionDose = false;
                   carbohydrateIntakeController.clear();
                   carbohydrateRatioController.clear();
                   bloodGlucoseController.clear();
@@ -196,6 +204,11 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () async {
+                bool temp = await isLastBolusTime(Timestamp.now());
+                if (temp == false) {
+                  _showAlertDialog(context);
+                  isCalculatePressed = false;
+                }
                 if (isCalculatePressed) {
                   await _firebaseService!.saveBolusData(bolusData);
                 }
@@ -206,6 +219,57 @@ class _BolusCalcPageState extends State<BolusCalcPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<bool> isLastBolusTime(Timestamp date) async {
+    List? bolustemp = await _firebaseService!.getBolusData();
+    List tlist;
+    int? time;
+    Timestamp t;
+    bool isCorrection = false;
+    int dt = date.millisecondsSinceEpoch;
+    if (bolustemp!.isNotEmpty) {
+      dev.log(bolustemp.last['Date'].toString());
+      dev.log(bolustemp.last['is Correction Bolus'].toString());
+      tlist = bolustemp
+          .where((item) => item['is Correction Bolus'] == true)
+          .toList();
+      dev.log(tlist.toString());
+      if (tlist!.isNotEmpty) {
+        isCorrection = tlist.last['is Correction Bolus'];
+        time = (dt - tlist.last['Date']) as int?;
+        dev.log(Timestamp.fromMillisecondsSinceEpoch(time!).toString());
+        t = Timestamp.fromMillisecondsSinceEpoch(time);
+        if (t.seconds / 3600 > 3) {
+          dev.log("more then 3 hours");
+          return true;
+        } else {
+          dev.log("less then 3 hours");
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("bolus_caculator_alert".tr()),
+          content: Text("bolus_caculator_alert_text".tr()),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
