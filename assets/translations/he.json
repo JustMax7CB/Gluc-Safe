@@ -184,6 +184,8 @@
   "bolus_caculator_bolus_dose":"מספר יחידות בולוס",
   "bolus_caculator_correction_dose":"יחידות תיקון",
   "bolus_caculator_calculate_bolus":"חישוב בולוס",
-  "bolus_caculator_save_entry":"שמירה של בולוס"
+  "bolus_caculator_save_entry":"שמירה של בולוס",
+  "bolus_caculator_alert":"הזהרה!",
+  "bolus_caculator_alert_text":"עדיין לא עברו 3 שעות מאז הזרקת התיקון האחרונה."
   
 }
