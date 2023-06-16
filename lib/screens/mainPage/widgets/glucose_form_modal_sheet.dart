@@ -80,8 +80,10 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           showGlucoseWarningDialog(
             context,
             () {
-              setScheduledAlert("glucose_notification_title".tr(),
-                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              setScheduledAlert(
+                  "glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(),
+                  const Duration(minutes: 15));
               Navigator.pop(context);
               Navigator.pop(context);
             },
@@ -97,8 +99,10 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           showGlucoseWarningDialog(
             context,
             () {
-              setScheduledAlert("glucose_notification_title".tr(),
-                  "glucose_notification_message".tr(), Duration(hours: 3));
+              setScheduledAlert(
+                  "glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(),
+                  const Duration(hours: 3));
               Navigator.pop(context);
               Navigator.pop(context);
             },
@@ -116,8 +120,10 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           showGlucoseWarningDialog(
             context,
             () {
-              setScheduledAlert("glucose_notification_title".tr(),
-                  "glucose_notification_message".tr(), Duration(minutes: 15));
+              setScheduledAlert(
+                  "glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(),
+                  const Duration(minutes: 15));
               Navigator.pop(context);
               Navigator.pop(context);
             },
@@ -133,8 +139,10 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
           showGlucoseWarningDialog(
             context,
             () {
-              setScheduledAlert("glucose_notification_title".tr(),
-                  "glucose_notification_message".tr(), Duration(hours: 3));
+              setScheduledAlert(
+                  "glucose_notification_title".tr(),
+                  "glucose_notification_message".tr(),
+                  const Duration(hours: 3));
               Navigator.pop(context);
               Navigator.pop(context);
             },
@@ -160,14 +168,14 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-              color: Color.fromRGBO(50, 108, 65, 1),
+              color: const Color.fromRGBO(50, 108, 65, 1),
               width: 5,
               style: BorderStyle.solid),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(34),
             topRight: Radius.circular(34),
           ),
-          color: Color.fromRGBO(211, 229, 214, 1)),
+          color: const Color.fromRGBO(211, 229, 214, 1)),
       width: widget.deviceWidth,
       height: widget.deviceHeight * 0.55,
       child: Column(
@@ -179,21 +187,20 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
             "main_page_glucose_form_title".tr(),
             style: TextStyle(
               fontFamily: "DM_Sans",
-              color: Color.fromRGBO(89, 180, 98, 1),
+              color: const Color.fromRGBO(89, 180, 98, 1),
               fontSize: 35,
               fontWeight: FontWeight.w600,
               shadows: <Shadow>[
-                Shadow(
+                const Shadow(
                   blurRadius: 4,
                   offset: Offset(0, 4),
                   color: Color.fromRGBO(0, 0, 0, 0.25),
                 ),
-              ]..addAll(
-                  textStroke(
-                    0.7,
-                    Color.fromRGBO(0, 0, 0, 1),
-                  ),
+                ...textStroke(
+                  0.7,
+                  const Color.fromRGBO(0, 0, 0, 1),
                 ),
+              ],
             ),
           ),
           Form(
@@ -250,17 +257,15 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                       },
                     ),
                     Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 5),
                         width: widget.deviceWidth * 0.35,
                         child: DropDown(
-                            optionList: Meal.values
-                                .map((e) => e.toString().split(".")[1])
-                                .toList(),
+                            optionList: mealsToList(context.locale),
                             height: 40,
                             width: 30,
                             hint: "main_page_glucose_form_meal".tr(),
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 17,
                               fontFamily: "DM_Sans",
                             ),
@@ -280,7 +285,7 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                           fillColor: Colors.white,
                           filled: true,
                           hintText: "main_page_glucose_form_notes".tr(),
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             fontFamily: "DM_Sans",
                             fontSize: 17,
                           ),
@@ -291,12 +296,12 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                       ),
                     ),
                     Padding(
-                      padding: context.locale == Locale('en')
+                      padding: context.locale == const Locale('en')
                           ? EdgeInsets.only(left: widget.deviceWidth * 0.13)
                           : EdgeInsets.only(right: widget.deviceWidth * 0.13),
                       child: Text(
                         "main_page_glucose_form_optional".tr(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "DM_Sans",
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
@@ -310,11 +315,11 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    side: BorderSide(
+                    side: const BorderSide(
                       color: Colors.black,
                       width: 1,
                     ),
-                    backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                    backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                   ),
                   onPressed: () async {
                     DateFormat format = DateFormat('dd/MM/yyyy HH:mm');
@@ -326,21 +331,22 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                             ? int.parse(carbsController.text)
                             : 0,
                         mealController.text.isNotEmpty
-                            ? Meal.values.firstWhere((element) =>
-                                element.toString().split(".")[1] ==
-                                mealController.text)
+                            ? Meal.values.byName(mealToString(
+                                mealController.text, const Locale('en'))!)
                             : null,
                         notesController.text.isNotEmpty
                             ? notesController.text
                             : null);
 
-                    await _firebaseService!.saveGlucoseData(glucoseData);
-
-                    Navigator.pop(context);
+                    await _firebaseService!
+                        .saveGlucoseData(glucoseData)
+                        .then((value) => {
+                              if (mounted) {Navigator.pop(context)}
+                            });
                   },
                   child: Text(
                     "main_page_glucose_form_save_btn".tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "DM_Sans",
                       fontSize: 17,
@@ -360,18 +366,18 @@ class _GlucoseFormModalSheetState extends State<GlucoseFormModalSheet> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    side: BorderSide(
+                    side: const BorderSide(
                       color: Colors.black,
                       width: 1,
                     ),
-                    backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                    backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: Text(
                     "misc_cancel".tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "DM_Sans",
                       fontSize: 17,

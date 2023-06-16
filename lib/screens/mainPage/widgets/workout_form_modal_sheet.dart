@@ -48,14 +48,14 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-              color: Color.fromRGBO(50, 108, 65, 1),
+              color: const Color.fromRGBO(50, 108, 65, 1),
               width: 5,
               style: BorderStyle.solid),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(34),
             topRight: Radius.circular(34),
           ),
-          color: Color.fromRGBO(211, 229, 214, 1)),
+          color: const Color.fromRGBO(211, 229, 214, 1)),
       width: widget.deviceWidth,
       height: widget.deviceHeight * 0.45,
       child: Column(
@@ -68,21 +68,20 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
             "main_page_workout_form_title".tr(),
             style: TextStyle(
               fontFamily: "DM_Sans",
-              color: Color.fromRGBO(89, 180, 98, 1),
+              color: const Color.fromRGBO(89, 180, 98, 1),
               fontSize: 35,
               fontWeight: FontWeight.w600,
               shadows: <Shadow>[
-                Shadow(
+                const Shadow(
                   blurRadius: 4,
                   offset: Offset(0, 4),
                   color: Color.fromRGBO(0, 0, 0, 0.25),
                 ),
-              ]..addAll(
-                  textStroke(
-                    0.7,
-                    Color.fromRGBO(0, 0, 0, 1),
-                  ),
+                ...textStroke(
+                  0.7,
+                  const Color.fromRGBO(0, 0, 0, 1),
                 ),
+              ],
             ),
           ),
           Form(
@@ -113,16 +112,15 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 5),
                       width: widget.deviceWidth * 0.4,
                       child: DropDown(
-                          optionList: Workouts.values
-                              .map((e) => e.toString().split(".")[1])
-                              .toList(),
+                          optionList: workoutsToList(context.locale),
                           height: 40,
                           width: 30,
                           hint: "main_page_workout_form_workout".tr(),
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 17,
                             fontFamily: "DM_Sans",
                           ),
@@ -158,12 +156,12 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                 Row(
                   children: [
                     Padding(
-                      padding: context.locale == Locale('en')
+                      padding: context.locale == const Locale('en')
                           ? EdgeInsets.only(left: widget.deviceWidth * 0.11)
                           : EdgeInsets.only(right: widget.deviceWidth * 0.11),
                       child: Text(
                         "main_page_workout_form_optional".tr(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "DM_Sans",
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
@@ -179,21 +177,24 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      side: BorderSide(
+                      side: const BorderSide(
                         color: Colors.black,
                         width: 1,
                       ),
-                      backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                      backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                     ),
                     onPressed: () async {
                       DateFormat format = DateFormat('dd/MM/yyyy');
                       DateTime dateTime = format.parse(dateContoller.text);
-                      Workouts workout =
-                          Workouts.values.byName(workoutController.text);
+                      Workouts workout = Workouts.values.byName(workoutToString(
+                          workoutController.text, const Locale('en'))!);
                       Workout workoutData;
-                      if (workoutController.text == "Running" ||
-                          workoutController.text == "Walking" ||
-                          workoutController.text == "Cycling") {
+                      if (workoutController.text ==
+                              workoutToString("Running", context.locale) ||
+                          workoutController.text ==
+                              workoutToString("Walking", context.locale) ||
+                          workoutController.text ==
+                              workoutToString("Cycling", context.locale)) {
                         workoutData = Workout(
                           dateTime,
                           workout,
@@ -204,12 +205,15 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                         workoutData = Workout(dateTime, workout,
                             int.parse(durationController.text), null);
                       }
-                      await _firebaseService!.saveWorkoutData(workoutData);
-                      Navigator.pop(context);
+                      await _firebaseService!
+                          .saveWorkoutData(workoutData)
+                          .then((value) => {
+                                if (mounted) {Navigator.pop(context)}
+                              });
                     },
                     child: Text(
                       "main_page_glucose_form_save_btn".tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: "DM_Sans",
                         fontSize: 17,
@@ -230,18 +234,18 @@ class _WorkoutFormModalSheetState extends State<WorkoutFormModalSheet> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    side: BorderSide(
+                    side: const BorderSide(
                       color: Colors.black,
                       width: 1,
                     ),
-                    backgroundColor: Color.fromRGBO(58, 170, 96, 1),
+                    backgroundColor: const Color.fromRGBO(58, 170, 96, 1),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: Text(
                     "misc_cancel".tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "DM_Sans",
                       fontSize: 17,
