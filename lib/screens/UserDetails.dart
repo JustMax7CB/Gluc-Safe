@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/enums/enumsExport.dart';
+import 'package:gluc_safe/Models/enums/enums_export.dart';
 import 'package:gluc_safe/Models/user.dart';
 import 'package:gluc_safe/screens/login_page.dart';
 import 'package:gluc_safe/services/database.dart';

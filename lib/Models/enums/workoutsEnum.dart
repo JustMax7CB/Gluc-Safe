@@ -12,7 +12,7 @@ enum Workouts {
   Cycling
 }
 
-List mealsToString(Locale locale) {
+List workoutsToList(Locale locale) {
   if (locale == const Locale('en')) {
     return Workouts.values.map((e) => e.toString().split(".")[1]).toList();
   } else {
@@ -36,4 +36,57 @@ List mealsToString(Locale locale) {
     }
     return workouts;
   }
+}
+
+String? workoutToString(String workout, Locale locale) {
+  if (locale == const Locale('en')) {
+    switch (workout) {
+      case 'ריצה':
+      case 'Running':
+        return 'Running';
+      case 'שחייה':
+      case 'Swimming':
+        return 'Swimming';
+      case 'הליכה':
+      case 'Walking':
+        return 'Walking';
+      case 'הרמת משקולות':
+      case 'Weighttraining':
+        return 'Weighttraining';
+      case 'יוגה':
+      case 'Yoga':
+        return 'Yoga';
+      case 'פילאטיס':
+      case 'Pilates':
+        return 'Pilates';
+      case 'רכיבת אופניים':
+      case 'Cycling':
+        return 'Cycling';
+    }
+  } else {
+    switch (workout) {
+      case 'ריצה':
+      case 'Running':
+        return 'ריצה';
+      case 'שחייה':
+      case 'Swimming':
+        return 'שחייה';
+      case 'הליכה':
+      case 'Walking':
+        return 'הליכה';
+      case 'הרמת משקולות':
+      case 'Weighttraining':
+        return 'הרמת משקולות';
+      case 'יוגה':
+      case 'Yoga':
+        return 'יוגה';
+      case 'פילאטיס':
+      case 'Pilates':
+        return 'פילאטיס';
+      case 'רכיבת אופניים':
+      case 'Cycling':
+        return 'רכיבת אופניים';
+    }
+  }
+  return null;
 }
