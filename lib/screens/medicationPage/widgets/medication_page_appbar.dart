@@ -2,15 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class MedicationAppBar extends StatelessWidget {
-  const MedicationAppBar(
-      {super.key, required this.changeLanguage, required this.width});
-  final Function changeLanguage;
+  const MedicationAppBar({super.key, required this.width});
+
   final double width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 0.6, color: Colors.black)),
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
@@ -21,7 +20,7 @@ class MedicationAppBar extends StatelessWidget {
           ],
         ),
       ),
-      padding: EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -29,13 +28,13 @@ class MedicationAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: context.locale == Locale('en')
+                padding: context.locale == const Locale('en')
                     ? EdgeInsets.only(left: width * 0.14)
                     : EdgeInsets.only(right: width * 0.14),
                 child: Center(
                   child: Text(
                     "medication_page_title".tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "DM_Sans",
                       fontSize: 40,
                       fontWeight: FontWeight.w600,

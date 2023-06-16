@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:gluc_safe/Models/MedReminder.dart';
-import 'package:gluc_safe/Models/enums/genders.dart';
+import 'package:gluc_safe/Models/med_reminder.dart';
 import 'package:gluc_safe/Models/glucose.dart';
 import 'package:gluc_safe/Models/bolus.dart';
 import 'package:gluc_safe/Models/medications.dart';
@@ -73,6 +71,8 @@ class FirebaseService {
       }
       return _userCredential;
     } on FirebaseAuthException catch (e) {
+      dev.log("FirebaseAuth code: ${e.code}");
+      dev.log("FirebaseAuth message: ${e.message}");
       switch (e.code) {
         case 'user-not-found':
           dev.log('User not found');
@@ -80,6 +80,9 @@ class FirebaseService {
         case 'wrong-password':
           dev.log('Wrong password');
           return "login_page_signin_error_wrong_password".tr();
+        case 'invalid-email':
+          dev.log("Invalid Email");
+          return "login_page_signin_error_invalid_email".tr();
         // Add additional cases for other error codes as needed
         default:
           dev.log('An error occurred: ${e.message}');
@@ -328,8 +331,47 @@ class FirebaseService {
       return glucUserMedicationData;
     } catch (e) {
       dev.log(e.toString());
-      dev.log("Failed to get user glucose data");
+      dev.log("Failed to get user medication data");
       return null;
+    }
+  }
+
+  Future<bool> editMedicationData(
+      {required String medicationName,
+      required int numOfPills,
+      required int perDay,
+      required MedReminders reminders}) async {
+    List? glucUserMedicationData;
+    String userId = user!.uid;
+
+    try {
+      var document =
+          await _database.collection(MEDICATION_COLLECTION).doc(userId).get();
+      glucUserMedicationData = document.data()![MEDICATION_RECORDS] as List;
+      for (Map record in glucUserMedicationData) {
+        if (record['medicationName'] != medicationName) {
+          continue;
+        } else {
+          record['numOfPills'] = numOfPills;
+          record['perDay'] = perDay;
+          record['reminders'] = reminders.reminders
+              .map((e) => {
+                    "Day": e.day.toString().split(".")[1],
+                    "Time": ("${e.time.hour}:${e.time.minute}")
+                  })
+              .toList();
+        }
+      }
+
+      await _database
+          .collection(MEDICATION_COLLECTION)
+          .doc(userId)
+          .set({MEDICATION_RECORDS: glucUserMedicationData});
+      return true;
+    } catch (e) {
+      dev.log(e.toString());
+      dev.log("Failed to update user medication data");
+      return false;
     }
   }
 
@@ -460,7 +502,7 @@ class FirebaseService {
             .doc(userID)
             .set({MEDHISTORY_RECORDS: []});
       }
-      if (document.exists && docList != null) {
+      if (document.exists) {
         recordsList = docList;
         recordsList.add(medHistoryRecord);
       } else {

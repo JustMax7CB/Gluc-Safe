@@ -12,11 +12,12 @@ class InputFieldWidget extends StatefulWidget {
     this.actionIcon,
     required this.controller,
     this.onTap,
-    this.onChanged,
     this.validator,
     this.keyboard,
     this.read,
     this.width,
+    this.fieldKey,
+    this.height,
   });
   final String hint;
   final String? label;
@@ -27,11 +28,12 @@ class InputFieldWidget extends StatefulWidget {
   final bool? obscure;
   final TextEditingController controller;
   final TextInputType? keyboard;
-  final Function? onChanged;
   final Function? validator;
   final Function? onTap;
   final bool? read;
   final double? width;
+  final Key? fieldKey;
+  final double? height;
 
   @override
   State<InputFieldWidget> createState() => _InputFieldWidgetState();
@@ -41,40 +43,33 @@ class _InputFieldWidgetState extends State<InputFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: widget.height,
       child: TextFormField(
+          key: widget.fieldKey ?? const Key(''),
           readOnly: widget.read ?? false,
           keyboardType: widget.keyboard,
           onTap: () => widget.onTap == null ? {} : widget.onTap!(),
           controller: widget.controller,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 12),
             prefixIcon: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: widget.leadingIcon,
             ),
-            prefixIconConstraints: BoxConstraints(maxHeight: 26),
+            prefixIconConstraints: const BoxConstraints(maxHeight: 26),
             suffixIcon: widget.actionIcon,
-            suffixIconColor: widget.actionIconColor,
-            iconColor: widget.leadingIconColor,
             hintText: widget.hint,
             labelText: widget.label,
-            labelStyle: TextStyle(
-              fontFamily: "DM_Sans",
-            ),
-            hintStyle: TextStyle(
-              fontFamily: "DM_Sans",
-            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.black, width: 1),
+              borderSide: const BorderSide(color: Colors.black, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.black, width: 1),
+              borderSide: const BorderSide(color: Colors.black, width: 1),
             ),
           ),
           obscureText: widget.obscure ?? false,
-          onChanged: (value) => widget.onChanged ?? {},
+          autovalidateMode: AutovalidateMode.disabled,
           validator: (value) =>
               widget.validator == null ? '' : widget.validator!(value)),
     );

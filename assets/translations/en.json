@@ -10,6 +10,8 @@
   "main_page_appbar_welcome" : "Welcome {}",
   "main_page_appbar_title" : "My Glucose",
   "main_page_appbar_glucose_title" : "{}",
+  "main_page_appbar_glucose_average" : "Average",
+  "main_page_appbar_glucose_latest" : "Latest",
   "main_page_appbar_glucose_average_value" : "{} mg/DL",
   "main_page_drawer_change_language" : "Change Language",
   "main_page_drawer_pdf" : "Export PDF",
@@ -62,13 +64,15 @@
   "login_page_signin_error_wrong_password" :"Wrong Password",
   "login_page_signin_error_email_not_verified" :"Email Not Verified",
   "login_page_signin_error_occured" :"Server Error Occured",
+  "login_page_signin_error_invalid_email" : "Invalid Email",
 
 
   "register_page_invalid_data": "Invalid user data",
-  "register_page_passwords_no_match": "Passwords doess not match",
+  "register_page_passwords_no_match": "Passwords does not match",
   "register_page_register_btn": "Register",
   "register_info_dialog_title": "Email Verification",
   "register_info_dialog_description": "Verification email has been sent to your email address",
+  "register_page_password_length_hint": "Password should be at least 6 characters",
 
   "details_page_title": "User Details",
   "details_page_user_title": "User",
@@ -80,7 +84,7 @@
   "details_page_user_phone_hint" : "Enter your phone number",
   "details_page_user_birthday_label" : "Date of Birth",
   "details_page_user_birthday_hint" : "Choose your date of birth",
-  "details_page_user_height_label" : "Height",
+  "details_page_user_height_label" : "Height (in cm)",
   "details_page_user_height_hint" : "enter your height (in cm)",
   "details_page_user_gender_label" : "Gender",
   "details_page_user_gender_hint" : "Select your gender",
@@ -140,9 +144,20 @@
   "medication_entry_medication_per_day" : "Times per day",
   "medication_entry_medication_day" : "Day",
   "medication_entry_medication_time" : "Time",
-  "medication_entry_add_another_reminder" : "Add Another Reminder",
+  "medication_entry_add_reminder" : "Add Reminder",
+  "medication_entry_remove_reminder" : "Remove Reminder",
   "medication_entry_reminders_max" : "Reminders(max 5 reminders*):",
+  "medication_edit" : "Edit Medication",
+  "medication_edit_error" : "Error while saving medication data",
   
+  "medication_details_page_medication_name": "Medication Name",
+  "medication_details_page_medication_dose": "Dose",
+  "medication_details_page_medication_pills": "{} pill(s)",
+  "medication_details_page_medication_times": "{} time(s)",
+  "medication_details_page_medication_per_day": "Times per day",
+  "medication_details_page_medication_reminders": "Reminders",
+  "medication_details_page_medication_edit": "Edit",
+
   "bolus_calculator_page_title" : "Calculator",
 
 

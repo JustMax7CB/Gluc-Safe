@@ -1,16 +1,15 @@
-import 'dart:io';
+import 'dart:developer' as dev;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/Models/user.dart';
+
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/services/deviceQueries.dart';
 import 'package:gluc_safe/widgets/infoDialog.dart';
 
-import '../widgets/customAppBar.dart';
 import '../widgets/glucsafeAppbar.dart';
 import '../widgets/textField.dart';
 import '../widgets/textStroke.dart';
@@ -25,6 +24,9 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   double? _deviceWidth, _deviceHeight;
   final _formkey = GlobalKey<FormState>();
+  final _emailInputKey = GlobalKey<FormFieldState>();
+  final _passwordInputKey = GlobalKey<FormFieldState>();
+  final _confirmPasswordInputKey = GlobalKey<FormFieldState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
@@ -58,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
           },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: glucSafeAppbar(context),
+            appBar: glucSafeAppbar(context, _deviceHeight!),
             body: isLoading
                 ? Center(child: const CircularProgressIndicator())
                 : Container(
@@ -94,20 +96,26 @@ class _RegisterPageState extends State<RegisterPage> {
                             // Email Input
                             margin: EdgeInsets.fromLTRB(35, 45, 35, 10),
                             child: InputFieldWidget(
+                              fieldKey: _emailInputKey,
                               hint: "input_email_hint".tr(),
                               label: "input_email_label".tr(),
                               controller: _emailController,
                               leadingIcon: SvgPicture.asset(
                                 "lib/assets/icons_svg/email_envelope.svg",
                               ),
-                              onChanged: () {},
-                              validator: (value) {},
+                              validator: (value) {
+                                // if (!checkEmailFormat(value)) {
+                                //   return "";
+                                // }
+                                // return null;
+                              },
                             ),
                           ),
                           Container(
                             // Password input
                             margin: EdgeInsets.fromLTRB(35, 0, 35, 10),
                             child: InputFieldWidget(
+                              fieldKey: _passwordInputKey,
                               hint: "input_password_hint".tr(),
                               label: "input_password_label".tr(),
                               obscure: obscurePassword,
@@ -126,14 +134,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                     width: 30,
                                     fit: BoxFit.scaleDown),
                               ),
-                              onChanged: () {},
-                              validator: (value) {},
+                              validator: (value) {
+                                // if (!checkPasswordLength(value)) {
+                                //   return "";
+                                // }
+                                // return null;
+                              },
                             ),
                           ),
                           Container(
                             // Confirm Password input
                             margin: EdgeInsets.fromLTRB(35, 0, 35, 35),
                             child: InputFieldWidget(
+                              fieldKey: _confirmPasswordInputKey,
                               hint: "input_confirm_password_hint".tr(),
                               label: "input_confirm_password_label".tr(),
                               obscure: obscureConfirmPassword,
@@ -153,8 +166,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     width: 30,
                                     fit: BoxFit.scaleDown),
                               ),
-                              onChanged: () {},
-                              validator: (value) {},
+                              validator: (value) {
+                                // if (checkPasswordsMatch(value) == 0) {
+                                //   return "";
+                                // }
+                                // return null;
+                              },
                             ),
                           ),
                           Container(
@@ -183,13 +200,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                 setState(() {
                                   isLoading = true;
                                 });
+                                if (!_emailInputKey.currentState!.validate()) {
+                                  dev.log(
+                                      ' Email Validation : ${_emailInputKey.currentState!.validate().toString()}');
+                                  snackBarWithDismiss("Email invalid format");
+                                } else if (!_passwordInputKey.currentState!
+                                    .validate()) {
+                                  dev.log(
+                                      ' Password Validation : ${_passwordInputKey.currentState!.validate().toString()}');
+                                  snackBarWithDismiss(
+                                      "Password should be at least 6 characters");
+                                } else if (!_confirmPasswordInputKey
+                                    .currentState!
+                                    .validate()) {
+                                  dev.log(
+                                      ' Confirm Password Validation : ${_confirmPasswordInputKey.currentState!.validate().toString()}');
+                                  snackBarWithDismiss(
+                                      "The passwords does not match");
+                                }
+
                                 await checkRegistration().then((value) {
                                   setState(() {
                                     isLoading = false;
                                   });
-                                  if (!value) {
-                                    snackBarWithDismiss("Registration Failed");
-                                  } else {
+                                  if (value) {
                                     showDialog(
                                       barrierDismissible: false,
                                       context: context,
@@ -237,6 +271,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                           ),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: _deviceHeight! * 0.05),
+                            child: Text(
+                              "register_page_password_length_hint".tr(),
+                              style: TextStyle(
+                                  fontSize: 13, fontFamily: "DM_Sans"),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -274,13 +317,27 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  bool checkEmailFormat(String emailString) {
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(emailString);
+  }
+
+  bool checkPasswordLength(String password) {
+    return password.length >= 6;
+  }
+
+  int checkPasswordsMatch(String confirmPassword) {
+    return _passwordController.text.compareTo(confirmPassword);
+  }
+
   Future<bool> checkRegistration() async {
     if (_passwordController.text == _confirmPasswordController.text) {
       try {
         bool result = await _firebaseService!.registerUser(
             email: _emailController.text, password: _passwordController.text);
         return result;
-      } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException catch (_) {
         snackBarWithDismiss("register_page_invalid_data".tr());
         return false;
       }

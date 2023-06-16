@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:gluc_safe/screens/chartPage/widgets/calendarContainer.dart';
-import 'package:gluc_safe/screens/chartPage/widgets/graphContainer.dart';
+import 'package:gluc_safe/screens/chartPage/widgets/calendar_container.dart';
+import 'package:gluc_safe/screens/chartPage/widgets/graph_container.dart';
 import 'package:gluc_safe/screens/chartPage/widgets/graph_appbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/bottom_navbar.dart';
 import 'package:gluc_safe/screens/mainPage/widgets/drawer.dart';
@@ -120,10 +120,11 @@ class _ChartPageState extends State<ChartPage> {
       endDrawer: MainDrawer(
         height: _deviceHeight!,
         ChangeLanguage: () {
-          if (context.locale == Locale('en'))
-            context.setLocale(Locale('he'));
-          else
-            context.setLocale(Locale('en'));
+          if (context.locale == const Locale('en')) {
+            context.setLocale(const Locale('he'));
+          } else {
+            context.setLocale(const Locale('en'));
+          }
         },
         exportPDF: () {
           Navigator.push(
@@ -141,7 +142,7 @@ class _ChartPageState extends State<ChartPage> {
                             '${userData['user']['firstName']} ${userData['user']['lastName']}',
                         glucoseValues: userData['glucose'] as List);
                   } else {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                 },
               ),
@@ -156,10 +157,11 @@ class _ChartPageState extends State<ChartPage> {
             deviceHeight: _deviceHeight!,
             deviceWidth: _deviceWidth!,
             changeLanguage: () {
-              if (context.locale == Locale('en'))
-                context.setLocale(Locale('he'));
-              else
-                context.setLocale(Locale('en'));
+              if (context.locale == const Locale('en')) {
+                context.setLocale(const Locale('he'));
+              } else {
+                context.setLocale(const Locale('en'));
+              }
             }),
       ),
       bottomNavigationBar: FutureBuilder(

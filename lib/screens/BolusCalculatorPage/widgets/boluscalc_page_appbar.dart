@@ -10,7 +10,7 @@ class BolusCalcAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 0.6, color: Colors.black)),
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
@@ -21,7 +21,7 @@ class BolusCalcAppBar extends StatelessWidget {
           ],
         ),
       ),
-      padding: EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -29,13 +29,13 @@ class BolusCalcAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: context.locale == Locale('en')
+                padding: context.locale == const Locale('en')
                     ? EdgeInsets.only(left: width * 0.14)
                     : EdgeInsets.only(right: width * 0.14),
                 child: Center(
                   child: Text(
                     "bolus_calculator_page_title".tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "DM_Sans",
                       fontSize: 40,
                       fontWeight: FontWeight.w600,

@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'dart:developer' as dev;
 
 Widget DropDown(
@@ -8,6 +9,7 @@ Widget DropDown(
     required double width,
     required String hint,
     TextStyle? textStyle,
+    String? value,
     required Function save}) {
   List<DropdownMenuItem<String>> items = optionList
       .map((item) => DropdownMenuItem<String>(
@@ -21,16 +23,14 @@ Widget DropDown(
             ),
           ))
       .toList();
-  return Container(
-    padding: EdgeInsets.symmetric(
-      vertical: height * 0.02,
-    ),
+  return SizedBox(
     height: height,
     child: DropdownButtonFormField2(
+      value: value,
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
-        contentPadding: EdgeInsets.only(bottom: 15),
+        contentPadding: const EdgeInsets.only(bottom: 15),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
         ),
@@ -39,7 +39,7 @@ Widget DropDown(
       hint: Text(
         hint,
         style: textStyle ??
-            TextStyle(
+            const TextStyle(
               fontSize: 14,
               fontFamily: "DM_Sans",
             ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gluc_safe/services/database.dart';
 import 'package:gluc_safe/widgets/chart.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'dart:developer' as dev;
 
@@ -51,12 +50,12 @@ class _GraphContainerState extends State<GraphContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromRGBO(213, 233, 217, 1),
+        color: const Color.fromRGBO(213, 233, 217, 1),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(width: 1, color: Colors.black),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -65,7 +64,7 @@ class _GraphContainerState extends State<GraphContainer> {
             children: [
               Text(
                 "chart_page_select_option".tr(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                 ),
               ),
@@ -81,29 +80,27 @@ class _GraphContainerState extends State<GraphContainer> {
               ),
             ],
           ),
-          Container(
-            child: FutureBuilder(
-              future: getGlucoseValues(optionSelected),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return LineChartWidget(
-                      glucoseValues: snapshot.data as List,
-                      deviceHeight: widget.deviceHeight,
-                      deviceWidth: widget.deviceWidth);
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
+          FutureBuilder(
+            future: getGlucoseValues(optionSelected),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return LineChartWidget(
+                    glucoseValues: snapshot.data as List,
+                    deviceHeight: widget.deviceHeight,
+                    deviceWidth: widget.deviceWidth);
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ],
       ),
     );
   }
 
-  List GlucoseByRange(List userGlucoseRecords) {
+  List glucoseByRange(List userGlucoseRecords) {
     if (widget.startDate == null &&
         widget.endDate == null &&
-        userGlucoseRecords.length > 0) {
+        userGlucoseRecords.isNotEmpty) {
       widget.startDate = userGlucoseRecords[0][1];
       widget.endDate = userGlucoseRecords[userGlucoseRecords.length - 1][1];
     }
@@ -116,7 +113,7 @@ class _GraphContainerState extends State<GraphContainer> {
     return userGlucoseRecords;
   }
 
-  List GlucoseByYear(List userGlucoseRecords) {
+  List glucoseByYear(List userGlucoseRecords) {
     dev.log(userGlucoseRecords.toString());
     dev.log(widget.selectedYear.toString());
     userGlucoseRecords = userGlucoseRecords
@@ -127,7 +124,7 @@ class _GraphContainerState extends State<GraphContainer> {
     return userGlucoseRecords;
   }
 
-  List GlucoseByMonth(List userGlucoseRecords) {
+  List glucoseByMonth(List userGlucoseRecords) {
     userGlucoseRecords = userGlucoseRecords
         .where((element) =>
             (DateTime.fromMillisecondsSinceEpoch(element[1]).month ==
@@ -151,11 +148,11 @@ class _GraphContainerState extends State<GraphContainer> {
     dev.log("Sorted Tuple List  \x1B[37m$userGlucoseRecords");
 
     if (mode == "chart_option_range".tr()) {
-      userGlucoseRecords = GlucoseByRange(userGlucoseRecords);
+      userGlucoseRecords = glucoseByRange(userGlucoseRecords);
     } else if (mode == "chart_option_year".tr()) {
-      userGlucoseRecords = GlucoseByYear(userGlucoseRecords);
+      userGlucoseRecords = glucoseByYear(userGlucoseRecords);
     } else if (mode == "chart_option_month".tr()) {
-      userGlucoseRecords = GlucoseByMonth(userGlucoseRecords);
+      userGlucoseRecords = glucoseByMonth(userGlucoseRecords);
     }
 
     userGlucoseRecords = userGlucoseRecords
