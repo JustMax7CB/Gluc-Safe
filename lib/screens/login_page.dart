@@ -294,8 +294,12 @@ class _LoginPageState extends State<LoginPage> {
       var result = await _firebaseService!.loginUser(
           email: emailController.text, password: passwordController.text);
       if (result is UserCredential) {
-        _firebaseService!.saveUserDeviceToken();
-        isLoading = false;
+        _firebaseService!.saveUserDeviceToken().then((value) {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.popAndPushNamed(context, "/");
+        });
       }
       if (result is String) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
