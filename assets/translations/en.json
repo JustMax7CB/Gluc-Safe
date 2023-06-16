@@ -193,5 +193,7 @@
   "bolus_caculator_bolus_dose":"Bolus dose",
   "bolus_caculator_correction_dose":"Correction Dose",
   "bolus_caculator_calculate_bolus":"Calculate Bolus",
-  "bolus_caculator_save_entry":"Save Bolus"
+  "bolus_caculator_save_entry":"Save Bolus",
+  "bolus_caculator_alert":"Alert!",
+  "bolus_caculator_alert_text":"3 hours are still not passed from the last correction bolus."
 }
